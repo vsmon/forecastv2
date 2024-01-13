@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, Image} from 'react-native';
+import GlobalStyle from '../../Constants/GlobalStyle';
 
 interface Current {
   temp: number;
@@ -10,24 +11,22 @@ interface Current {
   min: number;
 }
 
-interface currentForecast {
+interface CurrentForecast {
   currentForecast: Current;
 }
 
-export default function CurrentForecast({currentForecast}: currentForecast) {
+export default function CurrentForecast({currentForecast}: CurrentForecast) {
   return (
     <View
-      style={{
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        borderColor: '#FFF2',
-        borderWidth: 2,
-        margin: 5,
-        borderRadius: 25,
-        marginBottom: 20,
-        backgroundColor: '#FFF1',
-      }}>
+      style={[
+        GlobalStyle.container,
+        {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          padding: 0,
+          alignItems: 'stretch',
+        },
+      ]}>
       <View
         style={{
           flex: 1,
@@ -40,15 +39,16 @@ export default function CurrentForecast({currentForecast}: currentForecast) {
           {currentForecast.description}
         </Text>
         <Text style={{marginBottom: 5, fontSize: 14}}>Sorocaba</Text>
-        <Text>
-          {currentForecast.max.toFixed(0)}°/{currentForecast.min.toFixed(0)}°
+        <Text style={{fontSize: 11}}>
+          {currentForecast.max.toFixed(0)}°/{currentForecast.min.toFixed(0)}° {}
           Sensação térmica de {currentForecast.feels_like.toFixed(0)}°
         </Text>
       </View>
       <View
         style={{
           justifyContent: 'flex-start',
-          alignItems: 'flex-start',
+          alignItems: 'flex-end',
+          //backgroundColor: 'red',
         }}>
         <Image
           style={{height: 150, width: 150}}

@@ -1,5 +1,7 @@
 import React from 'react';
 import {View, Text, Image} from 'react-native';
+import GlobalStyle from '../../Constants/GlobalStyle';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Daily {
   dt: number;
@@ -24,18 +26,7 @@ export default function DailyForecast({dailyForecast}: DailyForecast) {
     'Sabado',
   ];
   return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: 'column',
-        padding: 20,
-        borderColor: '#FFF2',
-        borderWidth: 2,
-        margin: 5,
-        borderRadius: 25,
-        marginBottom: 20,
-        backgroundColor: '#FFF1',
-      }}>
+    <View style={[GlobalStyle.container, {alignItems: 'stretch'}]}>
       <View
         style={{
           flex: 1,
@@ -55,17 +46,42 @@ export default function DailyForecast({dailyForecast}: DailyForecast) {
           new Date(item.dt * 1000).getDay().toLocaleString(),
         );
         const rainProb: number = item.pop * 100;
+        console.log(item.pop);
         return (
-          <View key={index} style={{flex: 1, flexDirection: 'row'}}>
+          <View
+            key={index}
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
             <View style={{flex: 1}}>
               <Text style={{color: '#FFF'}}>
                 {index === 0 ? 'Hoje' : weekDay[date]}
               </Text>
             </View>
-            <View style={{flex: 1}}>
-              <Text>{rainProb}%</Text>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Icon
+                name={rainProb <= 10 ? 'water-outline' : 'water'}
+                size={28}
+                color={'skyblue'}
+              />
+              <View
+                style={{
+                  flex: 1,
+                }}>
+                <Text> {rainProb.toFixed(0)}%</Text>
+              </View>
             </View>
-            <View style={{flex: 1}}>
+            <View
+              style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
               <Image
                 style={{height: 40, width: 40}}
                 source={{

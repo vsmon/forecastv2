@@ -1,23 +1,35 @@
 import React from 'react';
 import {View, Text} from 'react-native';
+import GlobalStyle from '../../Constants/GlobalStyle';
 
-interface msg {
-  //sender_name: string;
+interface Alerts {
   event: string;
-  start: number;
-  end: number;
-  description: string;
-  tags: string[];
+  alertDescription: string;
 }
 
-interface messages {
-  messages: msg[];
+interface AlertsForecast {
+  message: Alerts;
 }
-
-export default function Messages({messages}: messages) {
+export default function MessagesForecast({message}: AlertsForecast) {
   return (
-    <View>
-      <Text style={{color: 'white'}}>Messages {messages[0].event}</Text>
+    <View style={GlobalStyle.container}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        {/* <Text
+          style={{
+            marginBottom: 10,
+            fontSize: 16,
+            color: '#FFF',
+            fontWeight: 'bold',
+          }}>
+          Alerts
+        </Text> */}
+        <Text style={{marginBottom: 10, fontSize: 12, color: '#FFF'}}>
+          {message.event}
+        </Text>
+        <Text style={{marginBottom: 10, fontSize: 12, color: '#FFF'}}>
+          {message.alertDescription}
+        </Text>
+      </View>
     </View>
   );
 }

@@ -31,6 +31,7 @@ export default function ItemHourlyForecast({
             .getHours()
             .toLocaleString();
           const rainProb: number = item.pop * 100;
+
           return (
             <View
               style={{
@@ -42,7 +43,12 @@ export default function ItemHourlyForecast({
               key={index}>
               <Text>{date}:00</Text>
               <Image
-                style={{height: 40, width: 40}}
+                style={{
+                  height: 40,
+                  width: 40,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
                 source={{
                   uri: `https://openweathermap.org/img/wn/${item.icon}@2x.png`,
                 }}

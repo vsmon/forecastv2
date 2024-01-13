@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import ItemHourlyForecast from '../ItemHourlyForecast';
+import GlobalStyle from '../../Constants/GlobalStyle';
 
 interface HourlyMain {
   dt: number;
@@ -16,18 +17,7 @@ interface HourlyForecast {
 
 export default function HourlyForecast({hourlyForecast}: HourlyForecast) {
   return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: 'column',
-        padding: 20,
-        borderColor: '#FFF2',
-        borderWidth: 2,
-        margin: 5,
-        borderRadius: 25,
-        marginBottom: 20,
-        backgroundColor: '#FFF1',
-      }}>
+    <View style={[GlobalStyle.container, {alignItems: 'stretch'}]}>
       <View>
         <Text style={{marginBottom: 10, fontSize: 12}}>
           {hourlyForecast[0].description}. Mínima de 22°C

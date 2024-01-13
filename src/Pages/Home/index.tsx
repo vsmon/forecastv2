@@ -7,11 +7,20 @@ import HourlyForecast from '../../components/HourlyForecast';
 
 import ForecastData from '../../../seed.json';
 import Messages from '../../components/MessagesForecast';
+import UVIndex from '../../components/UV Index';
+import Humidity from '../../components/Humidity';
+import Wind from '../../components/Wind';
+import Sunset from '../../components/Sunset';
 
 const {
   current: {
     temp,
     feels_like,
+    uvi,
+    humidity,
+    wind_speed,
+    sunrise,
+    sunset,
     weather: [{description, icon}],
   },
   daily: [
@@ -27,7 +36,13 @@ const {
       pop,
     },
   ],
+  alerts: [{event, description: alertDescription}],
 } = ForecastData;
+
+const alertsForecast = {
+  event,
+  alertDescription,
+};
 
 const currentForecast = {
   temp,
@@ -60,7 +75,10 @@ const dailyForecast = ForecastData.daily.map((item, index) => {
   return data;
 });
 
-const messages = ForecastData.alerts;
+const sunsetForeast = {
+  sunrise: sunrise * 1000,
+  sunset: sunset * 1000,
+};
 
 function Home() {
   return (
@@ -72,8 +90,16 @@ function Home() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <CurrentForecast currentForecast={currentForecast} />
         <HourlyForecast hourlyForecast={hourlyForecast} />
+        <Messages message={alertsForecast} />
         <DailyForecast dailyForecast={dailyForecast} />
-        <Messages messages={messages} />
+        <View style={{flex: 1, flexDirection: 'row'}}>
+          <UVIndex uv={uvi} />
+          <Humidity humidity={humidity} />
+        </View>
+        <View style={{flex: 1, flexDirection: 'row'}}>
+          <Wind wind={wind_speed} />
+          <Sunset sunset={sunsetForeast} />
+        </View>
       </ScrollView>
     </View>
   );
