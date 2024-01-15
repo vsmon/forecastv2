@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Daily {
   dt: number;
+  week: string;
   min: number;
   max: number;
   pop: number;
@@ -16,15 +17,6 @@ interface DailyForecast {
 }
 
 export default function DailyForecast({dailyForecast}: DailyForecast) {
-  const weekDay: Array<string> = [
-    'Domingo',
-    'Segunda',
-    'Terca',
-    'Quarta',
-    'Quinta',
-    'Sexta',
-    'Sabado',
-  ];
   return (
     <View style={[GlobalStyle.container, {alignItems: 'stretch'}]}>
       <View
@@ -34,19 +26,14 @@ export default function DailyForecast({dailyForecast}: DailyForecast) {
           justifyContent: 'space-between',
         }}>
         <Text style={{marginBottom: 5, fontSize: 12}}>Ontem</Text>
-        <Text style={{marginBottom: 5, fontSize: 12, paddingLeft: 5}}>
-          {dailyForecast[0].max.toFixed(0)}°{'  '}
-          {dailyForecast[0].min.toFixed(0)}°
+        <Text style={{marginBottom: 5, fontSize: 14, paddingLeft: 5}}>
+          {dailyForecast[0].max}°{'  '}
+          {dailyForecast[0].min}°
         </Text>
       </View>
       <View style={{backgroundColor: '#FFF2', height: 1, margin: 15}}></View>
 
       {dailyForecast.map((item, index) => {
-        const date: number = Number(
-          new Date(item.dt * 1000).getDay().toLocaleString(),
-        );
-        const rainProb: number = item.pop * 100;
-        console.log(item.pop);
         return (
           <View
             key={index}
@@ -58,7 +45,7 @@ export default function DailyForecast({dailyForecast}: DailyForecast) {
             }}>
             <View style={{flex: 1}}>
               <Text style={{color: '#FFF'}}>
-                {index === 0 ? 'Hoje' : weekDay[date]}
+                {index === 0 ? 'Hoje' : item.week}
               </Text>
             </View>
             <View
@@ -69,7 +56,7 @@ export default function DailyForecast({dailyForecast}: DailyForecast) {
                 justifyContent: 'center',
               }}>
               <Icon
-                name={rainProb <= 10 ? 'water-outline' : 'water'}
+                name={item.pop <= 10 ? 'water-outline' : 'water'}
                 size={28}
                 color={'skyblue'}
               />
@@ -77,7 +64,7 @@ export default function DailyForecast({dailyForecast}: DailyForecast) {
                 style={{
                   flex: 1,
                 }}>
-                <Text> {rainProb.toFixed(0)}%</Text>
+                <Text> {item.pop}%</Text>
               </View>
             </View>
             <View
@@ -93,12 +80,12 @@ export default function DailyForecast({dailyForecast}: DailyForecast) {
               <Text
                 style={{
                   marginBottom: 5,
-                  fontSize: 12,
+                  fontSize: 14,
                   paddingLeft: 5,
                   color: '#FFF',
                 }}>
-                {dailyForecast[0].max.toFixed(0)}°{'  '}
-                {dailyForecast[0].min.toFixed(0)}°
+                {item.max}°{'  '}
+                {item.min}°
               </Text>
             </View>
           </View>

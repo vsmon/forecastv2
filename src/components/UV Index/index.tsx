@@ -11,11 +11,11 @@ export default function UVIndex({uv}: uv) {
   let uvDescription;
   if (uv <= 2) {
     uvDescription = 'Baixo';
-  } else if (uv >= 3 && uv <= 5) {
+  } else if (uv > 2 && uv <= 5) {
     uvDescription = 'Moderado';
-  } else if (uv >= 6 && uv <= 7) {
+  } else if (uv > 5 && uv <= 7) {
     uvDescription = 'Alto';
-  } else if (uv >= 8 && uv <= 10) {
+  } else if (uv > 7 && uv <= 10) {
     uvDescription = 'Muito Alto';
   } else if (uv >= 11) {
     uvDescription = 'Extremo';

@@ -4,13 +4,16 @@ import {View, ScrollView} from 'react-native';
 import CurrentForecast from '../../components/CurrentForecast';
 import DailyForecast from '../../components/DailyForecast';
 import HourlyForecast from '../../components/HourlyForecast';
-
+import {NavigationProp, RouteProp} from '@react-navigation/native';
 import ForecastData from '../../../seed.json';
 import Messages from '../../components/MessagesForecast';
 import UVIndex from '../../components/UV Index';
 import Humidity from '../../components/Humidity';
 import Wind from '../../components/Wind';
 import Sunset from '../../components/Sunset';
+import {StackParamList} from '../../routes';
+import FormatHour from '../../utils/formatHour';
+import WeekDay from '../../utils/weekDay';
 
 const {
   current: {
@@ -45,42 +48,53 @@ const alertsForecast = {
 };
 
 const currentForecast = {
-  temp,
-  feels_like,
+  temp: parseInt(temp.toFixed(0)),
+  feels_like: parseInt(feels_like.toFixed(0)),
   description,
   icon,
-  max,
-  min,
+  max: parseInt(max.toFixed(0)),
+  min: parseInt(min.toFixed(0)),
 };
 
 const hourlyForecast = ForecastData.hourly.map((item, index) => {
   const data = {
-    dt: item.dt,
-    temp: item.temp,
+    dt: FormatHour(item.dt),
+    temp: parseInt(item.temp.toFixed(0)),
     icon: item.weather[0].icon,
-    pop: item.pop,
+    pop: Number((item.pop * 100).toFixed(0)),
     description: item.weather[0].description,
+    min: currentForecast.min,
   };
   return data;
 });
 
 const dailyForecast = ForecastData.daily.map((item, index) => {
+  const dayOfWeek: number = Number(
+    new Date(item.dt * 1000).getDay().toLocaleString(),
+  );
   const data = {
     dt: item.dt,
-    pop: item.pop,
+    week: WeekDay(dayOfWeek),
+    pop: Number((item.pop * 100).toFixed(0)),
     icon: item.weather[0].icon,
-    min: item.temp.min,
-    max: item.temp.max,
+    min: parseInt(item.temp.min.toFixed(0)),
+    max: parseInt(item.temp.max.toFixed(0)),
   };
   return data;
 });
 
 const sunsetForeast = {
-  sunrise: sunrise * 1000,
-  sunset: sunset * 1000,
+  sunrise: FormatHour(sunrise),
+  sunset: FormatHour(sunset),
 };
 
-function Home() {
+interface HomeProps {
+  navigation: NavigationProp<StackParamList>;
+  route: RouteProp<StackParamList>;
+}
+
+function Home({navigation, route}: HomeProps) {
+  console.log(route.params?.params);
   return (
     <View
       style={{

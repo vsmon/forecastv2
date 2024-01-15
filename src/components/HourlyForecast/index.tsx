@@ -4,11 +4,12 @@ import ItemHourlyForecast from '../ItemHourlyForecast';
 import GlobalStyle from '../../Constants/GlobalStyle';
 
 interface HourlyMain {
-  dt: number;
+  dt: string;
   temp: number;
   icon: string;
   pop: number;
   description: string;
+  min: number;
 }
 
 interface HourlyForecast {
@@ -20,7 +21,7 @@ export default function HourlyForecast({hourlyForecast}: HourlyForecast) {
     <View style={[GlobalStyle.container, {alignItems: 'stretch'}]}>
       <View>
         <Text style={{marginBottom: 10, fontSize: 12}}>
-          {hourlyForecast[0].description}. Mínima de 22°C
+          {hourlyForecast[0].description}. Mínima de {hourlyForecast[0].min}°C
         </Text>
       </View>
       <View style={{backgroundColor: '#FFF2', height: 1}}></View>

@@ -4,8 +4,8 @@ import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Sunset {
-  sunrise: number;
-  sunset: number;
+  sunrise: string;
+  sunset: string;
 }
 
 interface SunsetForecast {
@@ -13,23 +13,15 @@ interface SunsetForecast {
 }
 
 export default function Sunset({sunset}: SunsetForecast) {
-  const sunsetConverted: string =
-    new Date(sunset.sunset).getHours().toLocaleString() +
-    ':' +
-    new Date(sunset.sunset).getMinutes().toLocaleString();
-  const sunriseConverted: string =
-    new Date(sunset.sunrise).getHours().toLocaleString() +
-    ':' +
-    new Date(sunset.sunrise).getMinutes().toLocaleString();
   return (
     <View style={[GlobalStyle.container, {flexDirection: 'row'}]}>
       <View style={{marginRight: 25, alignItems: 'center'}}>
         <Icon name="weather-sunset-up" size={42} color={'#FFBB09'} />
-        <Text style={{marginTop: 5}}>{sunriseConverted}</Text>
+        <Text style={{marginTop: 5}}>{sunset.sunrise}</Text>
       </View>
       <View style={{marginLeft: 25, alignItems: 'center'}}>
         <Icon name="weather-sunset-down" size={42} color={'#F18D90'} />
-        <Text style={{marginTop: 5}}>{sunsetConverted}</Text>
+        <Text style={{marginTop: 5}}>{sunset.sunset}</Text>
       </View>
     </View>
   );

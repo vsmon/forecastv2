@@ -1,26 +1,3 @@
-const date = new Date(1705010400 * 1000).getHours().toLocaleString();
+const dt = new Date(1705122000 * 1000).toLocaleTimeString();
 
-console.log(date);
-
-const data = {
-  temp: {
-    max: 10,
-    min: 5,
-  },
-};
-
-const {
-  temp: {min},
-} = data;
-console.log(min);
-
-const ForecastData = require('./seed.json');
-
-const newList = ForecastData.hourly.map(item => {
-  const data = {
-    dt: item.dt,
-    temp: item.temp,
-  };
-  return data;
-});
-console.log(newList);
+console.log(`${dt.split(':')[0]}:${dt.split(':')[1]}`);

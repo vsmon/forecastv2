@@ -1,8 +1,9 @@
 import React from 'react';
 import {View, Text, ScrollView, Image} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface HourlyItem {
-  dt: number;
+  dt: string;
   temp: number;
   pop: number;
   icon: string;
@@ -26,12 +27,6 @@ export default function ItemHourlyForecast({
       }}>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         {hourlyForecast.map((item, index) => {
-          const temperature: string = item.temp.toFixed(0);
-          const date: string = new Date(item.dt * 1000)
-            .getHours()
-            .toLocaleString();
-          const rainProb: number = item.pop * 100;
-
           return (
             <View
               style={{
@@ -41,7 +36,7 @@ export default function ItemHourlyForecast({
                 alignItems: 'center',
               }}
               key={index}>
-              <Text>{date}:00</Text>
+              <Text>{item.dt}</Text>
               <Image
                 style={{
                   height: 40,
@@ -53,9 +48,30 @@ export default function ItemHourlyForecast({
                   uri: `https://openweathermap.org/img/wn/${item.icon}@2x.png`,
                 }}
               />
-              <Text>{temperature}°</Text>
-              <Text>G</Text>
-              <Text>{rainProb}%</Text>
+              <Text>{item.temp}°</Text>
+              {/* <Text>G</Text> */}
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  //backgroundColor: 'red',
+                }}>
+                <Icon
+                  name={item.pop <= 10 ? 'water-outline' : 'water'}
+                  size={20}
+                  color={'skyblue'}
+                />
+                <Text
+                  style={
+                    {
+                      /* backgroundColor: 'blue' */
+                    }
+                  }>
+                  {item.pop}%
+                </Text>
+              </View>
             </View>
           );
         })}

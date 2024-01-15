@@ -40,8 +40,8 @@ export default function CurrentForecast({currentForecast}: CurrentForecast) {
         </Text>
         <Text style={{marginBottom: 5, fontSize: 14}}>Sorocaba</Text>
         <Text style={{fontSize: 11}}>
-          {currentForecast.max.toFixed(0)}°/{currentForecast.min.toFixed(0)}° {}
-          Sensação térmica de {currentForecast.feels_like.toFixed(0)}°
+          {currentForecast.max}°/{currentForecast.min}° {}
+          Sensação térmica de {currentForecast.feels_like}°
         </Text>
       </View>
       <View
