@@ -54,6 +54,7 @@ const currentForecast = {
   icon,
   max: parseInt(max.toFixed(0)),
   min: parseInt(min.toFixed(0)),
+  city: '',
 };
 
 const hourlyForecast = ForecastData.hourly.map((item, index) => {
@@ -94,7 +95,7 @@ interface HomeProps {
 }
 
 function Home({navigation, route}: HomeProps) {
-  console.log(route.params?.params);
+  console.log('HOME============', route.params?.params);
   return (
     <View
       style={{
@@ -102,7 +103,12 @@ function Home({navigation, route}: HomeProps) {
         backgroundColor: '#000',
       }}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <CurrentForecast currentForecast={currentForecast} />
+        <CurrentForecast
+          currentForecast={{
+            ...currentForecast,
+            city: route.params?.params.name,
+          }}
+        />
         <HourlyForecast hourlyForecast={hourlyForecast} />
         <Messages message={alertsForecast} />
         <DailyForecast dailyForecast={dailyForecast} />

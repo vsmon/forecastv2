@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {storeCity} from '../../Database/AsyncStorage';
-import getCitiesData from '../../api/GetCitiesData';
+import getCitiesData from '../../api/getCitiesData';
 import {Locations} from '../../types/types';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
@@ -56,7 +56,8 @@ export default function SearchLocation({navigation}: SearchLocation) {
             <Icon
               name="map-marker"
               onPress={() => {
-                storeCity(item);
+                console.log(cities);
+                storeCity(item, item.name + item.state);
                 navigation.navigate('LocationManager');
               }}
               size={22}>

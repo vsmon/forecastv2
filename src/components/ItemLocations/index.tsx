@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Pressable} from 'react-native';
+import {View, Text, Pressable, Alert} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Locations} from '../../types/types';
@@ -8,37 +8,45 @@ import {StackParamList} from '../../routes';
 interface ItemLocations {
   city: Locations;
   navigation: NavigationProp<StackParamList>;
+  onPress: any;
+  starColor: string;
 }
 
-export default function ItemLocations({city, navigation}: ItemLocations) {
+export default function ItemLocations({
+  city,
+  navigation,
+  onPress,
+  starColor,
+}: ItemLocations) {
   return (
-    <View>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: '#171517',
+        justifyContent: 'center',
+        //padding: 25,
+        margin: 5,
+        marginBottom: 15,
+        borderRadius: 15,
+      }}>
       <Pressable
         onPress={() => {
           navigation.navigate('Home', {params: city});
         }}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: '#171517',
-            justifyContent: 'center',
-            padding: 25,
-            margin: 5,
-            marginBottom: 15,
-            borderRadius: 15,
-          }}>
+        <View style={{padding: 25}}>
+          <Icon name="map-marker" size={22} color={'#FFF'} />
           <View
             style={{
               flex: 1,
               flexDirection: 'row',
-              backgroundColor: '#171517',
               alignItems: 'center',
+              justifyContent: 'space-between',
             }}>
-            <Icon name="map-marker" size={22} color={'#FFF'} />
             <Text style={{fontSize: 18, color: '#FFF'}}>{city.name}</Text>
+            <Icon name="star" size={22} color={starColor} onPress={onPress} />
           </View>
           {city.state ? (
-            <Text style={{fontSize: 14}}>
+            <Text style={{fontSize: 12}}>
               {city.state},{city.country}
             </Text>
           ) : (

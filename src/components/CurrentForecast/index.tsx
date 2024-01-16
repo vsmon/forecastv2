@@ -9,6 +9,7 @@ interface Current {
   icon: string;
   max: number;
   min: number;
+  city: string;
 }
 
 interface CurrentForecast {
@@ -38,7 +39,9 @@ export default function CurrentForecast({currentForecast}: CurrentForecast) {
         <Text style={{marginBottom: 30, fontSize: 18}}>
           {currentForecast.description}
         </Text>
-        <Text style={{marginBottom: 5, fontSize: 14}}>Sorocaba</Text>
+        <Text style={{marginBottom: 5, fontSize: 14}}>
+          {currentForecast.city}
+        </Text>
         <Text style={{fontSize: 11}}>
           {currentForecast.max}°/{currentForecast.min}° {}
           Sensação térmica de {currentForecast.feels_like}°

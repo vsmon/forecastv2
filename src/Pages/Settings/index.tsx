@@ -4,7 +4,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Locations} from '../../types/types';
 
-import {getStoredCities} from '../../Database/AsyncStorage';
+import {getAllStoredCities} from '../../Database/AsyncStorage';
 
 /* interface Locations {
   name: string;
@@ -24,7 +24,7 @@ export default function Settings({navigation}: any) {
   );
 
   async function handleReload() {
-    const cities: Locations[] | undefined = await getStoredCities();
+    const cities: Locations[] | undefined = await getAllStoredCities();
     setLocations(cities);
   }
 
