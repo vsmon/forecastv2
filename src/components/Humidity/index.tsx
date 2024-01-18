@@ -4,7 +4,7 @@ import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface humidity {
-  humidity: number;
+  humidity: number | undefined;
 }
 
 export default function Humidity({humidity}: humidity) {

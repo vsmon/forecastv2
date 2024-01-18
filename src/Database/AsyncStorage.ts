@@ -37,7 +37,7 @@ async function storeCity(value: Locations, key: string ) {
     }
   }
 
-  async function getByKeyStoredCities(key:string) {
+  async function getByKeyStoredCities(key:string): Promise<Locations|undefined> {
     try {
 
       const response: string|any = await AsyncStorage.getItem(key);

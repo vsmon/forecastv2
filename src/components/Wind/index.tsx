@@ -4,7 +4,7 @@ import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface wind {
-  wind: number;
+  wind: number | undefined;
 }
 
 export default function Wind({wind}: wind) {
@@ -12,7 +12,7 @@ export default function Wind({wind}: wind) {
     <View style={GlobalStyle.container}>
       <Icon name="weather-windy" size={32} />
       <Text style={{color: '#FFF'}}>Vento</Text>
-      <Text>{wind.toFixed(0)} km/h</Text>
+      <Text>{wind} km/h</Text>
     </View>
   );
 }

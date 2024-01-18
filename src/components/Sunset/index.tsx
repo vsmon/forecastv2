@@ -4,12 +4,12 @@ import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Sunset {
-  sunrise: string;
-  sunset: string;
+  sunrise: string | '';
+  sunset: string | '';
 }
 
 interface SunsetForecast {
-  sunset: Sunset;
+  sunset: Sunset | any;
 }
 
 export default function Sunset({sunset}: SunsetForecast) {
