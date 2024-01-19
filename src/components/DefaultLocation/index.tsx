@@ -3,7 +3,7 @@ import {View, Text, Pressable, Alert} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Locations} from '../../types/types';
-import {StackParamList} from '../../routes';
+import {StackParamList} from '../../Routes/routes';
 
 interface DefaultLocations {
   city: Locations | undefined;

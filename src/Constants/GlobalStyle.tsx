@@ -13,4 +13,7 @@ export default StyleSheet.create({
     backgroundColor: '#171517',
     //backgroundColor: '#FFF',
   },
+  textColor: {
+    color: '#FFF2',
+  },
 });

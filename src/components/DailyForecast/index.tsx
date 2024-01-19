@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, Image} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {IDailyForecast} from '../../Pages/Home';
 
 interface Daily {
   dt: number;
@@ -13,8 +14,8 @@ interface Daily {
   moon_phase: number;
 }
 
-interface DailyForecast {
-  dailyForecast: Daily[] | any;
+interface IDaily {
+  dailyForecast: IDailyForecast[] | any;
 }
 
 /* enum MoonPhase {
@@ -75,7 +76,7 @@ function MoonPhase(moonPhase: number): string {
   }
   return iconName;
 }
-export default function DailyForecast({dailyForecast}: DailyForecast) {
+export default function DailyForecast({dailyForecast}: IDaily) {
   return (
     <View style={[GlobalStyle.container, {alignItems: 'stretch'}]}>
       <View

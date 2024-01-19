@@ -4,7 +4,7 @@ import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface uv {
-  uv: number | any;
+  uv: number;
 }
 
 export default function UVIndex({uv}: uv) {

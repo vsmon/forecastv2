@@ -1,5 +1,11 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {View, ScrollView, RefreshControl} from 'react-native';
+import React, {ErrorInfo, useCallback, useEffect, useState} from 'react';
+import {
+  View,
+  ScrollView,
+  RefreshControl,
+  ActivityIndicator,
+  Modal,
+} from 'react-native';
 
 import CurrentForecast from '../../components/CurrentForecast';
 import DailyForecast from '../../components/DailyForecast';
@@ -15,13 +21,14 @@ import UVIndex from '../../components/UV Index';
 import Humidity from '../../components/Humidity';
 import Wind from '../../components/Wind';
 import Sunset from '../../components/Sunset';
-import {StackParamList} from '../../routes';
+import {StackParamList} from '../../Routes/routes';
 import FormatHour from '../../utils/formatHour';
 import WeekDay from '../../utils/weekDay';
 import {Locations} from '../../types/types';
 import getForecastData from '../../api/getForecastData';
 import {getByKeyStoredCities} from '../../Database/AsyncStorage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import toastMessage from '../../utils/toastMessage';
 
 interface HomeProps {
   navigation: NavigationProp<StackParamList>;
@@ -47,44 +54,52 @@ export interface ICurrentForecast {
   alerts?: [{event: string; alertDescription: string}];
 }
 
-interface IHourlyForecast {
-  dt: number;
-  temp: number;
-  icon: string;
-  pop: number;
-  description: string;
-  min: number;
-  hourly: Array<IHourlyForecast>;
-  weather: [{icon: string; description: string}];
-}
-
-interface IDailyForecast {
-  dt: number;
-  temp: {min: number; max: number};
-  week: string;
-  pop: number;
-  icon: string;
-  min: number;
-  max: number;
-  daily: Array<IDailyForecast>;
-  weather: [{icon: string}];
-  moon_phase: number;
-}
-
-interface IAlertsForecast {
+export interface IAlertsForecast {
   alertEvent: string | undefined;
   alertDescription: string | undefined;
   alerts?: [{event: string; description: string}];
 }
 
-interface ISunsetForeast {
+export interface ISunsetForeast {
   sunrise: string;
   sunset: string;
 }
 
-function Current(
-  ForecastData: ICurrentForecast | any,
-): Promise<ICurrentForecast> {
+interface IForecastData {
+  current: {
+    dt: number;
+    temp: number;
+    feels_like: number;
+    uvi: number;
+    humidity: number;
+    wind_speed: number;
+    sunrise: number;
+    sunset: number;
+    weather: [{description: string; icon: string}];
+  };
+  daily: [
+    {
+      dt: number;
+      pop: number;
+      icon: string;
+      moon_phase: number;
+      temp: {max: number; min: number};
+      weather: [{icon: string}];
+    },
+  ];
+  hourly: [
+    {
+      dt: number;
+      temp: number;
+      weather: [{icon: string; description: string}];
+      pop: number;
+      icon: string;
+    },
+  ];
+  alerts?: [{event: string; description: string}];
+}
+
+function Current(ForecastData: IForecastData): Promise<ICurrentForecast> {
   const {
     current: {
       dt: dtCurrent,
@@ -110,19 +125,15 @@ function Current(
         pop,
       },
     ],
-    //alerts: [{event, description: alertDescription}],
   } = ForecastData;
   const currentForecast: ICurrentForecast = {
     dt: FormatHour(dtCurrent),
-    temp, //: parseInt(temp.toFixed(0)),
+    temp: Number(temp.toFixed(0)),
     feels_like: parseInt(feels_like.toFixed(0)),
     description,
     icon,
     max: parseInt(max.toFixed(0)),
     min: parseInt(min.toFixed(0)),
-    //city:'',
-    //event,
-    //alertDescription,
     sunrise,
     sunset,
     uvi,
@@ -132,25 +143,46 @@ function Current(
   return Promise.resolve(currentForecast);
 }
 
-function Hourly(ForecastData: IHourlyForecast): Promise<IHourlyForecast> {
-  const hourlyList: IHourlyForecast | any = ForecastData.hourly.map(
-    (item, index) => {
+export interface IHourlyForecast {
+  dt: string;
+  temp: number;
+  icon: string;
+  pop: number;
+  description: string;
+  min: string;
+  max: string;
+}
+function Hourly(ForecastData: IForecastData): Promise<IHourlyForecast[]> {
+  const min: string = ForecastData.daily[0].temp.min.toFixed(0);
+  const max: string = ForecastData.daily[0].temp.max.toFixed(0);
+  const hourlyList: IHourlyForecast[] = ForecastData.hourly.map(
+    (item, index): IHourlyForecast => {
       return {
         dt: FormatHour(item.dt),
         temp: parseInt(item.temp.toFixed(0)),
         icon: item.weather[0].icon,
         pop: Number((item.pop * 100).toFixed(0)),
         description: item.weather[0].description,
-        min: 99,
+        min,
+        max,
       };
     },
   );
   return Promise.resolve(hourlyList);
 }
 
-function Daily(ForecastData: IDailyForecast): Promise<IDailyForecast> {
-  const dailyList: IDailyForecast | any = ForecastData.daily.map(
-    (item, index) => {
+export interface IDailyForecast {
+  dt: number;
+  min: number;
+  max: number;
+  week: string;
+  pop: number;
+  icon: string;
+  moon_phase: number;
+}
+function Daily(ForecastData: IForecastData): Promise<IDailyForecast[]> {
+  const dailyList: IDailyForecast[] = ForecastData.daily.map(
+    (item, index): IDailyForecast => {
       const dayOfWeek: number = Number(
         new Date(item.dt * 1000).getDay().toLocaleString(),
       );
@@ -168,7 +200,7 @@ function Daily(ForecastData: IDailyForecast): Promise<IDailyForecast> {
   return Promise.resolve(dailyList);
 }
 
-function Alerts(ForecastData: IAlertsForecast): IAlertsForecast {
+function Alerts(ForecastData: IForecastData): IAlertsForecast {
   if (ForecastData.alerts) {
     console.log('ALERT FUNCTION===========', 'SIM');
     const {event, description} = ForecastData.alerts[0] || {};
@@ -182,12 +214,11 @@ function Alerts(ForecastData: IAlertsForecast): IAlertsForecast {
 }
 
 function Home({navigation, route}: HomeProps) {
-  const [currentForecast, setCurrentForecast] =
-    useState<ICurrentForecast | null>(null);
-  const [hourlyForecast, setHourlyForecast] = useState<IHourlyForecast | null>(
-    null,
-  );
-  const [dailyForecast, setDailyForecast] = useState<IDailyForecast | null>(
+  const [currentForecast, setCurrentForecast] = useState<ICurrentForecast>();
+  const [hourlyForecast, setHourlyForecast] = useState<
+    IHourlyForecast[] | null
+  >(null);
+  const [dailyForecast, setDailyForecast] = useState<IDailyForecast[] | null>(
     null,
   );
   const [alertsForecast, setAlertsForecast] = useState<IAlertsForecast | null>(
@@ -215,7 +246,7 @@ function Home({navigation, route}: HomeProps) {
       setCurrentForecast(currentWithCity);
       console.log('PASSEI CURRENT==========');
 
-      const hourly: IHourlyForecast = await Hourly(ForecastData);
+      const hourly: IHourlyForecast[] = await Hourly(ForecastData);
       //console.log('HOURLY====================', hourly);
       setHourlyForecast(hourly);
       console.log('PASSEI HOURLY==========');
@@ -224,7 +255,7 @@ function Home({navigation, route}: HomeProps) {
       setAlertsForecast(alerts);
       console.log('PASSEI ALERTS==========');
 
-      const daily: IDailyForecast = await Daily(ForecastData);
+      const daily: IDailyForecast[] = await Daily(ForecastData);
       setDailyForecast(daily);
       console.log('PASSEI DAILY==========');
 
@@ -235,10 +266,13 @@ function Home({navigation, route}: HomeProps) {
       setSunsetForeast(sunset);
       console.log('PASSEI SUNSET==========');
 
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 5000);
     } catch (error) {
-      //setIsError(true);
+      setIsError(true);
       console.log(error);
+      toastMessage(JSON.stringify(error));
     }
   }
 
@@ -274,15 +308,15 @@ function Home({navigation, route}: HomeProps) {
       <View
         style={{
           flex: 1,
-          backgroundColor: '#5A7DAB',
+          backgroundColor: '#000',
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <Icon
-          name={isError ? 'network-off-outline' : 'cog'}
-          size={44}
-          color={'#FFF9'}
-        />
+        {isError ? (
+          <Icon name={'network-off-outline'} size={44} color={'#FFF9'} />
+        ) : (
+          <ActivityIndicator size="large" color="#FFF" />
+        )}
       </View>
     );
   }
@@ -293,21 +327,36 @@ function Home({navigation, route}: HomeProps) {
         flex: 1,
         backgroundColor: '#000',
       }}>
+      <Modal transparent={false} visible={isLoading}>
+        <View
+          style={{
+            flex: 1,
+            //backgroundColor: '#5A7DAB',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          {isError ? (
+            <Icon name={'network-off-outline'} size={44} color={'#FFF9'} />
+          ) : (
+            <ActivityIndicator size="large" color="#FFF" />
+          )}
+        </View>
+      </Modal>
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={handleReload} />
         }>
-        <CurrentForecast currentForecast={currentForecast} />
+        <CurrentForecast currentForecast={currentForecast!} />
         <HourlyForecast hourlyForecast={hourlyForecast} />
         <Messages message={alertsForecast} />
         <DailyForecast dailyForecast={dailyForecast} />
         <View style={{flex: 1, flexDirection: 'row'}}>
-          <UVIndex uv={currentForecast?.uvi} />
-          <Humidity humidity={currentForecast?.humidity} />
+          <UVIndex uv={currentForecast!.uvi} />
+          <Humidity humidity={currentForecast!.humidity} />
         </View>
         <View style={{flex: 1, flexDirection: 'row'}}>
-          <Wind wind={currentForecast?.wind_speed} />
+          <Wind wind={currentForecast!.wind_speed} />
           <Sunset sunset={sunsetForecast} />
         </View>
       </ScrollView>

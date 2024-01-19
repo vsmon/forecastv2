@@ -2,16 +2,12 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {IAlertsForecast} from '../../Pages/Home';
 
-interface Alerts {
-  event: string;
-  alertDescription: string;
+interface IAlerts {
+  message: IAlertsForecast | any;
 }
-
-interface AlertsForecast {
-  message: Alerts | any;
-}
-export default function MessagesForecast({message}: AlertsForecast) {
+export default function MessagesForecast({message}: IAlerts) {
   return (
     <View style={GlobalStyle.container}>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>

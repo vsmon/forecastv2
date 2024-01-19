@@ -41,7 +41,7 @@ export default function LocationManager({navigation, route}: any) {
         style={{
           flexDirection: 'row',
           justifyContent: 'flex-end',
-          paddingRight: 10,
+          paddingRight: 25,
         }}>
         <Icon
           name="plus"
@@ -49,7 +49,7 @@ export default function LocationManager({navigation, route}: any) {
           color={'#FFF'}
           onPress={() => navigation.navigate('SearchLocation')}
         />
-        <Icon
+        {/* <Icon
           name="delete-sweep"
           size={32}
           color={'#FFF'}
@@ -62,12 +62,6 @@ export default function LocationManager({navigation, route}: any) {
 
             console.log('Done.');
           }}
-        />
-        {/* <Icon
-          name="reload"
-          size={32}
-          color={'#FFF'}
-          onPress={() => handleLoadCities}
         /> */}
       </View>
       <View>
