@@ -31,7 +31,9 @@ export default function ItemLocations({
       }}>
       <Pressable
         onPress={() => {
-          navigation.navigate('Home', {params: city});
+          navigation.navigate('Home', {
+            params: {city, screenName: 'ItemLocations'},
+          });
         }}>
         <View style={{padding: 25}}>
           <Icon name="map-marker" size={22} color={'#FFF'} />

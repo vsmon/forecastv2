@@ -11,7 +11,7 @@ export default function Wind({wind}: wind) {
   return (
     <View style={GlobalStyle.container}>
       <Icon name="weather-windy" size={32} />
-      <Text style={{color: '#FFF'}}>Vento</Text>
+      <Text style={{color: '#FFF', marginTop: 10}}>Vento</Text>
       <Text>{wind} km/h</Text>
     </View>
   );

@@ -23,7 +23,13 @@ export default function UVIndex({uv}: uv) {
   return (
     <View style={GlobalStyle.container}>
       <Icon name="sun-wireless" size={32} color={'#f7e708'} />
-      <Text style={{color: '#FFF'}}>Índice UV</Text>
+      <Text
+        style={{
+          color: '#FFF',
+          marginTop: 10,
+        }}>
+        Índice UV
+      </Text>
       <Text>{uvDescription}</Text>
     </View>
   );

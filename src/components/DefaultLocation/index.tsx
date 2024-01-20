@@ -3,7 +3,7 @@ import {View, Text, Pressable, Alert} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Locations} from '../../types/types';
-import {StackParamList} from '../../Routes/routes';
+import {StackParamList} from '../../Routes/Stack';
 
 interface DefaultLocations {
   city: Locations | undefined;
@@ -22,7 +22,9 @@ export default function DefaultLocation({city, navigation}: DefaultLocations) {
       }}>
       <Pressable
         onPress={() => {
-          navigation.navigate('Home', {params: city});
+          navigation.navigate('Home', {
+            params: {city, screenName: 'DefaultLocation'},
+          });
         }}>
         <View style={{padding: 25}}>
           <View>

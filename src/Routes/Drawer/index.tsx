@@ -21,7 +21,10 @@ export default function DrawerNavigator() {
       <Drawer.Screen
         name="StackScreen"
         component={StackScreen}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          drawerHideStatusBarOnOpen: false,
+        }}
       />
     </Drawer.Navigator>
   );

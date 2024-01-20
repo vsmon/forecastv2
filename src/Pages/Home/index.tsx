@@ -21,7 +21,7 @@ import UVIndex from '../../components/UV Index';
 import Humidity from '../../components/Humidity';
 import Wind from '../../components/Wind';
 import Sunset from '../../components/Sunset';
-import {StackParamList} from '../../Routes/routes';
+import {StackParamList} from '../../Routes/Stack';
 import FormatHour from '../../utils/formatHour';
 import WeekDay from '../../utils/weekDay';
 import {Locations} from '../../types/types';
@@ -229,10 +229,12 @@ function Home({navigation, route}: HomeProps) {
   );
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
-  const [currentCity, setCurrentCity] = useState<string | undefined>('');
+  const [activityIndicator, setActivityIndicator] = useState(false);
 
   async function getForecast(city: Locations) {
     try {
+      //setIsLoading(true);
+      setActivityIndicator(true);
       const ForecastData = await getForecastData(city);
       //console.log('FETCH2============', ForecastData.current);
       console.log('CURRENT CITY==========', city);
@@ -266,9 +268,8 @@ function Home({navigation, route}: HomeProps) {
       setSunsetForeast(sunset);
       console.log('PASSEI SUNSET==========');
 
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 5000);
+      setIsLoading(false);
+      setActivityIndicator(false);
     } catch (error) {
       setIsError(true);
       console.log(error);
@@ -282,21 +283,27 @@ function Home({navigation, route}: HomeProps) {
     return city;
   }
 
+  const cityByParam: Locations = route.params?.params.city;
+  const screenOrigin: string = route.params?.params.screenName;
+  //navigation.setParams({params: {screenOrigin: undefined}});
   const handleReload = async () => {
-    const cityByParam: Locations = route.params?.params;
-    console.log('CITY PARAM', cityByParam);
+    //console.log('CITY PARAM', cityByParam);
     const defaultCity: Locations | undefined = await getDefaultCity();
-    console.log('CITY DEFAULT', defaultCity);
-
-    if (defaultCity !== undefined) {
-      await getForecast(defaultCity);
+    //console.log('CITY DEFAULT', defaultCity);
+    let city: Locations | undefined = undefined;
+    if (screenOrigin === undefined) {
+      city = defaultCity;
+    } else {
+      city = cityByParam;
     }
+    await getForecast(city);
+    console.log('SCREEN NAME=====', screenOrigin);
   };
 
   useFocusEffect(
     useCallback(() => {
       handleReload();
-    }, []),
+    }, [cityByParam]),
   );
 
   useEffect(() => {
@@ -327,7 +334,7 @@ function Home({navigation, route}: HomeProps) {
         flex: 1,
         backgroundColor: '#000',
       }}>
-      <Modal transparent={false} visible={isLoading}>
+      {/* <Modal transparent={false} visible={isLoading}>
         <View
           style={{
             flex: 1,
@@ -341,13 +348,20 @@ function Home({navigation, route}: HomeProps) {
             <ActivityIndicator size="large" color="#FFF" />
           )}
         </View>
-      </Modal>
+      </Modal> */}
+      <View>
+        <CurrentForecast currentForecast={currentForecast!} />
+      </View>
+      {activityIndicator ? (
+        <View>
+          <ActivityIndicator size="large" color="#FFF" />
+        </View>
+      ) : null}
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={handleReload} />
         }>
-        <CurrentForecast currentForecast={currentForecast!} />
         <HourlyForecast hourlyForecast={hourlyForecast} />
         <Messages message={alertsForecast} />
         <DailyForecast dailyForecast={dailyForecast} />

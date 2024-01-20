@@ -60,15 +60,14 @@ export default function ItemHourlyForecast({
                 }}>
                 <Icon
                   name={item.pop <= 10 ? 'water-outline' : 'water'}
-                  size={20}
+                  size={18}
                   color={'skyblue'}
                 />
                 <Text
-                  style={
-                    {
-                      /* backgroundColor: 'blue' */
-                    }
-                  }>
+                  style={{
+                    /* backgroundColor: 'blue' */
+                    fontSize: 12,
+                  }}>
                   {item.pop}%
                 </Text>
               </View>

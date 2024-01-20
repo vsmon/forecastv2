@@ -8,12 +8,12 @@ export default async function getForecastData(city:Locations): Promise<any> {
     const URL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&lang=pt_br&exclude=minutely&appid=f7e324eced811885a4c794141a933b13`
     console.log('URL=============', URL)
     try {
-      /* const response = await fetch(URL
+      const response = await fetch(URL
         ,{method:'GET', headers:{Accept:'application/json', 'Content-Type': 'application/json'}}
       );
       const json: Locations[] = await response.json();
       //console.log('FETCH===========', json)
-      return Promise.resolve(json) */
+      return Promise.resolve(json)
 
       const seedForecast = seed
       return Promise.resolve({...seedForecast, city})

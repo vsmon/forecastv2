@@ -18,7 +18,7 @@ async function storeCity(value: Locations, key: string ) {
     }
   }
 
-  async function getAllStoredCities() {
+  async function getAllStoredCities(): Promise<Locations[]> {
     let citiesList: Locations[] = [];
     try {
       const keys = await AsyncStorage.getAllKeys();
@@ -30,24 +30,33 @@ async function storeCity(value: Locations, key: string ) {
           citiesList.push(json);        
         }
       });
+      if(keys === null){
+        throw new Error("Nenhum registro encontrado");
+        
+      }
+      return Promise.resolve<Locations[]>(citiesList) 
       //console.log('API ALL KEYS===========', citiesList)
-      return Promise.resolve(citiesList) 
     } catch (e: any) {
       console.log('Error read keys', e.message);
+      return Promise.resolve(e)
     }
   }
 
-  async function getByKeyStoredCities(key:string): Promise<Locations|undefined> {
+async function getByKeyStoredCities(key:string): Promise<Locations> {
     try {
 
-      const response: string|any = await AsyncStorage.getItem(key);
+      const response: string | null= await AsyncStorage.getItem(key);
       const json: Locations = response != null ? JSON.parse(response) : null; //JSON.parse(response);
-
-      //console.log('API BY KEY===========', json)
-    
-      return Promise.resolve(json) 
+      
+      if(json === null){
+        throw new Error("Nenhum registro encontrado com e key: " + key);
+        
+      }
+      //console.log('API BY KEY===========', json)        
+      return Promise.resolve<Locations>(json) 
     } catch (e: any) {
-      console.log('Error read keys', e.message);
+      //console.log('Error read keys', e);
+      return Promise.resolve(e)
     }
   }
 

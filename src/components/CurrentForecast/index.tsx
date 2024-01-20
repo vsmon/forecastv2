@@ -13,6 +13,8 @@ export default function CurrentForecast({currentForecast}: ICurrent) {
       style={[
         GlobalStyle.container,
         {
+          flex: 0,
+          backgroundColor: '#000',
           flexDirection: 'row',
           justifyContent: 'space-between',
           padding: 0,
@@ -37,7 +39,7 @@ export default function CurrentForecast({currentForecast}: ICurrent) {
           {currentForecast.city}
         </Text>
         <Text style={{fontSize: 11}}>
-          {currentForecast.max}°/{currentForecast.min}° {}
+          {currentForecast.max}° / {currentForecast.min}° {}
           Sensação térmica de {currentForecast.feels_like}°
         </Text>
       </View>
