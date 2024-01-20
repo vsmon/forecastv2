@@ -36,7 +36,7 @@ export default function CurrentForecast({currentForecast}: ICurrent) {
           {new Date().toLocaleString()}
         </Text>
         <Text style={{marginBottom: 5, fontSize: 14}}>
-          {currentForecast.city}
+          {currentForecast.city?.name}, {currentForecast.city?.country}
         </Text>
         <Text style={{fontSize: 11}}>
           {currentForecast.max}° / {currentForecast.min}° {}

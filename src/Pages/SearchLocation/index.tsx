@@ -14,7 +14,6 @@ import {storeCity} from '../../Database/AsyncStorage';
 import getCitiesData from '../../api/getCitiesData';
 import {Locations} from '../../types/types';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Platform} from 'react-native';
 
 type StackParamList = {
   Home: undefined;
@@ -31,9 +30,24 @@ export default function SearchLocation({navigation}: SearchLocation) {
   const [city, setCity] = useState('');
   const [cities, setCities] = useState<Locations[]>([]);
 
+  function fullCountryName(abreviateName: string) {
+    let regionNames = new Intl.DisplayNames(['pt-BR'], {type: 'region'});
+    return regionNames.of(abreviateName); // "United States"
+  }
+
   async function handleGetCities() {
-    const resp: Locations[] | any = await getCitiesData(city);
-    setCities(resp);
+    try {
+      const resp: Locations[] = await getCitiesData(city);
+
+      /* let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
+      regionNames.of('US'); // "United States"
+
+      console.log(regionNames.of('US')); */
+
+      setCities(resp);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -60,6 +74,7 @@ export default function SearchLocation({navigation}: SearchLocation) {
           margin: 10,
         }}>
         <FlatList
+          keyboardShouldPersistTaps="handled"
           ItemSeparatorComponent={() => {
             return (
               <View
@@ -91,7 +106,7 @@ export default function SearchLocation({navigation}: SearchLocation) {
                   <Icon name="map-marker" size={22} />
                   <Text style={{fontSize: 18, color: '#FFF'}}>{item.name}</Text>
                   <Text style={{fontSize: 14, color: '#FFF'}}>
-                    {item.state}, {item.country}
+                    {item.state}, {item.country} - {item.country}
                   </Text>
                 </Pressable>
               </View>

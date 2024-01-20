@@ -5,6 +5,8 @@ import {
   RefreshControl,
   ActivityIndicator,
   Modal,
+  AppState,
+  AppStateStatus,
 } from 'react-native';
 
 import CurrentForecast from '../../components/CurrentForecast';
@@ -43,7 +45,7 @@ export interface ICurrentForecast {
   icon: string;
   max: number;
   min: number;
-  city?: string;
+  city?: Locations;
   event?: string;
   alertDescription?: string;
   sunrise: number;
@@ -242,7 +244,7 @@ function Home({navigation, route}: HomeProps) {
       const current: ICurrentForecast = await Current(ForecastData);
       const currentWithCity: ICurrentForecast = {
         ...current,
-        city: city.name,
+        city,
       };
       //console.log('CURRENT============', currentWithCity);
       setCurrentForecast(currentWithCity);
@@ -286,7 +288,8 @@ function Home({navigation, route}: HomeProps) {
   const cityByParam: Locations = route.params?.params.city;
   const screenOrigin: string = route.params?.params.screenName;
   //navigation.setParams({params: {screenOrigin: undefined}});
-  const handleReload = async () => {
+
+  const handleReload = async (appState?: AppStateStatus) => {
     //console.log('CITY PARAM', cityByParam);
     const defaultCity: Locations | undefined = await getDefaultCity();
     //console.log('CITY DEFAULT', defaultCity);
@@ -308,6 +311,15 @@ function Home({navigation, route}: HomeProps) {
 
   useEffect(() => {
     handleReload();
+
+    const appStateSubscription = AppState.addEventListener(
+      'change',
+      appState => {
+        appState === 'active' ? handleReload() : null;
+      },
+    );
+
+    return () => appStateSubscription.remove();
   }, []);
 
   if (isLoading) {
