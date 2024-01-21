@@ -10,7 +10,7 @@ import {
   useDrawerStatus,
   DrawerContentComponentProps,
 } from '@react-navigation/drawer';
-import {countries} from 'country-data';
+import {ScrollView} from 'react-native-gesture-handler';
 
 export default function Settings({navigation}: DrawerContentComponentProps) {
   const [locations, setLocations] = useState<Locations[]>([]);
@@ -30,18 +30,24 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
   }, [useDrawerStatus()]);
 
   return (
-    <View style={{flex: 1, backgroundColor: '#171517', padding: 25}}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: '#171517',
+        padding: 25,
+      }}>
       <View
         style={{
-          flex: 2,
-          /* backgroundColor: 'red', */
+          flex: 1,
+          backgroundColor: '#171517',
+          justifyContent: 'center',
+          //padding: 25,
+          margin: 5,
+          marginBottom: 15,
+          borderRadius: 15,
         }}>
         <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 25,
-            }}>
+          <View style={{flexDirection: 'row', marginBottom: 20}}>
             <Icon name="star" size={22} color={'#e7ff0d'} />
             <Text style={{fontSize: 18, marginLeft: 10}}>
               Localização Favorita
@@ -66,8 +72,6 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
           </Pressable>
           {/* <DefaultLocation city={defaultLocation} navigation={navigation} /> */}
         </View>
-      </View>
-      <View style={{flex: 12 /* backgroundColor: 'blue' */}}>
         <View style={{flexDirection: 'row', marginBottom: 20}}>
           <Icon name="map-marker-multiple" size={22} color={'#e7ff0d'} />
           <Text style={{fontSize: 18, marginLeft: 10}}>
@@ -93,44 +97,43 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
                     })
                   }>
                   {/* <Icon name="map-marker" size={22} /> */}
-                  <View style={{justifyContent: 'center', marginLeft: 20}}>
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        //marginLeft: 10,
-                        color: '#FFF',
-                      }}>
-                      {item.name}
-                    </Text>
-                    {item.state ? (
-                      <Text style={{fontSize: 12}}>
-                        {item.state}, {countries[item.country].name}
-                      </Text>
-                    ) : (
-                      <Text style={{fontSize: 14}}>
-                        {countries[item.country].name}
-                      </Text>
-                    )}
-                  </View>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      marginLeft: 10,
+                      color: '#FFF',
+                    }}>
+                    {item.name}, {item.country}
+                  </Text>
                 </Pressable>
               </View>
             )}
           />
         </View>
-      </View>
-      <View style={{flex: 1 /* backgroundColor: 'gray' */}}>
-        <Pressable
-          style={{
-            //backgroundColor: 'red',
-            backgroundColor: '#FFF3',
+        <View
+          style={
+            {
+              //flex: 1,
+              /* backgroundColor: '#FFF3',
             borderRadius: 50,
             justifyContent: 'center',
             alignItems: 'center',
-            padding: 15,
-          }}
-          onPress={() => navigation.navigate('LocationManager')}>
-          <Text>Gerenciar Localizações</Text>
-        </Pressable>
+            padding: 15, */
+            }
+          }>
+          <Pressable
+            style={{
+              //backgroundColor: 'red',
+              backgroundColor: '#FFF3',
+              borderRadius: 50,
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 15,
+            }}
+            onPress={() => navigation.navigate('LocationManager')}>
+            <Text>Gerenciar Localizações</Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );

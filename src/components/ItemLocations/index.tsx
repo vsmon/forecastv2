@@ -4,6 +4,7 @@ import {NavigationProp} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Locations} from '../../types/types';
 import {StackParamList} from '../../Routes/Stack';
+import {countries} from 'country-data';
 
 interface ItemLocations {
   city: Locations;
@@ -49,10 +50,10 @@ export default function ItemLocations({
           </View>
           {city.state ? (
             <Text style={{fontSize: 12}}>
-              {city.state},{city.country}
+              {city.state}, {countries[city.country].name}
             </Text>
           ) : (
-            <Text style={{fontSize: 14}}>{city.country}</Text>
+            <Text style={{fontSize: 14}}>{countries[city.country].name}</Text>
           )}
         </View>
       </Pressable>

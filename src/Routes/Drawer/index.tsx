@@ -1,6 +1,6 @@
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import Settings from '../../Pages/Settings';
+import Settings from '../../Pages/Settings/index';
 import StackScreen from '../Stack';
 
 const Drawer = createDrawerNavigator();

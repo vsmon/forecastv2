@@ -2,12 +2,12 @@ import React, {useState, useCallback} from 'react';
 import {View, FlatList, Text} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   getAllStoredCities,
   getByKeyStoredCities,
   storeCity,
 } from '../../Database/AsyncStorage';
+
 import {Locations} from '../../types/types';
 
 import ItemLocations from '../../components/ItemLocations';

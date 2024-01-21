@@ -14,6 +14,7 @@ import {storeCity} from '../../Database/AsyncStorage';
 import getCitiesData from '../../api/getCitiesData';
 import {Locations} from '../../types/types';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {countries} from 'country-data';
 
 type StackParamList = {
   Home: undefined;
@@ -30,19 +31,9 @@ export default function SearchLocation({navigation}: SearchLocation) {
   const [city, setCity] = useState('');
   const [cities, setCities] = useState<Locations[]>([]);
 
-  function fullCountryName(abreviateName: string) {
-    let regionNames = new Intl.DisplayNames(['pt-BR'], {type: 'region'});
-    return regionNames.of(abreviateName); // "United States"
-  }
-
   async function handleGetCities() {
     try {
       const resp: Locations[] = await getCitiesData(city);
-
-      /* let regionNames = new Intl.DisplayNames(['en'], {type: 'region'});
-      regionNames.of('US'); // "United States"
-
-      console.log(regionNames.of('US')); */
 
       setCities(resp);
     } catch (error) {
@@ -52,23 +43,37 @@ export default function SearchLocation({navigation}: SearchLocation) {
 
   return (
     <View style={{flex: 1, backgroundColor: '#000'}}>
-      <TextInput
-        style={{
-          backgroundColor: '#171517',
-          color: '#FFF',
-          padding: 20,
-        }}
-        placeholder="Cidade..."
-        onChangeText={city => setCity(city)}
-        value={city}
-      />
-
-      <Button title="Pesquisar" onPress={handleGetCities} />
       <View
         style={{
-          //flex: 1,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          margin: 5,
+        }}>
+        <TextInput
+          style={{
+            flex: 1,
+            margin: 10,
+            backgroundColor: '#171517',
+            color: '#FFF',
+            padding: 15,
+            borderRadius: 15,
+          }}
+          placeholder="Pesquisar Cidade..."
+          onChangeText={city => setCity(city)}
+          value={city}
+        />
+        <Icon
+          name="map-search-outline"
+          color={'#FFF'}
+          size={42}
+          onPress={handleGetCities}
+        />
+      </View>
+
+      <View
+        style={{
           backgroundColor: '#171517',
-          padding: 10,
           justifyContent: 'center',
           borderRadius: 45,
           margin: 10,
@@ -92,24 +97,32 @@ export default function SearchLocation({navigation}: SearchLocation) {
               style={{
                 flex: 1,
                 justifyContent: 'center',
-                /* paddingTop: 15,
-                paddingBottom: 15, */
-                padding: 15,
+                //padding: 15,
               }}>
-              <View style={{flexDirection: 'column'}}>
-                <Pressable
-                  onPress={() => {
-                    console.log(cities);
-                    storeCity(item, item.name + item.state);
-                    navigation.navigate('LocationManager');
-                  }}>
-                  <Icon name="map-marker" size={22} />
+              {/* <View style={{flex: 1, flexDirection: 'column'}}> */}
+              <Pressable
+                style={{flex: 1, padding: 25}}
+                android_ripple={{
+                  color: 'gray',
+                  foreground: false,
+                  radius: 200,
+                  borderless: false,
+                }}
+                onPress={() => {
+                  console.log(cities);
+                  storeCity(item, item.name + item.state);
+                  navigation.navigate('LocationManager');
+                }}>
+                <View style={{alignItems: 'baseline'}}>
+                  <Icon name="map-marker" size={18} />
                   <Text style={{fontSize: 18, color: '#FFF'}}>{item.name}</Text>
-                  <Text style={{fontSize: 14, color: '#FFF'}}>
-                    {item.state}, {item.country} - {item.country}
+                  <Text style={{fontSize: 12, color: '#FFF9'}}>
+                    {item.state ? item.state + ', ' : null}
+                    {countries[item.country].name}
                   </Text>
-                </Pressable>
-              </View>
+                </View>
+              </Pressable>
+              {/* </View> */}
             </View>
           )}
         />

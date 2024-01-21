@@ -11,7 +11,6 @@ export default StyleSheet.create({
     borderRadius: 25,
     marginBottom: 5,
     backgroundColor: '#171517',
-    //backgroundColor: '#FFF',
   },
   textColor: {
     color: '#FFF2',

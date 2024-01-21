@@ -2,6 +2,8 @@ import React from 'react';
 import {View, Text, Image} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import {ICurrentForecast} from '../../Pages/Home';
+import {countries} from 'country-data';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface ICurrent {
   currentForecast: ICurrentForecast;
@@ -35,8 +37,11 @@ export default function CurrentForecast({currentForecast}: ICurrent) {
         <Text style={{marginBottom: 5, fontSize: 14}}>
           {new Date().toLocaleString()}
         </Text>
-        <Text style={{marginBottom: 5, fontSize: 14}}>
-          {currentForecast.city?.name}, {currentForecast.city?.country}
+        <Text style={{marginBottom: 5, fontSize: 14, flexDirection: 'row'}}>
+          <Icon name="map-marker" size={14} color={'#FFF'} />
+          {currentForecast.city?.name}
+          {/* {', '}
+          {countries[currentForecast.city!.country].name} */}
         </Text>
         <Text style={{fontSize: 11}}>
           {currentForecast.max}° / {currentForecast.min}° {}
