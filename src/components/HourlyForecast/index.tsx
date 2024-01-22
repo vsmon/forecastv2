@@ -12,9 +12,9 @@ export default function HourlyForecast({hourlyForecast}: IHourly) {
   return (
     <View style={[GlobalStyle.container, {alignItems: 'stretch'}]}>
       <View>
-        <Text style={{marginBottom: 10, fontSize: 12}}>
+        <Text style={{marginBottom: 10, fontSize: 12, color: '#FFF'}}>
           {hourlyForecast[0].description}. Mínima de {hourlyForecast[0].min}
-          °C e Máxima de {hourlyForecast[0].max}°C
+          °C e Máxima de {hourlyForecast[0].max}°C.
         </Text>
       </View>
       <View style={{backgroundColor: '#FFF2', height: 1}}></View>

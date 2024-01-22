@@ -30,7 +30,7 @@ export default function UVIndex({uv}: uv) {
         }}>
         Índice UV
       </Text>
-      <Text>{uvDescription}</Text>
+      <Text style={{color: '#FFF9'}}>{uvDescription}</Text>
     </View>
   );
 }

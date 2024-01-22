@@ -60,6 +60,7 @@ export default function SearchLocation({navigation}: SearchLocation) {
             borderRadius: 15,
           }}
           placeholder="Pesquisar Cidade..."
+          placeholderTextColor={'#FFF3'}
           onChangeText={city => setCity(city)}
           value={city}
         />
@@ -97,9 +98,7 @@ export default function SearchLocation({navigation}: SearchLocation) {
               style={{
                 flex: 1,
                 justifyContent: 'center',
-                //padding: 15,
               }}>
-              {/* <View style={{flex: 1, flexDirection: 'column'}}> */}
               <Pressable
                 style={{flex: 1, padding: 25}}
                 android_ripple={{
@@ -109,12 +108,11 @@ export default function SearchLocation({navigation}: SearchLocation) {
                   borderless: false,
                 }}
                 onPress={() => {
-                  console.log(cities);
                   storeCity(item, item.name + item.state);
                   navigation.navigate('LocationManager');
                 }}>
                 <View style={{alignItems: 'baseline'}}>
-                  <Icon name="map-marker" size={18} />
+                  <Icon name="map-marker" size={18} color={'#FFF'} />
                   <Text style={{fontSize: 18, color: '#FFF'}}>{item.name}</Text>
                   <Text style={{fontSize: 12, color: '#FFF9'}}>
                     {item.state ? item.state + ', ' : null}
@@ -122,7 +120,6 @@ export default function SearchLocation({navigation}: SearchLocation) {
                   </Text>
                 </View>
               </Pressable>
-              {/* </View> */}
             </View>
           )}
         />

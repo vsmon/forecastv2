@@ -85,8 +85,16 @@ export default function DailyForecast({dailyForecast}: IDaily) {
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-        <Text style={{marginBottom: 5, fontSize: 12}}>Ontem</Text>
-        <Text style={{marginBottom: 5, fontSize: 14, paddingLeft: 5}}>
+        <Text style={{marginBottom: 5, fontSize: 12, color: '#FFF9'}}>
+          Ontem
+        </Text>
+        <Text
+          style={{
+            marginBottom: 5,
+            fontSize: 14,
+            paddingLeft: 5,
+            color: '#FFF9',
+          }}>
           {dailyForecast[0].max}°{'  '}
           {dailyForecast[0].min}°
         </Text>
@@ -117,14 +125,14 @@ export default function DailyForecast({dailyForecast}: IDaily) {
               }}>
               <Icon
                 name={item.pop <= 10 ? 'water-outline' : 'water'}
-                size={28}
+                size={24}
                 color={'skyblue'}
               />
               <View
                 style={{
                   flex: 1,
                 }}>
-                <Text> {item.pop}%</Text>
+                <Text style={{color: '#FFF9', fontSize: 12}}> {item.pop}%</Text>
               </View>
             </View>
             <View
@@ -137,7 +145,7 @@ export default function DailyForecast({dailyForecast}: IDaily) {
               />
             </View>
 
-            <Icon name={MoonPhase(item.moon_phase)} size={22} />
+            <Icon name={MoonPhase(item.moon_phase)} size={22} color={'#FFF9'} />
             <View style={{flex: 1, alignItems: 'flex-end'}}>
               <Text
                 style={{

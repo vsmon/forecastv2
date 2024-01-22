@@ -12,7 +12,7 @@ export default function Humidity({humidity}: humidity) {
     <View style={GlobalStyle.container}>
       <Icon name="water" size={32} color={'#00b7ff'} />
       <Text style={{color: '#FFF', marginTop: 10}}>Umidade</Text>
-      <Text>{humidity}%</Text>
+      <Text style={{color: '#FFF9'}}>{humidity}%</Text>
     </View>
   );
 }

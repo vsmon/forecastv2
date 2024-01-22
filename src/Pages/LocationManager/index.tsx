@@ -1,23 +1,39 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {View, FlatList, Text} from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
+import {
+  NavigationProp,
+  RouteProp,
+  useFocusEffect,
+} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
+  getAllKeys,
   getAllStoredCities,
   getByKeyStoredCities,
   storeCity,
+  removeCity,
 } from '../../Database/AsyncStorage';
 
 import {Locations} from '../../types/types';
 
 import ItemLocations from '../../components/ItemLocations';
 import DefaultLocation from '../../components/DefaultLocation';
+import {StackParamList} from '../../Routes/Stack';
 
-export default function LocationManager({navigation, route}: any) {
-  const [locations, setLocations] = useState<Locations[] | undefined>([]);
-  const [defaultLocation, setDefaultLocation] = useState<
-    Locations | undefined
-  >();
+interface LocationManager {
+  route: RouteProp<StackParamList>;
+  navigation: NavigationProp<StackParamList>;
+}
+
+export default function LocationManager({navigation, route}: LocationManager) {
+  const [locations, setLocations] = useState<Locations[]>([]);
+  const [defaultLocation, setDefaultLocation] = useState<Locations>({
+    name: '',
+    state: '',
+    country: '',
+    lat: 0,
+    lon: 0,
+  });
 
   useFocusEffect(
     useCallback(() => {
@@ -26,13 +42,18 @@ export default function LocationManager({navigation, route}: any) {
   );
 
   async function handleLoadCities() {
-    const cities: Locations[] | any = await getAllStoredCities();
+    const cities: Locations[] = await getAllStoredCities();
     setLocations(cities);
 
-    const defaultCity: Locations | any = await getByKeyStoredCities('default');
-    if (!null) {
-      setDefaultLocation(defaultCity);
-    }
+    const defaultCity: Locations = await getByKeyStoredCities('default');
+    setDefaultLocation(defaultCity);
+
+    getAllKeys();
+  }
+
+  async function handleRemoveCity(key: string) {
+    await removeCity(key);
+    handleLoadCities();
   }
 
   return (
@@ -65,10 +86,14 @@ export default function LocationManager({navigation, route}: any) {
         /> */}
       </View>
       <View>
-        <Text style={{marginLeft: 10}}>Localização Favorita</Text>
+        <Text style={{marginLeft: 10, marginBottom: 10, color: '#FFF9'}}>
+          Localização Favorita
+        </Text>
         <DefaultLocation city={defaultLocation} navigation={navigation} />
       </View>
-      <Text style={{marginLeft: 10}}>Outras Localidades</Text>
+      <Text style={{marginLeft: 10, marginBottom: 10, color: '#FFF9'}}>
+        Outras Localidades
+      </Text>
       <FlatList
         data={locations}
         renderItem={({item, separators}) => (
@@ -85,6 +110,9 @@ export default function LocationManager({navigation, route}: any) {
               storeCity(item, 'default');
               getByKeyStoredCities('default');
               handleLoadCities();
+            }}
+            onLongPress={() => {
+              handleRemoveCity(item.name + item.state);
             }}
           />
         )}

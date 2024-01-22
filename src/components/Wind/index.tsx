@@ -10,9 +10,9 @@ interface wind {
 export default function Wind({wind}: wind) {
   return (
     <View style={GlobalStyle.container}>
-      <Icon name="weather-windy" size={32} />
+      <Icon name="weather-windy" size={32} color={'#FFF9'} />
       <Text style={{color: '#FFF', marginTop: 10}}>Vento</Text>
-      <Text>{wind} km/h</Text>
+      <Text style={{color: '#FFF9'}}>{wind} km/h</Text>
     </View>
   );
 }

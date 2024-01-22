@@ -60,4 +60,27 @@ async function getByKeyStoredCities(key:string): Promise<Locations> {
     }
   }
 
-  export {storeCity,getAllStoredCities,getByKeyStoredCities}
+  async function removeCity(key:string){
+    try {
+      await AsyncStorage.removeItem((key).replace(' ', ''))
+    } catch(e) {
+      // remove error
+      console.log('Erro ao remover cidade', e)
+    }
+  
+    console.log('Done.')
+  }
+
+  async function getAllKeys(){
+    //let keys = []
+    try {
+    const keys = await AsyncStorage.getAllKeys()
+    console.log(keys)
+    return keys
+  } catch(e) {
+    // read key error
+  }
+
+  }
+
+  export {storeCity,getAllStoredCities,getByKeyStoredCities,removeCity,getAllKeys}

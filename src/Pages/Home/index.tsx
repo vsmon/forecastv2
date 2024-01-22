@@ -204,11 +204,9 @@ function Daily(ForecastData: IForecastData): Promise<IDailyForecast[]> {
 
 function Alerts(ForecastData: IForecastData): IAlertsForecast {
   if (ForecastData.alerts) {
-    console.log('ALERT FUNCTION===========', 'SIM');
     const {event, description} = ForecastData.alerts[0] || {};
     return {alertEvent: event, alertDescription: description};
   }
-  console.log('ALERT FUNCTION===========', 'NAO');
   return {
     alertEvent: '',
     alertDescription: 'Nenhum Alerta no momento',
@@ -233,12 +231,13 @@ function Home({navigation, route}: HomeProps) {
   const [isError, setIsError] = useState<boolean>(false);
   const [activityIndicator, setActivityIndicator] = useState(false);
 
+  const cityByParam: Locations = route.params?.params.city;
+  const screenOrigin: string = route.params?.params.screenName;
+
   async function getForecast(city: Locations) {
     try {
-      //setIsLoading(true);
       setActivityIndicator(true);
       const ForecastData = await getForecastData(city);
-      //console.log('FETCH2============', ForecastData.current);
       console.log('CURRENT CITY==========', city);
 
       const current: ICurrentForecast = await Current(ForecastData);
@@ -246,12 +245,10 @@ function Home({navigation, route}: HomeProps) {
         ...current,
         city,
       };
-      //console.log('CURRENT============', currentWithCity);
       setCurrentForecast(currentWithCity);
       console.log('PASSEI CURRENT==========');
 
       const hourly: IHourlyForecast[] = await Hourly(ForecastData);
-      //console.log('HOURLY====================', hourly);
       setHourlyForecast(hourly);
       console.log('PASSEI HOURLY==========');
 
@@ -279,28 +276,21 @@ function Home({navigation, route}: HomeProps) {
     }
   }
 
-  async function getDefaultCity() {
+  async function getDefaultCity(): Promise<Locations> {
     const city = await getByKeyStoredCities('default');
 
     return city;
   }
 
-  const cityByParam: Locations = route.params?.params.city;
-  const screenOrigin: string = route.params?.params.screenName;
-  //navigation.setParams({params: {screenOrigin: undefined}});
-
   const handleReload = async (appState?: AppStateStatus) => {
-    //console.log('CITY PARAM', cityByParam);
-    const defaultCity: Locations | undefined = await getDefaultCity();
-    //console.log('CITY DEFAULT', defaultCity);
-    let city: Locations | undefined = undefined;
+    const defaultCity: Locations = await getDefaultCity();
+    let city: Locations = {name: '', state: '', country: '', lat: 0, lon: 0};
     if (screenOrigin === undefined) {
       city = defaultCity;
     } else {
       city = cityByParam;
     }
     await getForecast(city);
-    console.log('SCREEN NAME=====', screenOrigin);
   };
 
   useFocusEffect(
@@ -310,8 +300,6 @@ function Home({navigation, route}: HomeProps) {
   );
 
   useEffect(() => {
-    handleReload();
-
     const appStateSubscription = AppState.addEventListener(
       'change',
       appState => {
@@ -346,21 +334,6 @@ function Home({navigation, route}: HomeProps) {
         flex: 1,
         backgroundColor: '#000',
       }}>
-      {/* <Modal transparent={false} visible={isLoading}>
-        <View
-          style={{
-            flex: 1,
-            //backgroundColor: '#5A7DAB',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          {isError ? (
-            <Icon name={'network-off-outline'} size={44} color={'#FFF9'} />
-          ) : (
-            <ActivityIndicator size="large" color="#FFF" />
-          )}
-        </View>
-      </Modal> */}
       <View>
         <CurrentForecast currentForecast={currentForecast!} />
       </View>

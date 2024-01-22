@@ -28,22 +28,31 @@ export default function CurrentForecast({currentForecast}: ICurrent) {
           flex: 1,
           padding: 20,
         }}>
-        <Text style={{marginBottom: 5, fontSize: 48}}>
+        <Text style={{marginBottom: 5, fontSize: 48, color: '#FFF'}}>
           {currentForecast.temp}°
         </Text>
-        <Text style={{marginBottom: 30, fontSize: 18}}>
+        <Text style={{marginBottom: 30, fontSize: 18, color: '#FFF'}}>
           {currentForecast.description}
         </Text>
-        <Text style={{marginBottom: 5, fontSize: 14}}>
+        <Text style={{marginBottom: 5, fontSize: 14, color: '#FFF'}}>
           {new Date().toLocaleString()}
         </Text>
-        <Text style={{marginBottom: 5, fontSize: 14, flexDirection: 'row'}}>
-          <Icon name="map-marker" size={14} color={'#FFF'} />
+        <Text
+          style={{
+            marginBottom: 5,
+            fontSize: 14,
+            flexDirection: 'row',
+            color: '#FFF',
+          }}>
           {currentForecast.city?.name}
-          {/* {', '}
-          {countries[currentForecast.city!.country].name} */}
+          {currentForecast.city?.state
+            ? ' - ' + currentForecast.city.state
+            : null}
+          {', '}
+          {countries[currentForecast.city!.country].name}
+          <Icon name="map-marker" size={14} color={'#FFF'} />
         </Text>
-        <Text style={{fontSize: 11}}>
+        <Text style={{fontSize: 11, color: '#FFF'}}>
           {currentForecast.max}° / {currentForecast.min}° {}
           Sensação térmica de {currentForecast.feels_like}°
         </Text>

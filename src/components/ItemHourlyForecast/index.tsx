@@ -36,7 +36,7 @@ export default function ItemHourlyForecast({
                 alignItems: 'center',
               }}
               key={index}>
-              <Text>{item.dt}</Text>
+              <Text style={{color: '#FFF9'}}>{item.dt}</Text>
               <Image
                 style={{
                   height: 40,
@@ -48,7 +48,7 @@ export default function ItemHourlyForecast({
                   uri: `https://openweathermap.org/img/wn/${item.icon}@2x.png`,
                 }}
               />
-              <Text>{item.temp}°</Text>
+              <Text style={{color: '#FFF'}}>{item.temp}°</Text>
               {/* <Text>G</Text> */}
               <View
                 style={{
@@ -56,7 +56,6 @@ export default function ItemHourlyForecast({
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  //backgroundColor: 'red',
                 }}>
                 <Icon
                   name={item.pop <= 10 ? 'water-outline' : 'water'}
@@ -65,8 +64,9 @@ export default function ItemHourlyForecast({
                 />
                 <Text
                   style={{
-                    /* backgroundColor: 'blue' */
                     fontSize: 12,
+                    color: '#FFF9',
+                    marginTop: 10,
                   }}>
                   {item.pop}%
                 </Text>

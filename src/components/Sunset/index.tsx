@@ -17,11 +17,11 @@ export default function Sunset({sunset}: SunsetForecast) {
     <View style={[GlobalStyle.container, {flexDirection: 'row'}]}>
       <View style={{marginRight: 25, alignItems: 'center'}}>
         <Icon name="weather-sunset-up" size={42} color={'#FFBB09'} />
-        <Text style={{marginTop: 5}}>{sunset.sunrise}</Text>
+        <Text style={{marginTop: 5, color: '#FFF9'}}>{sunset.sunrise}</Text>
       </View>
       <View style={{marginLeft: 25, alignItems: 'center'}}>
         <Icon name="weather-sunset-down" size={42} color={'#F18D90'} />
-        <Text style={{marginTop: 5}}>{sunset.sunset}</Text>
+        <Text style={{marginTop: 5, color: '#FFF9'}}>{sunset.sunset}</Text>
       </View>
     </View>
   );

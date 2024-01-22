@@ -14,7 +14,13 @@ import {countries} from 'country-data';
 
 export default function Settings({navigation}: DrawerContentComponentProps) {
   const [locations, setLocations] = useState<Locations[]>([]);
-  const [defaultLocation, setDefaultLocation] = useState<Locations>();
+  const [defaultLocation, setDefaultLocation] = useState<Locations>({
+    name: '',
+    country: '',
+    lat: 0,
+    lon: 0,
+    state: '',
+  });
 
   async function handleReload() {
     const cities: Locations[] = await getAllStoredCities();
@@ -33,48 +39,65 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
     <View style={{flex: 1, backgroundColor: '#171517', padding: 25}}>
       <View
         style={{
-          flex: 2,
+          //flex: 1,
           /* backgroundColor: 'red', */
+          marginTop: 25,
         }}>
         <View>
           <View
             style={{
               flexDirection: 'row',
-              marginTop: 25,
             }}>
             <Icon name="star" size={22} color={'#e7ff0d'} />
-            <Text style={{fontSize: 18, marginLeft: 10}}>
+            <Text style={{fontSize: 18, marginLeft: 10, color: '#FFF9'}}>
               Localização Favorita
             </Text>
           </View>
-
-          <Pressable
-            style={{
-              marginBottom: 20,
-              flexDirection: 'row',
-              padding: 15,
-            }}
-            onPress={() =>
-              navigation.navigate('Home', {
-                params: {city: defaultLocation, screenName: 'Settings'},
-              })
-            }>
-            <Icon name="map-marker" size={22} />
-            <Text style={{fontSize: 18, marginLeft: 10, color: '#FFF'}}>
-              {defaultLocation?.name}, {defaultLocation?.country}
-            </Text>
-          </Pressable>
-          {/* <DefaultLocation city={defaultLocation} navigation={navigation} /> */}
         </View>
+
+        <Pressable
+          android_ripple={{
+            color: 'gray',
+            foreground: false,
+            radius: 200,
+            borderless: false,
+          }}
+          style={{
+            flexDirection: 'row',
+            padding: 15,
+          }}
+          onPress={() =>
+            navigation.navigate('Home', {
+              params: {city: defaultLocation, screenName: 'Settings'},
+            })
+          }>
+          <Icon name="map-marker" size={22} color={'#FFF'} />
+          <Text style={{fontSize: 18, marginLeft: 10, color: '#FFF'}}>
+            {defaultLocation.name}
+            {defaultLocation.state ? ' - ' + defaultLocation.state : null},{' '}
+            {countries[defaultLocation.country].name}
+          </Text>
+        </Pressable>
       </View>
-      <View style={{flex: 12 /* backgroundColor: 'blue' */}}>
+      <View
+        style={{
+          backgroundColor: '#FFF2',
+          height: 1,
+          marginBottom: 15,
+          marginTop: 5,
+        }}></View>
+      <View
+        style={{
+          flex: 1,
+          /* backgroundColor: 'blue', */
+        }}>
         <View style={{flexDirection: 'row', marginBottom: 20}}>
           <Icon name="map-marker-multiple" size={22} color={'#e7ff0d'} />
-          <Text style={{fontSize: 18, marginLeft: 10}}>
+          <Text style={{fontSize: 18, marginLeft: 10, color: '#FFF9'}}>
             Outras Localizações
           </Text>
         </View>
-        <View style={{height: 550}}>
+        <View style={{height: 550, flex: 1}}>
           <FlatList
             showsVerticalScrollIndicator={false}
             maxToRenderPerBatch={15}
@@ -82,6 +105,12 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
             renderItem={({item, separators}) => (
               <View>
                 <Pressable
+                  android_ripple={{
+                    color: 'gray',
+                    foreground: false,
+                    radius: 200,
+                    borderless: false,
+                  }}
                   style={{
                     marginBottom: 5,
                     flexDirection: 'row',
@@ -97,17 +126,16 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
                     <Text
                       style={{
                         fontSize: 18,
-                        //marginLeft: 10,
                         color: '#FFF',
                       }}>
                       {item.name}
                     </Text>
                     {item.state ? (
-                      <Text style={{fontSize: 12}}>
+                      <Text style={{fontSize: 12, color: '#FFF9'}}>
                         {item.state}, {countries[item.country].name}
                       </Text>
                     ) : (
-                      <Text style={{fontSize: 14}}>
+                      <Text style={{fontSize: 14, color: '#FFF9'}}>
                         {countries[item.country].name}
                       </Text>
                     )}
@@ -118,10 +146,15 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
           />
         </View>
       </View>
-      <View style={{flex: 1 /* backgroundColor: 'gray' */}}>
+      <View
+        style={
+          {
+            /* backgroundColor: 'gray', */
+            //flex: 2,
+          }
+        }>
         <Pressable
           style={{
-            //backgroundColor: 'red',
             backgroundColor: '#FFF3',
             borderRadius: 50,
             justifyContent: 'center',
@@ -129,7 +162,7 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
             padding: 15,
           }}
           onPress={() => navigation.navigate('LocationManager')}>
-          <Text>Gerenciar Localizações</Text>
+          <Text style={{color: '#FFF'}}>Gerenciar Localizações</Text>
         </Pressable>
       </View>
     </View>
