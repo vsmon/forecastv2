@@ -48,14 +48,13 @@ export default function ItemHourlyForecast({
                   uri: `https://openweathermap.org/img/wn/${item.icon}@2x.png`,
                 }}
               />
-              <Text style={{color: '#FFF'}}>{item.temp}°</Text>
-              {/* <Text>G</Text> */}
+              <Text style={{color: '#FFF', marginBottom: 5}}>{item.temp}°</Text>
+              {/* <Text>Graphic</Text> */}
               <View
                 style={{
                   flex: 1,
                   flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'center',
                 }}>
                 <Icon
                   name={item.pop <= 10 ? 'water-outline' : 'water'}
@@ -66,7 +65,7 @@ export default function ItemHourlyForecast({
                   style={{
                     fontSize: 12,
                     color: '#FFF9',
-                    marginTop: 10,
+                    alignSelf: 'center',
                   }}>
                   {item.pop}%
                 </Text>

@@ -13,8 +13,16 @@ import {
 import {countries} from 'country-data';
 
 export default function Settings({navigation}: DrawerContentComponentProps) {
-  const [locations, setLocations] = useState<Locations[]>([]);
-  const [defaultLocation, setDefaultLocation] = useState<Locations>({
+  const [locations, setLocations] = useState<Locations[] | null>([
+    {
+      name: '',
+      country: '',
+      lat: 0,
+      lon: 0,
+      state: '',
+    },
+  ]);
+  const [defaultLocation, setDefaultLocation] = useState<Locations | null>({
     name: '',
     country: '',
     lat: 0,
@@ -23,11 +31,14 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
   });
 
   async function handleReload() {
-    const cities: Locations[] = await getAllStoredCities();
-    setLocations(cities);
-
+    const cities: Locations[] | null = await getAllStoredCities();
     const city = await getByKeyStoredCities('default');
 
+    if (cities === null || city === null) {
+      return;
+    }
+
+    setLocations(cities);
     setDefaultLocation(city);
   }
 
@@ -73,9 +84,11 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
           }>
           <Icon name="map-marker" size={22} color={'#FFF'} />
           <Text style={{fontSize: 18, marginLeft: 10, color: '#FFF'}}>
-            {defaultLocation.name}
-            {defaultLocation.state ? ' - ' + defaultLocation.state : null},{' '}
-            {countries[defaultLocation.country].name}
+            {defaultLocation?.name}
+            {defaultLocation?.state
+              ? ' - ' + defaultLocation.state
+              : null},{' '}
+            {defaultLocation && countries[defaultLocation.country].name}
           </Text>
         </Pressable>
       </View>

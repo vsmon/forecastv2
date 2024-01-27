@@ -26,8 +26,8 @@ interface LocationManager {
 }
 
 export default function LocationManager({navigation, route}: LocationManager) {
-  const [locations, setLocations] = useState<Locations[]>([]);
-  const [defaultLocation, setDefaultLocation] = useState<Locations>({
+  const [locations, setLocations] = useState<Locations[] | null>([]);
+  const [defaultLocation, setDefaultLocation] = useState<Locations | null>({
     name: '',
     state: '',
     country: '',
@@ -42,12 +42,14 @@ export default function LocationManager({navigation, route}: LocationManager) {
   );
 
   async function handleLoadCities() {
-    const cities: Locations[] = await getAllStoredCities();
-    setLocations(cities);
+    const cities: Locations[] | null = await getAllStoredCities();
 
-    const defaultCity: Locations = await getByKeyStoredCities('default');
+    const defaultCity: Locations | null = await getByKeyStoredCities('default');
+
+    console.log(cities);
+
     setDefaultLocation(defaultCity);
-
+    setLocations(cities);
     getAllKeys();
   }
 
@@ -70,20 +72,6 @@ export default function LocationManager({navigation, route}: LocationManager) {
           color={'#FFF'}
           onPress={() => navigation.navigate('SearchLocation')}
         />
-        {/* <Icon
-          name="delete-sweep"
-          size={32}
-          color={'#FFF'}
-          onPress={async () => {
-            try {
-              await AsyncStorage.clear();
-            } catch (e) {
-              // clear error
-            }
-
-            console.log('Done.');
-          }}
-        /> */}
       </View>
       <View>
         <Text style={{marginLeft: 10, marginBottom: 10, color: '#FFF9'}}>

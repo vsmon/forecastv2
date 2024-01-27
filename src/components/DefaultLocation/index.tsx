@@ -7,12 +7,12 @@ import {StackParamList} from '../../Routes/Stack';
 import {countries} from 'country-data';
 
 interface DefaultLocations {
-  city: Locations;
+  city: Locations | null;
   navigation: NavigationProp<StackParamList>;
 }
 
 export default function DefaultLocation({city, navigation}: DefaultLocations) {
-  const [defaultCity, setDefaultCity] = useState<Locations>({
+  const [defaultCity, setDefaultCity] = useState<Locations | null>({
     name: '',
     state: '',
     country: '',
@@ -23,7 +23,7 @@ export default function DefaultLocation({city, navigation}: DefaultLocations) {
     setDefaultCity(city);
   }, []);
 
-  if (city === undefined) {
+  if (city === null) {
     return (
       <View
         style={{
@@ -71,7 +71,7 @@ export default function DefaultLocation({city, navigation}: DefaultLocations) {
               </Text>
             ) : (
               <Text style={{fontSize: 14, color: '#FFF9'}}>
-                {countries[city.country].name}
+                {countries[city.country]?.name}
               </Text>
             )}
           </View>

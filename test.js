@@ -1,11 +1,13 @@
-function soma(num1, num2) {
-  let result = 0;
-  result = num1 === 2 ? num1 + num2 : null;
-  return result;
+async function Sum(num1, num2) {
+  return num1 + num2;
 }
 
-console.log(soma(3, 3));
+async function Mult(num1, num2) {
+  return num1 * num2;
+}
 
-let regionNames = new Intl.DisplayNames(['pt-BR'], {type: 'region'});
-regionNames.of('US'); // "United States"
-console.log(regionNames.of('GB'));
+const resultSum = await Sum(2, 2);
+//const resultMult = await Mult(resultSum, 2);
+
+console.log('SUM===>', resultSum);
+//console.log('Mult===>', resultMult);

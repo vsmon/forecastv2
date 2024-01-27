@@ -1,9 +1,9 @@
 import {Locations} from '../types/types';
 
-export default async function getCitiesData(cityName:string): Promise<Locations[]> {
+export default async function getCityByCoords(lat:number,lon:number): Promise<Locations[]> {
     try {
       const response = await fetch(
-        `https://api.openweathermap.org/geo/1.0/direct?q=${cityName},,&limit=10&appid=f7e324eced811885a4c794141a933b13`,
+        `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=f7e324eced811885a4c794141a933b13`,
       );
       const json: Locations[] = await response.json();
 

@@ -21,6 +21,8 @@ export default function CurrentForecast({currentForecast}: ICurrent) {
           justifyContent: 'space-between',
           padding: 0,
           alignItems: 'stretch',
+          borderRadius: 0,
+          marginTop: 0,
         },
       ]}>
       <View
@@ -35,7 +37,8 @@ export default function CurrentForecast({currentForecast}: ICurrent) {
           {currentForecast.description}
         </Text>
         <Text style={{marginBottom: 5, fontSize: 14, color: '#FFF'}}>
-          {new Date().toLocaleString()}
+          {/* {new Date(Number(currentForecast.dt)).toLocaleString()} */}
+          {currentForecast.dt}
         </Text>
         <Text
           style={{
@@ -49,7 +52,7 @@ export default function CurrentForecast({currentForecast}: ICurrent) {
             ? ' - ' + currentForecast.city.state
             : null}
           {', '}
-          {countries[currentForecast.city!.country].name}
+          {countries[currentForecast.city!.country]?.name}{' '}
           <Icon name="map-marker" size={14} color={'#FFF'} />
         </Text>
         <Text style={{fontSize: 11, color: '#FFF'}}>

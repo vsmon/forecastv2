@@ -18,7 +18,7 @@ async function storeCity(value: Locations, key: string ) {
     }
   }
 
-  async function getAllStoredCities(): Promise<Locations[]> {
+  async function getAllStoredCities(): Promise<Locations[] | null> {
     let citiesList: Locations[] = [];
     try {
       const keys = await AsyncStorage.getAllKeys();
@@ -38,11 +38,11 @@ async function storeCity(value: Locations, key: string ) {
       //console.log('API ALL KEYS===========', citiesList)
     } catch (e: any) {
       console.log('Error read keys', e.message);
-      return Promise.resolve(e)
+      return Promise.resolve(null)
     }
   }
 
-async function getByKeyStoredCities(key:string): Promise<Locations> {
+async function getByKeyStoredCities(key:string): Promise<Locations|null> {
     try {
 
       const response: string | null= await AsyncStorage.getItem(key);
@@ -55,8 +55,8 @@ async function getByKeyStoredCities(key:string): Promise<Locations> {
       //console.log('API BY KEY===========', json)        
       return Promise.resolve<Locations>(json) 
     } catch (e: any) {
-      //console.log('Error read keys', e);
-      return Promise.resolve(e)
+      console.log('Error read keys', e);
+      return Promise.resolve(null)
     }
   }
 

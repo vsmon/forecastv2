@@ -7,6 +7,7 @@ import {
   Modal,
   AppState,
   AppStateStatus,
+  Text,
 } from 'react-native';
 
 import CurrentForecast from '../../components/CurrentForecast';
@@ -24,13 +25,23 @@ import Humidity from '../../components/Humidity';
 import Wind from '../../components/Wind';
 import Sunset from '../../components/Sunset';
 import {StackParamList} from '../../Routes/Stack';
-import FormatHour from '../../utils/formatHour';
 import WeekDay from '../../utils/weekDay';
 import {Locations} from '../../types/types';
 import getForecastData from '../../api/getForecastData';
-import {getByKeyStoredCities} from '../../Database/AsyncStorage';
+import {
+  getAllStoredCities,
+  getByKeyStoredCities,
+  storeCity,
+} from '../../Database/AsyncStorage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import toastMessage from '../../utils/toastMessage';
+import getPosition from '../../services/Geolocations';
+import getCityByCoords from '../../api/getCityByCoords';
+import getCitiesData from '../../api/getCitiesData';
+import FormatDate from '../../utils/formatDate';
+import Geolocation, {
+  GeolocationConfiguration,
+} from '@react-native-community/geolocation';
 
 interface HomeProps {
   navigation: NavigationProp<StackParamList>;
@@ -129,7 +140,10 @@ function Current(ForecastData: IForecastData): Promise<ICurrentForecast> {
     ],
   } = ForecastData;
   const currentForecast: ICurrentForecast = {
-    dt: FormatHour(dtCurrent),
+    dt:
+      FormatDate(dtCurrent).dateFormatted +
+      ' - ' +
+      FormatDate(dtCurrent).hourFormatted,
     temp: Number(temp.toFixed(0)),
     feels_like: parseInt(feels_like.toFixed(0)),
     description,
@@ -160,7 +174,7 @@ function Hourly(ForecastData: IForecastData): Promise<IHourlyForecast[]> {
   const hourlyList: IHourlyForecast[] = ForecastData.hourly.map(
     (item, index): IHourlyForecast => {
       return {
-        dt: FormatHour(item.dt),
+        dt: FormatDate(item.dt).hourFormatted,
         temp: parseInt(item.temp.toFixed(0)),
         icon: item.weather[0].icon,
         pop: Number((item.pop * 100).toFixed(0)),
@@ -214,19 +228,61 @@ function Alerts(ForecastData: IForecastData): IAlertsForecast {
 }
 
 function Home({navigation, route}: HomeProps) {
-  const [currentForecast, setCurrentForecast] = useState<ICurrentForecast>();
+  const [currentForecast, setCurrentForecast] = useState<ICurrentForecast>({
+    dt: '',
+    temp: 0,
+    feels_like: 0,
+    description: '',
+    icon: '',
+    max: 0,
+    min: 0,
+    city: {
+      name: '',
+      lat: 0,
+      lon: 0,
+      country: '',
+      state: '',
+    },
+    event: '',
+    alertDescription: '',
+    sunrise: 0,
+    sunset: 0,
+    uvi: 0,
+    humidity: 0,
+    wind_speed: 0,
+    alerts: [{event: '', alertDescription: ''}],
+  });
   const [hourlyForecast, setHourlyForecast] = useState<
     IHourlyForecast[] | null
-  >(null);
-  const [dailyForecast, setDailyForecast] = useState<IDailyForecast[] | null>(
-    null,
-  );
+  >([
+    {
+      dt: '',
+      temp: 0,
+      icon: '',
+      pop: 0,
+      description: '',
+      min: '',
+      max: '',
+    },
+  ]);
+  const [dailyForecast, setDailyForecast] = useState<IDailyForecast[] | null>([
+    {
+      dt: 0,
+      min: 0,
+      max: 0,
+      week: '',
+      pop: 0,
+      icon: '',
+      moon_phase: 0,
+    },
+  ]);
   const [alertsForecast, setAlertsForecast] = useState<IAlertsForecast | null>(
     null,
   );
-  const [sunsetForecast, setSunsetForeast] = useState<ISunsetForeast | null>(
-    null,
-  );
+  const [sunsetForecast, setSunsetForeast] = useState<ISunsetForeast | null>({
+    sunrise: '',
+    sunset: '',
+  });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
   const [activityIndicator, setActivityIndicator] = useState(false);
@@ -236,9 +292,15 @@ function Home({navigation, route}: HomeProps) {
 
   async function getForecast(city: Locations) {
     try {
-      setActivityIndicator(true);
+      //setActivityIndicator(true);
       const ForecastData = await getForecastData(city);
-      console.log('CURRENT CITY==========', city);
+      console.log('CURRENT CITY==========', {
+        name: city.name,
+        state: city.state,
+        country: city.country,
+        lat: city.lat,
+        lon: city.lon,
+      });
 
       const current: ICurrentForecast = await Current(ForecastData);
       const currentWithCity: ICurrentForecast = {
@@ -261,14 +323,14 @@ function Home({navigation, route}: HomeProps) {
       console.log('PASSEI DAILY==========');
 
       const sunset = {
-        sunrise: FormatHour(current.sunrise),
-        sunset: FormatHour(current.sunset),
+        sunrise: FormatDate(current.sunrise).hourFormatted,
+        sunset: FormatDate(current.sunset).hourFormatted,
       };
       setSunsetForeast(sunset);
       console.log('PASSEI SUNSET==========');
 
-      setIsLoading(false);
-      setActivityIndicator(false);
+      /* setIsLoading(false);
+      setActivityIndicator(false); */
     } catch (error) {
       setIsError(true);
       console.log(error);
@@ -276,26 +338,61 @@ function Home({navigation, route}: HomeProps) {
     }
   }
 
-  async function getDefaultCity(): Promise<Locations> {
+  async function getDefaultCity(): Promise<Locations | null> {
     const city = await getByKeyStoredCities('default');
 
     return city;
   }
 
-  const handleReload = async (appState?: AppStateStatus) => {
-    const defaultCity: Locations = await getDefaultCity();
-    let city: Locations = {name: '', state: '', country: '', lat: 0, lon: 0};
+  const handleReload = async () => {
+    setActivityIndicator(true);
+
+    let city: Locations | null = {
+      name: '',
+      state: '',
+      country: '',
+      lat: 0,
+      lon: 0,
+    };
+
+    const {latitude, longitude} = await getPosition();
+
+    const cityByCoords: Locations[] = await getCityByCoords(
+      latitude,
+      longitude,
+    );
+    console.log('COORDS=============', latitude, longitude);
+    console.log('CITY BY COORDS==============', cityByCoords);
+    console.log('CITY BY PARAMS==============', cityByParam);
+
+    const defaultCity: Locations | null = await getDefaultCity();
+
     if (screenOrigin === undefined) {
       city = defaultCity;
+      if (cityByCoords.length > 0) {
+        city = cityByCoords[0];
+        storeCity(city, 'default');
+      }
     } else {
       city = cityByParam;
     }
+
+    if (city === null) {
+      navigation.navigate('SearchLocation');
+      return;
+    }
+
     await getForecast(city);
+
+    setIsLoading(false);
+    setActivityIndicator(false);
   };
 
   useFocusEffect(
     useCallback(() => {
-      handleReload();
+      if (cityByParam !== undefined) {
+        handleReload();
+      }
     }, [cityByParam]),
   );
 
@@ -307,7 +404,9 @@ function Home({navigation, route}: HomeProps) {
       },
     );
 
-    return () => appStateSubscription.remove();
+    return () => {
+      appStateSubscription.remove();
+    };
   }, []);
 
   if (isLoading) {
@@ -334,24 +433,24 @@ function Home({navigation, route}: HomeProps) {
         flex: 1,
         backgroundColor: '#000',
       }}>
-      <View>
-        <CurrentForecast currentForecast={currentForecast!} />
-      </View>
       {activityIndicator ? (
         <View>
           <ActivityIndicator size="large" color="#FFF" />
         </View>
       ) : null}
       <ScrollView
+        stickyHeaderIndices={[0]}
+        stickyHeaderHiddenOnScroll={false}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={handleReload} />
         }>
+        <CurrentForecast currentForecast={currentForecast!} />
         <HourlyForecast hourlyForecast={hourlyForecast} />
         <Messages message={alertsForecast} />
         <DailyForecast dailyForecast={dailyForecast} />
         <View style={{flex: 1, flexDirection: 'row'}}>
-          <UVIndex uv={currentForecast!.uvi} />
+          <UVIndex uv={currentForecast.uvi} />
           <Humidity humidity={currentForecast!.humidity} />
         </View>
         <View style={{flex: 1, flexDirection: 'row'}}>
