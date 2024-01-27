@@ -1,4 +1,10 @@
-import React, {ErrorInfo, useCallback, useEffect, useState} from 'react';
+import React, {
+  ErrorInfo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   View,
   ScrollView,
@@ -8,6 +14,7 @@ import {
   AppState,
   AppStateStatus,
   Text,
+  Animated,
 } from 'react-native';
 
 import CurrentForecast from '../../components/CurrentForecast';
@@ -37,11 +44,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import toastMessage from '../../utils/toastMessage';
 import getPosition from '../../services/Geolocations';
 import getCityByCoords from '../../api/getCityByCoords';
-import getCitiesData from '../../api/getCitiesData';
 import FormatDate from '../../utils/formatDate';
-import Geolocation, {
-  GeolocationConfiguration,
-} from '@react-native-community/geolocation';
 
 interface HomeProps {
   navigation: NavigationProp<StackParamList>;
@@ -287,6 +290,8 @@ function Home({navigation, route}: HomeProps) {
   const [isError, setIsError] = useState<boolean>(false);
   const [activityIndicator, setActivityIndicator] = useState(false);
 
+  const scaleAnimValue = useRef(new Animated.Value(0)).current;
+
   const cityByParam: Locations = route.params?.params.city;
   const screenOrigin: string = route.params?.params.screenName;
 
@@ -364,9 +369,9 @@ function Home({navigation, route}: HomeProps) {
     console.log('COORDS=============', latitude, longitude);
     console.log('CITY BY COORDS==============', cityByCoords);
     console.log('CITY BY PARAMS==============', cityByParam);
+    console.log('SCREEN ORIGIN============', screenOrigin);
 
     const defaultCity: Locations | null = await getDefaultCity();
-
     if (screenOrigin === undefined) {
       city = defaultCity;
       if (cityByCoords.length > 0) {
@@ -383,6 +388,10 @@ function Home({navigation, route}: HomeProps) {
     }
 
     await getForecast(city);
+
+    navigation.setParams({
+      params: {screenName: undefined},
+    });
 
     setIsLoading(false);
     setActivityIndicator(false);
@@ -439,13 +448,21 @@ function Home({navigation, route}: HomeProps) {
         </View>
       ) : null}
       <ScrollView
+        scrollEventThrottle={0.1}
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scaleAnimValue}}}],
+          {useNativeDriver: false},
+        )}
         stickyHeaderIndices={[0]}
-        stickyHeaderHiddenOnScroll={false}
+        //stickyHeaderHiddenOnScroll={false}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={handleReload} />
         }>
-        <CurrentForecast currentForecast={currentForecast!} />
+        <CurrentForecast
+          currentForecast={currentForecast!}
+          animatedValue={scaleAnimValue}
+        />
         <HourlyForecast hourlyForecast={hourlyForecast} />
         <Messages message={alertsForecast} />
         <DailyForecast dailyForecast={dailyForecast} />

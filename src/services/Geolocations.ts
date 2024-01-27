@@ -27,7 +27,7 @@ import Geolocation, {
           console.log(error);
           reject(error.message);
         },
-        {enableHighAccuracy: true, maximumAge: 1000, distanceFilter: 5},
+        {enableHighAccuracy: true/* , maximumAge: 1000, distanceFilter: 5 */},
       );
     });
   }
