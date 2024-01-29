@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {View, Text, Image, Animated} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, Animated} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {StackParamList} from '../../Routes/Stack';
 import GlobalStyle from '../../Constants/GlobalStyle';
@@ -20,6 +20,8 @@ export default function CurrentForecast({
   animatedValue,
   navigation,
 }: ICurrent) {
+  const [imageSizeValue, setImageSizeValue] = useState<number>(0);
+
   const headerHeight = animatedValue.interpolate({
     inputRange: [0, 100],
     outputRange: [100, 80],
@@ -40,23 +42,30 @@ export default function CurrentForecast({
     inputRange: [0, 150],
     outputRange: [0, 1],
   });
+
+  let valueToChangeTitle: number = 0;
+
+  imageSize.addListener(value => {
+    valueToChangeTitle = value.value;
+    if (valueToChangeTitle === 120 || valueToChangeTitle === 180) {
+      setImageSizeValue(valueToChangeTitle);
+    }
+  });
+
   useEffect(() => {
-    let valueToChangeTitle: number = 0;
-    imageSize.addListener(value => {
-      console.log('LIST', value.value);
-      valueToChangeTitle = value.value;
-      console.log(valueToChangeTitle === 120);
-      if (valueToChangeTitle === 120) {
-        navigation.navigate('StackScreen', {
-          params: {title: currentForecast.city?.name},
-        });
-      } else if (valueToChangeTitle === 180) {
-        navigation.navigate('StackScreen', {
-          params: {title: ''},
-        });
-      }
-    });
-  }, [imageSize]);
+    if (imageSizeValue === 120) {
+      navigation.navigate('StackScreen', {
+        params: {title: currentForecast.city?.name},
+      });
+    } else if (imageSizeValue === 180) {
+      navigation.navigate('StackScreen', {
+        params: {title: ''},
+      });
+    }
+
+    return () => imageSize.removeAllListeners();
+  }, [imageSizeValue]);
+
   return (
     <Animated.View
       style={[

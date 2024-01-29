@@ -22,7 +22,7 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
       state: '',
     },
   ]);
-  const [defaultLocation, setDefaultLocation] = useState<Locations | null>({
+  const [defaultLocation, setDefaultLocation] = useState<Locations>({
     name: '',
     country: '',
     lat: 0,
@@ -83,13 +83,25 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
             })
           }>
           <Icon name="map-marker" size={22} color={'#FFF'} />
-          <Text style={{fontSize: 18, marginLeft: 10, color: '#FFF'}}>
-            {defaultLocation?.name}
-            {defaultLocation?.state
-              ? ' - ' + defaultLocation.state
-              : null},{' '}
-            {defaultLocation && countries[defaultLocation.country].name}
-          </Text>
+          <View style={{justifyContent: 'center', marginLeft: 20}}>
+            <Text
+              style={{
+                fontSize: 18,
+                color: '#FFF',
+              }}>
+              {defaultLocation?.name}
+            </Text>
+            {defaultLocation?.state ? (
+              <Text style={{fontSize: 12, color: '#FFF9'}}>
+                {defaultLocation?.state},{' '}
+                {countries[defaultLocation?.country].name}
+              </Text>
+            ) : (
+              <Text style={{fontSize: 14, color: '#FFF9'}}>
+                {countries[defaultLocation?.country].name}
+              </Text>
+            )}
+          </View>
         </Pressable>
       </View>
       <View
