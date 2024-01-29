@@ -1,17 +1,27 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationProp,
+} from '@react-navigation/native-stack';
 import Home from '../../Pages/Home';
 import SearchLocation from '../../Pages/SearchLocation';
 import LocationManager from '../../Pages/LocationManager';
+import {useLayoutEffect} from 'react';
 
 export type StackParamList = {
   Home: any;
   Settings: any;
   LocationManager: any;
   SearchLocation: any;
+  StackScreen: any;
 };
 
+interface IStackNavigationProps {
+  navigation: NativeStackNavigationProp<StackParamList>;
+}
+
 const Stack = createNativeStackNavigator<StackParamList>();
-export default function StackNavigator() {
+
+export default function StackNavigator({navigation}: IStackNavigationProps) {
   return (
     <Stack.Navigator
       screenOptions={{

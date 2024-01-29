@@ -2,6 +2,7 @@ import React, {
   ErrorInfo,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react';
@@ -45,9 +46,10 @@ import toastMessage from '../../utils/toastMessage';
 import getPosition from '../../services/Geolocations';
 import getCityByCoords from '../../api/getCityByCoords';
 import FormatDate from '../../utils/formatDate';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
-interface HomeProps {
-  navigation: NavigationProp<StackParamList>;
+interface IHomeProps {
+  navigation: NativeStackNavigationProp<StackParamList>;
   route: RouteProp<StackParamList>;
 }
 
@@ -230,7 +232,7 @@ function Alerts(ForecastData: IForecastData): IAlertsForecast {
   };
 }
 
-function Home({navigation, route}: HomeProps) {
+function Home({navigation, route}: IHomeProps) {
   const [currentForecast, setCurrentForecast] = useState<ICurrentForecast>({
     dt: '',
     temp: 0,
@@ -460,18 +462,19 @@ function Home({navigation, route}: HomeProps) {
           <RefreshControl refreshing={isLoading} onRefresh={handleReload} />
         }>
         <CurrentForecast
-          currentForecast={currentForecast!}
+          currentForecast={currentForecast}
           animatedValue={scaleAnimValue}
+          navigation={navigation}
         />
         <HourlyForecast hourlyForecast={hourlyForecast} />
         <Messages message={alertsForecast} />
         <DailyForecast dailyForecast={dailyForecast} />
         <View style={{flex: 1, flexDirection: 'row'}}>
           <UVIndex uv={currentForecast.uvi} />
-          <Humidity humidity={currentForecast!.humidity} />
+          <Humidity humidity={currentForecast.humidity} />
         </View>
         <View style={{flex: 1, flexDirection: 'row'}}>
-          <Wind wind={currentForecast!.wind_speed} />
+          <Wind wind={currentForecast.wind_speed} />
           <Sunset sunset={sunsetForecast} />
         </View>
       </ScrollView>

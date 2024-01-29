@@ -1,18 +1,24 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, Image, Animated} from 'react-native';
+import {RouteProp} from '@react-navigation/native';
+import {StackParamList} from '../../Routes/Stack';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import {ICurrentForecast} from '../../Pages/Home';
 import {countries} from 'country-data';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 interface ICurrent {
   currentForecast: ICurrentForecast;
   animatedValue: Animated.Value;
+  navigation: NativeStackNavigationProp<StackParamList>;
+  //route: RouteProp<StackParamList>;
 }
 
 export default function CurrentForecast({
   currentForecast,
   animatedValue,
+  navigation,
 }: ICurrent) {
   const headerHeight = animatedValue.interpolate({
     inputRange: [0, 100],
@@ -34,7 +40,23 @@ export default function CurrentForecast({
     inputRange: [0, 150],
     outputRange: [0, 1],
   });
-
+  useEffect(() => {
+    let valueToChangeTitle: number = 0;
+    imageSize.addListener(value => {
+      console.log('LIST', value.value);
+      valueToChangeTitle = value.value;
+      console.log(valueToChangeTitle === 120);
+      if (valueToChangeTitle === 120) {
+        navigation.navigate('StackScreen', {
+          params: {title: currentForecast.city?.name},
+        });
+      } else if (valueToChangeTitle === 180) {
+        navigation.navigate('StackScreen', {
+          params: {title: ''},
+        });
+      }
+    });
+  }, [imageSize]);
   return (
     <Animated.View
       style={[

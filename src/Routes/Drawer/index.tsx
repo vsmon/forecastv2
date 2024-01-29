@@ -1,9 +1,18 @@
-import React from 'react';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import React, {useLayoutEffect} from 'react';
+import {
+  createDrawerNavigator,
+  DrawerNavigationProp,
+} from '@react-navigation/drawer';
 import Settings from '../../Pages/Settings/index';
-import StackScreen from '../Stack';
+import StackScreen, {StackParamList} from '../Stack';
+import {RouteProp} from '@react-navigation/native';
 
-const Drawer = createDrawerNavigator();
+interface IDrawerNavigationProps {
+  navigation: DrawerNavigationProp<StackParamList>;
+  route: RouteProp<StackParamList>;
+}
+
+const Drawer = createDrawerNavigator<StackParamList>();
 
 export default function DrawerNavigator() {
   return (
@@ -11,19 +20,23 @@ export default function DrawerNavigator() {
       initialRouteName="Home"
       drawerContent={props => <Settings {...props} />}
       screenOptions={{
-        headerTitle: '',
         headerStyle: {backgroundColor: '#000'},
         headerShadowVisible: false,
         headerTintColor: '#FFF',
         headerBackgroundContainerStyle: {backgroundColor: '#FFF'},
-        headerShown: true,
+        headerShown: false,
       }}>
       <Drawer.Screen
         name="StackScreen"
         component={StackScreen}
-        options={{
-          headerShown: true,
-          drawerHideStatusBarOnOpen: false,
+        options={({route}) => {
+          const title = route.params?.params.title;
+          console.log('PARAM===========', route.params?.params.title);
+          return {
+            headerShown: true,
+            headerTitle: title ?? '',
+            drawerHideStatusBarOnOpen: false,
+          };
         }}
       />
     </Drawer.Navigator>
