@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Animated} from 'react-native';
+import {View, Text, Animated, Easing} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {StackParamList} from '../../Routes/Stack';
 import GlobalStyle from '../../Constants/GlobalStyle';
@@ -29,8 +29,9 @@ export default function CurrentForecast({
   });
 
   const imageSize = animatedValue.interpolate({
-    inputRange: [0, 100],
-    outputRange: [180, 120],
+    inputRange: [0, 150],
+    outputRange: [150, 120],
+    easing: Easing.linear,
     extrapolate: 'clamp',
   });
 
@@ -43,21 +44,28 @@ export default function CurrentForecast({
     outputRange: [0, 1],
   });
 
-  let valueToChangeTitle: number = 0;
+  /*let valueToChangeTitle: number = 0;
 
-  imageSize.addListener(value => {
+   imageSize.addListener(value => {
     valueToChangeTitle = value.value;
-    if (valueToChangeTitle === 120 || valueToChangeTitle === 180) {
+
+    if (valueToChangeTitle === 120 || valueToChangeTitle === 150) {
       setImageSizeValue(valueToChangeTitle);
+    }
+  }); */
+
+  opacityShow.addListener(value => {
+    if ((value.value >= 0.1 && value.value <= 0.4) || value.value === 0) {
+      setImageSizeValue(value.value);
     }
   });
 
   useEffect(() => {
-    if (imageSizeValue === 120) {
+    if (imageSizeValue >= 0.1 && imageSizeValue <= 0.4) {
       navigation.navigate('StackScreen', {
         params: {title: currentForecast.city?.name},
       });
-    } else if (imageSizeValue === 180) {
+    } else if (imageSizeValue === 0) {
       navigation.navigate('StackScreen', {
         params: {title: ''},
       });
@@ -102,13 +110,20 @@ export default function CurrentForecast({
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'center',
+                //backgroundColor: 'blue',
               }}>
-              <Text style={{marginBottom: 5, fontSize: 48, color: '#FFF'}}>
-                {currentForecast.temp}°{' '}
+              <Text
+                style={{
+                  marginBottom: 5,
+                  fontSize: 56,
+                  color: '#FFF',
+                  marginRight: 15,
+                }}>
+                {currentForecast.temp}°
               </Text>
               <Animated.Text
                 style={{
-                  fontSize: 14,
+                  fontSize: 18,
                   color: '#FFF',
                   opacity: opacityShow,
                 }}>
@@ -126,20 +141,28 @@ export default function CurrentForecast({
               {currentForecast.description}
             </Animated.Text>
           </View>
-          <View
+          <Animated.View
             style={{
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              marginTop: -30,
-              //backgroundColor: 'red',
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              //padding: 10,
             }}>
             <Animated.Image
-              style={{height: imageSize, width: imageSize}}
+              style={{
+                flex: 1,
+                height: imageSize,
+                width: imageSize,
+                //marginTop: -30,
+                alignItems: 'center',
+                justifyContent: 'center',
+                //backgroundColor: 'red',
+              }}
               source={{
                 uri: `https://openweathermap.org/img/wn/${currentForecast.icon}@2x.png`,
               }}
             />
-          </View>
+          </Animated.View>
         </View>
       </Animated.View>
       <Animated.View

@@ -83,7 +83,7 @@ export interface ISunsetForeast {
   sunset: string;
 }
 
-interface IForecastData {
+export interface IForecastData {
   current: {
     dt: number;
     temp: number;
