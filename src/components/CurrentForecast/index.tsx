@@ -1,26 +1,114 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Animated, Easing} from 'react-native';
-import {RouteProp} from '@react-navigation/native';
 import {StackParamList} from '../../Routes/Stack';
 import GlobalStyle from '../../Constants/GlobalStyle';
-import {ICurrentForecast} from '../../Pages/Home';
+import {ICurrentForecast, IForecastData} from '../../Pages/Home';
 import {countries} from 'country-data';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import FormatDate from '../../utils/formatDate';
 
 interface ICurrent {
-  currentForecast: ICurrentForecast;
+  forecastData: IForecastData;
   animatedValue: Animated.Value;
   navigation: NativeStackNavigationProp<StackParamList>;
   //route: RouteProp<StackParamList>;
 }
 
+function Current(ForecastData: IForecastData): Promise<ICurrentForecast> {
+  const {
+    current: {
+      dt: dtCurrent,
+      temp,
+      feels_like,
+      uvi,
+      humidity,
+      wind_speed,
+      sunrise,
+      sunset,
+      weather: [{description, icon}],
+    },
+    city: {name, lat, lon, country, state, countryFull},
+    daily: [
+      {
+        temp: {max, min},
+      },
+    ],
+    hourly: [
+      {
+        dt,
+        temp: tempHourly,
+        weather: [{icon: iconHourly}],
+        pop,
+      },
+    ],
+  } = ForecastData;
+  const currentForecast: ICurrentForecast = {
+    dt:
+      FormatDate(dtCurrent).dateFormatted +
+      ' - ' +
+      FormatDate(dtCurrent).hourFormatted,
+    temp: Number(temp.toFixed(0)),
+    feels_like: parseInt(feels_like.toFixed(0)),
+    description,
+    icon,
+    max: parseInt(max.toFixed(0)),
+    min: parseInt(min.toFixed(0)),
+    sunrise,
+    sunset,
+    uvi,
+    humidity,
+    wind_speed: parseInt(wind_speed.toFixed(0)),
+    city: {
+      name,
+      lat,
+      lon,
+      country,
+      state,
+      countryFull: countries[country].name,
+    },
+  };
+  return Promise.resolve(currentForecast);
+}
+
 export default function CurrentForecast({
-  currentForecast,
+  forecastData,
   animatedValue,
   navigation,
 }: ICurrent) {
+  const [currentForecast, setCurrentForecast] = useState<ICurrentForecast>({
+    dt: '',
+    temp: 0,
+    feels_like: 0,
+    description: '',
+    icon: '',
+    max: 0,
+    min: 0,
+    city: {
+      name: '',
+      lat: 0,
+      lon: 0,
+      country: '',
+      state: '',
+      countryFull: '',
+    },
+    event: '',
+    alertDescription: '',
+    sunrise: 0,
+    sunset: 0,
+    uvi: 0,
+    humidity: 0,
+    wind_speed: 0,
+    alerts: [{event: '', alertDescription: ''}],
+  });
   const [imageSizeValue, setImageSizeValue] = useState<number>(0);
+
+  async function handleReload() {
+    const current: ICurrentForecast = await Current(forecastData);
+
+    setCurrentForecast(current);
+    console.log('PASSEI CURRENT==========');
+  }
 
   const headerHeight = animatedValue.interpolate({
     inputRange: [0, 100],
@@ -59,6 +147,10 @@ export default function CurrentForecast({
       setImageSizeValue(value.value);
     }
   });
+
+  useEffect(() => {
+    handleReload();
+  }, []);
 
   useEffect(() => {
     if (imageSizeValue >= 0.1 && imageSizeValue <= 0.4) {
@@ -180,12 +272,12 @@ export default function CurrentForecast({
             flexDirection: 'row',
             color: '#FFF',
           }}>
-          {currentForecast.city?.name}
-          {currentForecast.city?.state
+          {currentForecast.city.name}
+          {currentForecast.city.state
             ? ' - ' + currentForecast.city.state
             : null}
           {', '}
-          {countries[currentForecast.city!.country]?.name}{' '}
+          {currentForecast.city.countryFull}{' '}
           <Icon name="map-marker" size={14} color={'#FFF'} />
         </Text>
         <Text style={{fontSize: 11, color: '#FFF'}}>

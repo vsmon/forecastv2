@@ -1,52 +1,32 @@
-import React, {
-  ErrorInfo,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   View,
   ScrollView,
   RefreshControl,
   ActivityIndicator,
-  Modal,
   AppState,
-  AppStateStatus,
-  Text,
   Animated,
 } from 'react-native';
 
 import CurrentForecast from '../../components/CurrentForecast';
 import DailyForecast from '../../components/DailyForecast';
 import HourlyForecast from '../../components/HourlyForecast';
-import {
-  NavigationProp,
-  RouteProp,
-  useFocusEffect,
-} from '@react-navigation/native';
-import seed from '../../../seed.json';
+import {RouteProp, useFocusEffect} from '@react-navigation/native';
 import Messages from '../../components/MessagesForecast';
 import UVIndex from '../../components/UV Index';
 import Humidity from '../../components/Humidity';
 import Wind from '../../components/Wind';
 import Sunset from '../../components/Sunset';
 import {StackParamList} from '../../Routes/Stack';
-import WeekDay from '../../utils/weekDay';
 import {Locations} from '../../types/types';
 import getForecastData from '../../api/getForecastData';
-import {
-  getAllStoredCities,
-  getByKeyStoredCities,
-  storeCity,
-} from '../../Database/AsyncStorage';
+import {getByKeyStoredCities, storeCity} from '../../Database/AsyncStorage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import toastMessage from '../../utils/toastMessage';
 import getPosition from '../../services/Geolocations';
 import getCityByCoords from '../../api/getCityByCoords';
-import FormatDate from '../../utils/formatDate';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {countries} from 'country-data';
 
 interface IHomeProps {
   navigation: NativeStackNavigationProp<StackParamList>;
@@ -61,7 +41,7 @@ export interface ICurrentForecast {
   icon: string;
   max: number;
   min: number;
-  city?: Locations;
+  city: Locations;
   event?: string;
   alertDescription?: string;
   sunrise: number;
@@ -95,6 +75,7 @@ export interface IForecastData {
     sunset: number;
     weather: [{description: string; icon: string}];
   };
+  city: Locations;
   daily: [
     {
       dt: number;
@@ -117,53 +98,6 @@ export interface IForecastData {
   alerts?: [{event: string; description: string}];
 }
 
-function Current(ForecastData: IForecastData): Promise<ICurrentForecast> {
-  const {
-    current: {
-      dt: dtCurrent,
-      temp,
-      feels_like,
-      uvi,
-      humidity,
-      wind_speed,
-      sunrise,
-      sunset,
-      weather: [{description, icon}],
-    },
-    daily: [
-      {
-        temp: {max, min},
-      },
-    ],
-    hourly: [
-      {
-        dt,
-        temp: tempHourly,
-        weather: [{icon: iconHourly}],
-        pop,
-      },
-    ],
-  } = ForecastData;
-  const currentForecast: ICurrentForecast = {
-    dt:
-      FormatDate(dtCurrent).dateFormatted +
-      ' - ' +
-      FormatDate(dtCurrent).hourFormatted,
-    temp: Number(temp.toFixed(0)),
-    feels_like: parseInt(feels_like.toFixed(0)),
-    description,
-    icon,
-    max: parseInt(max.toFixed(0)),
-    min: parseInt(min.toFixed(0)),
-    sunrise,
-    sunset,
-    uvi,
-    humidity,
-    wind_speed: parseInt(wind_speed.toFixed(0)),
-  };
-  return Promise.resolve(currentForecast);
-}
-
 export interface IHourlyForecast {
   dt: string;
   temp: number;
@@ -172,24 +106,6 @@ export interface IHourlyForecast {
   description: string;
   min: string;
   max: string;
-}
-function Hourly(ForecastData: IForecastData): Promise<IHourlyForecast[]> {
-  const min: string = ForecastData.daily[0].temp.min.toFixed(0);
-  const max: string = ForecastData.daily[0].temp.max.toFixed(0);
-  const hourlyList: IHourlyForecast[] = ForecastData.hourly.map(
-    (item, index): IHourlyForecast => {
-      return {
-        dt: FormatDate(item.dt).hourFormatted,
-        temp: parseInt(item.temp.toFixed(0)),
-        icon: item.weather[0].icon,
-        pop: Number((item.pop * 100).toFixed(0)),
-        description: item.weather[0].description,
-        min,
-        max,
-      };
-    },
-  );
-  return Promise.resolve(hourlyList);
 }
 
 export interface IDailyForecast {
@@ -201,92 +117,48 @@ export interface IDailyForecast {
   icon: string;
   moon_phase: number;
 }
-function Daily(ForecastData: IForecastData): Promise<IDailyForecast[]> {
-  const dailyList: IDailyForecast[] = ForecastData.daily.map(
-    (item, index): IDailyForecast => {
-      const dayOfWeek: number = Number(
-        new Date(item.dt * 1000).getDay().toLocaleString(),
-      );
-      return {
-        dt: item.dt,
-        week: WeekDay(dayOfWeek),
-        pop: Number((item.pop * 100).toFixed(0)),
-        icon: item.weather[0].icon,
-        min: parseInt(item.temp.min.toFixed(0)),
-        max: parseInt(item.temp.max.toFixed(0)),
-        moon_phase: item.moon_phase,
-      };
-    },
-  );
-  return Promise.resolve(dailyList);
-}
-
-function Alerts(ForecastData: IForecastData): IAlertsForecast {
-  if (ForecastData.alerts) {
-    const {event, description} = ForecastData.alerts[0] || {};
-    return {alertEvent: event, alertDescription: description};
-  }
-  return {
-    alertEvent: '',
-    alertDescription: 'Nenhum Alerta no momento',
-  };
-}
 
 function Home({navigation, route}: IHomeProps) {
-  const [currentForecast, setCurrentForecast] = useState<ICurrentForecast>({
-    dt: '',
-    temp: 0,
-    feels_like: 0,
-    description: '',
-    icon: '',
-    max: 0,
-    min: 0,
+  const [forecastData, setForecastData] = useState<IForecastData>({
+    current: {
+      dt: 0,
+      temp: 0,
+      feels_like: 0,
+      uvi: 0,
+      humidity: 0,
+      wind_speed: 0,
+      sunrise: 0,
+      sunset: 0,
+      weather: [{description: '', icon: ''}],
+    },
     city: {
       name: '',
+      state: '',
+      country: '',
       lat: 0,
       lon: 0,
-      country: '',
-      state: '',
+      countryFull: '',
     },
-    event: '',
-    alertDescription: '',
-    sunrise: 0,
-    sunset: 0,
-    uvi: 0,
-    humidity: 0,
-    wind_speed: 0,
-    alerts: [{event: '', alertDescription: ''}],
-  });
-  const [hourlyForecast, setHourlyForecast] = useState<
-    IHourlyForecast[] | null
-  >([
-    {
-      dt: '',
-      temp: 0,
-      icon: '',
-      pop: 0,
-      description: '',
-      min: '',
-      max: '',
-    },
-  ]);
-  const [dailyForecast, setDailyForecast] = useState<IDailyForecast[] | null>([
-    {
-      dt: 0,
-      min: 0,
-      max: 0,
-      week: '',
-      pop: 0,
-      icon: '',
-      moon_phase: 0,
-    },
-  ]);
-  const [alertsForecast, setAlertsForecast] = useState<IAlertsForecast | null>(
-    null,
-  );
-  const [sunsetForecast, setSunsetForeast] = useState<ISunsetForeast | null>({
-    sunrise: '',
-    sunset: '',
+    daily: [
+      {
+        dt: 0,
+        pop: 0,
+        icon: '',
+        moon_phase: 0,
+        temp: {max: 0, min: 0},
+        weather: [{icon: ''}],
+      },
+    ],
+    hourly: [
+      {
+        dt: 0,
+        temp: 0,
+        weather: [{icon: '', description: ''}],
+        pop: 0,
+        icon: '',
+      },
+    ],
+    alerts: [{event: '', description: ''}],
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
@@ -299,8 +171,8 @@ function Home({navigation, route}: IHomeProps) {
 
   async function getForecast(city: Locations) {
     try {
-      //setActivityIndicator(true);
-      const ForecastData = await getForecastData(city);
+      const ForecastData: IForecastData = await getForecastData(city);
+      setForecastData({...ForecastData, city});
       console.log('CURRENT CITY==========', {
         name: city.name,
         state: city.state,
@@ -308,36 +180,6 @@ function Home({navigation, route}: IHomeProps) {
         lat: city.lat,
         lon: city.lon,
       });
-
-      const current: ICurrentForecast = await Current(ForecastData);
-      const currentWithCity: ICurrentForecast = {
-        ...current,
-        city,
-      };
-      setCurrentForecast(currentWithCity);
-      console.log('PASSEI CURRENT==========');
-
-      const hourly: IHourlyForecast[] = await Hourly(ForecastData);
-      setHourlyForecast(hourly);
-      console.log('PASSEI HOURLY==========');
-
-      const alerts: IAlertsForecast = Alerts(ForecastData);
-      setAlertsForecast(alerts);
-      console.log('PASSEI ALERTS==========');
-
-      const daily: IDailyForecast[] = await Daily(ForecastData);
-      setDailyForecast(daily);
-      console.log('PASSEI DAILY==========');
-
-      const sunset = {
-        sunrise: FormatDate(current.sunrise).hourFormatted,
-        sunset: FormatDate(current.sunset).hourFormatted,
-      };
-      setSunsetForeast(sunset);
-      console.log('PASSEI SUNSET==========');
-
-      /* setIsLoading(false);
-      setActivityIndicator(false); */
     } catch (error) {
       setIsError(true);
       console.log(error);
@@ -360,14 +202,20 @@ function Home({navigation, route}: IHomeProps) {
       country: '',
       lat: 0,
       lon: 0,
+      countryFull: '',
     };
 
     const {latitude, longitude} = await getPosition();
 
-    const cityByCoords: Locations[] = await getCityByCoords(
+    const cityByCoordsResp: Locations[] = await getCityByCoords(
       latitude,
       longitude,
     );
+
+    const cityByCoords: Locations[] = cityByCoordsResp.map(city => {
+      return {...city, countryFull: countries[city.country].name};
+    });
+
     console.log('COORDS=============', latitude, longitude);
     console.log('CITY BY COORDS==============', cityByCoords);
     console.log('CITY BY PARAMS==============', cityByParam);
@@ -462,20 +310,20 @@ function Home({navigation, route}: IHomeProps) {
           <RefreshControl refreshing={isLoading} onRefresh={handleReload} />
         }>
         <CurrentForecast
-          currentForecast={currentForecast}
+          forecastData={forecastData}
           animatedValue={scaleAnimValue}
           navigation={navigation}
         />
-        <HourlyForecast hourlyForecast={hourlyForecast} />
-        <Messages message={alertsForecast} />
-        <DailyForecast dailyForecast={dailyForecast} />
+        <HourlyForecast forecastData={forecastData} />
+        <Messages forecastData={forecastData} />
+        <DailyForecast forecastData={forecastData} />
         <View style={{flex: 1, flexDirection: 'row'}}>
-          <UVIndex uv={currentForecast.uvi} />
-          <Humidity humidity={currentForecast.humidity} />
+          <UVIndex uv={forecastData?.current.uvi} />
+          <Humidity humidity={forecastData?.current.humidity} />
         </View>
         <View style={{flex: 1, flexDirection: 'row'}}>
-          <Wind wind={currentForecast.wind_speed} />
-          <Sunset sunset={sunsetForecast} />
+          <Wind wind={forecastData?.current.wind_speed} />
+          <Sunset forecastData={forecastData} />
         </View>
       </ScrollView>
     </View>

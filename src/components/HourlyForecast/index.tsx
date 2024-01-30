@@ -1,14 +1,54 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import ItemHourlyForecast from '../ItemHourlyForecast';
 import GlobalStyle from '../../Constants/GlobalStyle';
-import {IHourlyForecast} from '../../Pages/Home';
+import {IForecastData, IHourlyForecast} from '../../Pages/Home';
+import FormatDate from '../../utils/formatDate';
 
 interface IHourly {
-  hourlyForecast: IHourlyForecast[] | any;
+  forecastData: IForecastData;
 }
+function Hourly(ForecastData: IForecastData): Promise<IHourlyForecast[]> {
+  const min: string = ForecastData.daily[0].temp.min.toFixed(0);
+  const max: string = ForecastData.daily[0].temp.max.toFixed(0);
+  const hourlyList: IHourlyForecast[] = ForecastData.hourly.map(
+    (item, index): IHourlyForecast => {
+      return {
+        dt: FormatDate(item.dt).hourFormatted,
+        temp: parseInt(item.temp.toFixed(0)),
+        icon: item.weather[0].icon,
+        pop: Number((item.pop * 100).toFixed(0)),
+        description: item.weather[0].description,
+        min,
+        max,
+      };
+    },
+  );
+  return Promise.resolve(hourlyList);
+}
+export default function HourlyForecast({forecastData}: IHourly) {
+  const [hourlyForecast, setHourlyForecast] = useState<IHourlyForecast[]>([
+    {
+      dt: '',
+      temp: 0,
+      icon: '',
+      pop: 0,
+      description: '',
+      min: '',
+      max: '',
+    },
+  ]);
 
-export default function HourlyForecast({hourlyForecast}: IHourly) {
+  async function handleReload() {
+    const hourly: IHourlyForecast[] = await Hourly(forecastData);
+    setHourlyForecast(hourly);
+    console.log('PASSEI HOURLY==========');
+  }
+
+  useEffect(() => {
+    handleReload();
+  }, []);
+
   return (
     <View style={[GlobalStyle.container, {alignItems: 'stretch'}]}>
       <View>

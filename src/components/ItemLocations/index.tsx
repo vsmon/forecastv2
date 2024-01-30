@@ -70,11 +70,11 @@ export default function ItemLocations({
           </View>
           {city.state ? (
             <Text style={{fontSize: 12, color: '#FFF9'}}>
-              {city.state}, {countries[city.country].name}
+              {city.state}, {city.countryFull}
             </Text>
           ) : (
             <Text style={{fontSize: 14, color: '#FFF9'}}>
-              {countries[city.country].name}
+              {city.countryFull}
             </Text>
           )}
         </View>

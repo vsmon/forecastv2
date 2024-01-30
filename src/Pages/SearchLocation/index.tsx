@@ -34,8 +34,10 @@ export default function SearchLocation({navigation}: SearchLocation) {
   async function handleGetCities() {
     try {
       const resp: Locations[] = await getCitiesData(city);
-
-      setCities(resp);
+      const citiesWithFullCountry: Locations[] = resp.map(city => {
+        return {...city, countryFull: countries[city.country].name};
+      });
+      setCities(citiesWithFullCountry);
     } catch (error) {
       console.log(error);
     }
@@ -116,7 +118,7 @@ export default function SearchLocation({navigation}: SearchLocation) {
                   <Text style={{fontSize: 18, color: '#FFF'}}>{item.name}</Text>
                   <Text style={{fontSize: 12, color: '#FFF9'}}>
                     {item.state ? item.state + ', ' : null}
-                    {countries[item.country].name}
+                    {item.countryFull}
                   </Text>
                 </View>
               </Pressable>

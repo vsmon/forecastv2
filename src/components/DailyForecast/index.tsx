@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {IDailyForecast} from '../../Pages/Home';
+import {IDailyForecast, IForecastData} from '../../Pages/Home';
+import WeekDay from '../../utils/weekDay';
 
 interface Daily {
   dt: number;
@@ -15,7 +16,7 @@ interface Daily {
 }
 
 interface IDaily {
-  dailyForecast: IDailyForecast[] | any;
+  forecastData: IForecastData;
 }
 
 /* enum MoonPhase {
@@ -76,7 +77,47 @@ function MoonPhase(moonPhase: number): string {
   }
   return iconName;
 }
-export default function DailyForecast({dailyForecast}: IDaily) {
+function Daily(ForecastData: IForecastData): Promise<IDailyForecast[]> {
+  const dailyList: IDailyForecast[] = ForecastData.daily.map(
+    (item, index): IDailyForecast => {
+      const dayOfWeek: number = Number(
+        new Date(item.dt * 1000).getDay().toLocaleString(),
+      );
+      return {
+        dt: item.dt,
+        week: WeekDay(dayOfWeek),
+        pop: Number((item.pop * 100).toFixed(0)),
+        icon: item.weather[0].icon,
+        min: parseInt(item.temp.min.toFixed(0)),
+        max: parseInt(item.temp.max.toFixed(0)),
+        moon_phase: item.moon_phase,
+      };
+    },
+  );
+  return Promise.resolve(dailyList);
+}
+export default function DailyForecast({forecastData}: IDaily) {
+  const [dailyForecast, setDailyForecast] = useState<IDailyForecast[]>([
+    {
+      dt: 0,
+      min: 0,
+      max: 0,
+      week: '',
+      pop: 0,
+      icon: '',
+      moon_phase: 0,
+    },
+  ]);
+
+  async function handleReload() {
+    const daily: IDailyForecast[] = await Daily(forecastData);
+    setDailyForecast(daily);
+    console.log('PASSEI DAILY==========');
+  }
+
+  useEffect(() => {
+    handleReload();
+  }, []);
   return (
     <View style={[GlobalStyle.container, {alignItems: 'stretch'}]}>
       <View

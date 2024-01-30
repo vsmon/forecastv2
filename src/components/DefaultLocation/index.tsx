@@ -18,6 +18,7 @@ export default function DefaultLocation({city, navigation}: DefaultLocations) {
     country: '',
     lat: 0,
     lon: 0,
+    countryFull: '',
   });
   useEffect(() => {
     setDefaultCity(city);
@@ -67,11 +68,11 @@ export default function DefaultLocation({city, navigation}: DefaultLocations) {
           <View style={{justifyContent: 'flex-start'}}>
             {city.state ? (
               <Text style={{fontSize: 14, color: '#FFF9'}}>
-                {city.state}, {countries[city.country].name}
+                {city.state}, {city.countryFull}
               </Text>
             ) : (
               <Text style={{fontSize: 14, color: '#FFF9'}}>
-                {countries[city.country]?.name}
+                {city.countryFull}
               </Text>
             )}
           </View>

@@ -4,6 +4,7 @@ interface Locations {
     lon: number;
     country: string;
     state: string;
+    countryFull: string
   }
 
 export type {Locations}  

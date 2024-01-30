@@ -20,6 +20,7 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
       lat: 0,
       lon: 0,
       state: '',
+      countryFull: '',
     },
   ]);
   const [defaultLocation, setDefaultLocation] = useState<Locations>({
@@ -28,6 +29,7 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
     lat: 0,
     lon: 0,
     state: '',
+    countryFull: '',
   });
 
   async function handleReload() {
@@ -89,16 +91,15 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
                 fontSize: 18,
                 color: '#FFF',
               }}>
-              {defaultLocation?.name}
+              {defaultLocation.name}
             </Text>
-            {defaultLocation?.state ? (
+            {defaultLocation.state ? (
               <Text style={{fontSize: 12, color: '#FFF9'}}>
-                {defaultLocation?.state},{' '}
-                {countries[defaultLocation?.country].name}
+                {defaultLocation.state}, {defaultLocation.countryFull}
               </Text>
             ) : (
               <Text style={{fontSize: 14, color: '#FFF9'}}>
-                {countries[defaultLocation?.country].name}
+                {defaultLocation.countryFull}
               </Text>
             )}
           </View>
@@ -157,11 +158,11 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
                     </Text>
                     {item.state ? (
                       <Text style={{fontSize: 12, color: '#FFF9'}}>
-                        {item.state}, {countries[item.country].name}
+                        {item.state}, {item.countryFull}
                       </Text>
                     ) : (
                       <Text style={{fontSize: 14, color: '#FFF9'}}>
-                        {countries[item.country].name}
+                        {item.countryFull}
                       </Text>
                     )}
                   </View>

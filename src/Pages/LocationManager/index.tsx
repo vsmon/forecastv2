@@ -33,6 +33,7 @@ export default function LocationManager({navigation, route}: LocationManager) {
     country: '',
     lat: 0,
     lon: 0,
+    countryFull: '',
   });
 
   useFocusEffect(
