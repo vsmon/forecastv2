@@ -2,8 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {IAlertsForecast, IForecastData} from '../../Pages/Home';
+import {IForecastData} from '../../types/types';
 
+export interface IAlertsForecast {
+  alertEvent: string | undefined;
+  alertDescription: string | undefined;
+  alerts?: [{event: string; description: string}];
+}
 interface IAlerts {
   forecastData: IForecastData;
 }

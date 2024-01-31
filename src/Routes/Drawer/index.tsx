@@ -1,16 +1,7 @@
-import React, {useLayoutEffect} from 'react';
-import {
-  createDrawerNavigator,
-  DrawerNavigationProp,
-} from '@react-navigation/drawer';
+import React from 'react';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import Settings from '../../Pages/Settings/index';
 import StackScreen, {StackParamList} from '../Stack';
-import {RouteProp} from '@react-navigation/native';
-
-interface IDrawerNavigationProps {
-  navigation: DrawerNavigationProp<StackParamList>;
-  route: RouteProp<StackParamList>;
-}
 
 const Drawer = createDrawerNavigator<StackParamList>();
 

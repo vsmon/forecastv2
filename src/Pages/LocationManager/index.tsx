@@ -14,7 +14,7 @@ import {
   removeCity,
 } from '../../Database/AsyncStorage';
 
-import {Locations} from '../../types/types';
+import {ILocations} from '../../types/types';
 
 import ItemLocations from '../../components/ItemLocations';
 import DefaultLocation from '../../components/DefaultLocation';
@@ -26,8 +26,8 @@ interface LocationManager {
 }
 
 export default function LocationManager({navigation, route}: LocationManager) {
-  const [locations, setLocations] = useState<Locations[] | null>([]);
-  const [defaultLocation, setDefaultLocation] = useState<Locations | null>({
+  const [locations, setLocations] = useState<ILocations[] | null>([]);
+  const [defaultLocation, setDefaultLocation] = useState<ILocations | null>({
     name: '',
     state: '',
     country: '',
@@ -43,9 +43,11 @@ export default function LocationManager({navigation, route}: LocationManager) {
   );
 
   async function handleLoadCities() {
-    const cities: Locations[] | null = await getAllStoredCities();
+    const cities: ILocations[] | null = await getAllStoredCities();
 
-    const defaultCity: Locations | null = await getByKeyStoredCities('default');
+    const defaultCity: ILocations | null = await getByKeyStoredCities(
+      'default',
+    );
 
     console.log(cities);
 

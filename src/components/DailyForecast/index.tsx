@@ -2,9 +2,18 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, Image} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {IDailyForecast, IForecastData} from '../../Pages/Home';
+import {IForecastData} from '../../types/types';
 import WeekDay from '../../utils/weekDay';
 
+export interface IDailyForecast {
+  dt: number;
+  min: number;
+  max: number;
+  week: string;
+  pop: number;
+  icon: string;
+  moon_phase: number;
+}
 interface Daily {
   dt: number;
   week: string;

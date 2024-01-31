@@ -12,7 +12,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {storeCity} from '../../Database/AsyncStorage';
 import getCitiesData from '../../api/getCitiesData';
-import {Locations} from '../../types/types';
+import {ILocations} from '../../types/types';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {countries} from 'country-data';
 
@@ -29,12 +29,12 @@ interface SearchLocation {
 
 export default function SearchLocation({navigation}: SearchLocation) {
   const [city, setCity] = useState('');
-  const [cities, setCities] = useState<Locations[]>([]);
+  const [cities, setCities] = useState<ILocations[]>([]);
 
   async function handleGetCities() {
     try {
-      const resp: Locations[] = await getCitiesData(city);
-      const citiesWithFullCountry: Locations[] = resp.map(city => {
+      const resp: ILocations[] = await getCitiesData(city);
+      const citiesWithFullCountry: ILocations[] = resp.map(city => {
         return {...city, countryFull: countries[city.country].name};
       });
       setCities(citiesWithFullCountry);

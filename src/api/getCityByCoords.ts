@@ -1,16 +1,25 @@
-import {Locations} from '../types/types';
+import {ILocations} from '../types/types';
+import {OPENWEATHERMAPTOKEN} from '@env'
 
-export default async function getCityByCoords(lat:number,lon:number): Promise<Locations[]> {
+
+export default async function getCityByCoords(lat:number,lon:number): Promise<ILocations[]> {
     try {
       const response = await fetch(
-        `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=f7e324eced811885a4c794141a933b13`,
+        `http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${OPENWEATHERMAPTOKEN}`,
       );
-      const json: Locations[] = await response.json();
+      
+      const json: ILocations[] = await response.json();
 
       if(json === null){
-        throw new Error("Erro ao obter cidades");        
+        throw new Error("Error gettting city by coords");        
       }
-      return Promise.resolve<Locations[]>(json)
+
+      if(!response.ok){
+        console.log('Error gettting city by coords==========', json);   
+        return Promise.resolve<ILocations[]>([])
+      }
+
+      return Promise.resolve<ILocations[]>(json)
     } catch (error: any) {
       console.log('CATCH==========', error);
       return Promise.resolve(error)

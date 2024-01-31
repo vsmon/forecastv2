@@ -3,8 +3,12 @@ import {View, Text} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FormatDate from '../../utils/formatDate';
-import {IForecastData, ISunsetForeast} from '../../Pages/Home';
+import {IForecastData} from '../../types/types';
 
+export interface ISunsetForeast {
+  sunrise: string;
+  sunset: string;
+}
 interface SunsetForecast {
   forecastData: IForecastData;
 }

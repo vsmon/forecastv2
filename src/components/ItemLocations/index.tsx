@@ -2,12 +2,11 @@ import React, {useState} from 'react';
 import {View, Text, Pressable, Alert} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Locations} from '../../types/types';
+import {ILocations} from '../../types/types';
 import {StackParamList} from '../../Routes/Stack';
-import {countries} from 'country-data';
 
 interface ItemLocations {
-  city: Locations;
+  city: ILocations;
   navigation: NavigationProp<StackParamList>;
   onPress: any;
   onLongPress: any;

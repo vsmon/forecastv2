@@ -1,16 +1,24 @@
-import {Locations} from '../types/types';
+import {ILocations} from '../types/types';
+import {OPENWEATHERMAPTOKEN} from '@env'
 
-export default async function getCitiesData(cityName:string): Promise<Locations[]> {
+
+export default async function getCitiesData(cityName:string): Promise<ILocations[]> {
     try {
       const response = await fetch(
-        `https://api.openweathermap.org/geo/1.0/direct?q=${cityName},,&limit=10&appid=f7e324eced811885a4c794141a933b13`,
+        `https://api.openweathermap.org/geo/1.0/direct?q=${cityName},,&limit=10&appid=${OPENWEATHERMAPTOKEN}`,
       );
-      const json: Locations[] = await response.json();
+      const json: ILocations[] = await response.json();
 
       if(json === null){
-        throw new Error("Erro ao obter cidades");        
+        throw new Error("Erro getting city data");        
       }
-      return Promise.resolve<Locations[]>(json)
+
+      if(!response.ok){
+        console.log('Error gettting city data==========', json);
+        return Promise.resolve<ILocations[]>([])
+      }
+
+      return Promise.resolve<ILocations[]>(json)
     } catch (error: any) {
       console.log('CATCH==========', error);
       return Promise.resolve(error)

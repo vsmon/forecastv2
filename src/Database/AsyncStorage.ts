@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import toastMessage from '../utils/toastMessage';
-import { Locations } from '../types/types';
+import { ILocations } from '../types/types';
 
 
-async function storeCity(value: Locations, key: string ) {
+async function storeCity(value: ILocations, key: string ) {
     //Save city in async storage
     try {
       const jsonValue = JSON.stringify(value);
@@ -18,13 +18,13 @@ async function storeCity(value: Locations, key: string ) {
     }
   }
 
-  async function getAllStoredCities(): Promise<Locations[] | null> {
-    let citiesList: Locations[] = [];
+  async function getAllStoredCities(): Promise<ILocations[] | null> {
+    let citiesList: ILocations[] = [];
     try {
       const keys = await AsyncStorage.getAllKeys();
       keys.map(async key => {
         const response: string|any = await AsyncStorage.getItem(key);
-        const json: Locations = JSON.parse(response);
+        const json: ILocations = JSON.parse(response);
         if(key !== 'default'){
 
           citiesList.push(json);        
@@ -34,7 +34,7 @@ async function storeCity(value: Locations, key: string ) {
         throw new Error("Nenhum registro encontrado");
         
       }
-      return Promise.resolve<Locations[]>(citiesList) 
+      return Promise.resolve<ILocations[]>(citiesList) 
       //console.log('API ALL KEYS===========', citiesList)
     } catch (e: any) {
       console.log('Error read keys', e.message);
@@ -42,18 +42,18 @@ async function storeCity(value: Locations, key: string ) {
     }
   }
 
-async function getByKeyStoredCities(key:string): Promise<Locations|null> {
+async function getByKeyStoredCities(key:string): Promise<ILocations|null> {
     try {
 
       const response: string | null= await AsyncStorage.getItem(key);
-      const json: Locations = response != null ? JSON.parse(response) : null; //JSON.parse(response);
+      const json: ILocations = response != null ? JSON.parse(response) : null; //JSON.parse(response);
       
       if(json === null){
         throw new Error("Nenhum registro encontrado com e key: " + key);
         
       }
       //console.log('API BY KEY===========', json)        
-      return Promise.resolve<Locations>(json) 
+      return Promise.resolve<ILocations>(json) 
     } catch (e: any) {
       console.log('Error read keys', e);
       return Promise.resolve(null)

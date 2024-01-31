@@ -5,7 +5,6 @@ import {
 import Home from '../../Pages/Home';
 import SearchLocation from '../../Pages/SearchLocation';
 import LocationManager from '../../Pages/LocationManager';
-import {useLayoutEffect} from 'react';
 
 export type StackParamList = {
   Home: any;

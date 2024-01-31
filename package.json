@@ -8,9 +8,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "build2": "cd android && ./gradlew clean && ./gradlew assembleRelease && cd D:/Users/Rodrigo/Desktop/forecast/android/app/build/outputs/apk/release && ren app-release.apk forecast.apk && start D:/Users/Rodrigo/Desktop/forecast/android/app/build/outputs/apk/release",
-    "build": "cd android && ./gradlew clean && ./gradlew assembleRelease && cd D:/Users/Rodrigo/Desktop/forecast/android/app/build/outputs/apk/release && ren app-release.apk forecast.apk && copy D:\\Users\\Rodrigo\\Desktop\\forecast\\android\\app\\build\\outputs\\apk\\release\\forecast.apk \\\\192.168.0.95\\private",
-    "copy": "copy D:\\Users\\Rodrigo\\Desktop\\forecast\\android\\app\\build\\outputs\\apk\\release\\forecast.apk \\\\192.168.0.95\\private"
+    "build": "cd android && ./gradlew clean && ./gradlew assembleRelease && cd D:/Users/Rodrigo/Desktop/forecast/android/app/build/outputs/apk/release && ren app-release.apk forecast.apk && copy D:\\Users\\Rodrigo\\Desktop\\forecast\\android\\app\\build\\outputs\\apk\\release\\forecast.apk \\\\192.168.0.95\\private"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.21.0",
@@ -44,6 +42,7 @@
     "eslint": "^8.19.0",
     "jest": "^29.6.3",
     "prettier": "2.8.8",
+    "react-native-dotenv": "^3.4.9",
     "react-test-renderer": "18.2.0",
     "typescript": "5.0.4"
   },

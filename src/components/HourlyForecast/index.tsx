@@ -2,9 +2,18 @@ import React, {useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import ItemHourlyForecast from '../ItemHourlyForecast';
 import GlobalStyle from '../../Constants/GlobalStyle';
-import {IForecastData, IHourlyForecast} from '../../Pages/Home';
+import {IForecastData} from '../../types/types';
 import FormatDate from '../../utils/formatDate';
 
+export interface IHourlyForecast {
+  dt: string;
+  temp: number;
+  icon: string;
+  pop: number;
+  description: string;
+  min: string;
+  max: string;
+}
 interface IHourly {
   forecastData: IForecastData;
 }

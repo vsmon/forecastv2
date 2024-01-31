@@ -18,7 +18,7 @@ import Humidity from '../../components/Humidity';
 import Wind from '../../components/Wind';
 import Sunset from '../../components/Sunset';
 import {StackParamList} from '../../Routes/Stack';
-import {Locations} from '../../types/types';
+import {IForecastData, ILocations} from '../../types/types';
 import getForecastData from '../../api/getForecastData';
 import {getByKeyStoredCities, storeCity} from '../../Database/AsyncStorage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -31,91 +31,6 @@ import {countries} from 'country-data';
 interface IHomeProps {
   navigation: NativeStackNavigationProp<StackParamList>;
   route: RouteProp<StackParamList>;
-}
-
-export interface ICurrentForecast {
-  dt: string;
-  temp: number;
-  feels_like: number;
-  description: string;
-  icon: string;
-  max: number;
-  min: number;
-  city: Locations;
-  event?: string;
-  alertDescription?: string;
-  sunrise: number;
-  sunset: number;
-  uvi: number;
-  humidity: number;
-  wind_speed: number;
-  alerts?: [{event: string; alertDescription: string}];
-}
-
-export interface IAlertsForecast {
-  alertEvent: string | undefined;
-  alertDescription: string | undefined;
-  alerts?: [{event: string; description: string}];
-}
-
-export interface ISunsetForeast {
-  sunrise: string;
-  sunset: string;
-}
-
-export interface IForecastData {
-  current: {
-    dt: number;
-    temp: number;
-    feels_like: number;
-    uvi: number;
-    humidity: number;
-    wind_speed: number;
-    sunrise: number;
-    sunset: number;
-    weather: [{description: string; icon: string}];
-  };
-  city: Locations;
-  daily: [
-    {
-      dt: number;
-      pop: number;
-      icon: string;
-      moon_phase: number;
-      temp: {max: number; min: number};
-      weather: [{icon: string}];
-    },
-  ];
-  hourly: [
-    {
-      dt: number;
-      temp: number;
-      weather: [{icon: string; description: string}];
-      pop: number;
-      icon: string;
-    },
-  ];
-  alerts?: [{event: string; description: string}];
-}
-
-export interface IHourlyForecast {
-  dt: string;
-  temp: number;
-  icon: string;
-  pop: number;
-  description: string;
-  min: string;
-  max: string;
-}
-
-export interface IDailyForecast {
-  dt: number;
-  min: number;
-  max: number;
-  week: string;
-  pop: number;
-  icon: string;
-  moon_phase: number;
 }
 
 function Home({navigation, route}: IHomeProps) {
@@ -166,13 +81,15 @@ function Home({navigation, route}: IHomeProps) {
 
   const scaleAnimValue = useRef(new Animated.Value(0)).current;
 
-  const cityByParam: Locations = route.params?.params.city;
+  const cityByParam: ILocations = route.params?.params.city;
   const screenOrigin: string = route.params?.params.screenName;
 
-  async function getForecast(city: Locations) {
+  async function getForecast(city: ILocations) {
     try {
       const ForecastData: IForecastData = await getForecastData(city);
+
       setForecastData({...ForecastData, city});
+
       console.log('CURRENT CITY==========', {
         name: city.name,
         state: city.state,
@@ -187,7 +104,7 @@ function Home({navigation, route}: IHomeProps) {
     }
   }
 
-  async function getDefaultCity(): Promise<Locations | null> {
+  async function getDefaultCity(): Promise<ILocations | null> {
     const city = await getByKeyStoredCities('default');
 
     return city;
@@ -196,7 +113,7 @@ function Home({navigation, route}: IHomeProps) {
   const handleReload = async () => {
     setActivityIndicator(true);
 
-    let city: Locations | null = {
+    let city: ILocations | null = {
       name: '',
       state: '',
       country: '',
@@ -207,12 +124,12 @@ function Home({navigation, route}: IHomeProps) {
 
     const {latitude, longitude} = await getPosition();
 
-    const cityByCoordsResp: Locations[] = await getCityByCoords(
+    const cityByCoordsResp: ILocations[] = await getCityByCoords(
       latitude,
       longitude,
     );
 
-    const cityByCoords: Locations[] = cityByCoordsResp.map(city => {
+    const cityByCoords: ILocations[] = cityByCoordsResp.map(city => {
       return {...city, countryFull: countries[city.country].name};
     });
 
@@ -221,7 +138,8 @@ function Home({navigation, route}: IHomeProps) {
     console.log('CITY BY PARAMS==============', cityByParam);
     console.log('SCREEN ORIGIN============', screenOrigin);
 
-    const defaultCity: Locations | null = await getDefaultCity();
+    const defaultCity: ILocations | null = await getDefaultCity();
+
     if (screenOrigin === undefined) {
       city = defaultCity;
       if (cityByCoords.length > 0) {
@@ -318,11 +236,11 @@ function Home({navigation, route}: IHomeProps) {
         <Messages forecastData={forecastData} />
         <DailyForecast forecastData={forecastData} />
         <View style={{flex: 1, flexDirection: 'row'}}>
-          <UVIndex uv={forecastData?.current.uvi} />
-          <Humidity humidity={forecastData?.current.humidity} />
+          <UVIndex uv={forecastData.current.uvi} />
+          <Humidity humidity={forecastData.current.humidity} />
         </View>
         <View style={{flex: 1, flexDirection: 'row'}}>
-          <Wind wind={forecastData?.current.wind_speed} />
+          <Wind wind={forecastData.current.wind_speed} />
           <Sunset forecastData={forecastData} />
         </View>
       </ScrollView>

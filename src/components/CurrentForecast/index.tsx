@@ -2,11 +2,31 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, Animated, Easing} from 'react-native';
 import {StackParamList} from '../../Routes/Stack';
 import GlobalStyle from '../../Constants/GlobalStyle';
-import {ICurrentForecast, IForecastData} from '../../Pages/Home';
+import {IForecastData} from '../../types/types';
 import {countries} from 'country-data';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import FormatDate from '../../utils/formatDate';
+import {ILocations} from '../../types/types';
+
+export interface ICurrentForecast {
+  dt: string;
+  temp: number;
+  feels_like: number;
+  description: string;
+  icon: string;
+  max: number;
+  min: number;
+  city: ILocations;
+  event?: string;
+  alertDescription?: string;
+  sunrise: number;
+  sunset: number;
+  uvi: number;
+  humidity: number;
+  wind_speed: number;
+  alerts?: [{event: string; alertDescription: string}];
+}
 
 interface ICurrent {
   forecastData: IForecastData;

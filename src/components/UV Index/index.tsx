@@ -20,6 +20,7 @@ export default function UVIndex({uv}: uv) {
   } else if (uv >= 11) {
     uvDescription = 'Extremo';
   }
+
   return (
     <View style={GlobalStyle.container}>
       <Icon name="sun-wireless" size={32} color={'#f7e708'} />

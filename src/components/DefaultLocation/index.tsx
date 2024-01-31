@@ -2,17 +2,16 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, Pressable, ActivityIndicator} from 'react-native';
 import {NavigationProp} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Locations} from '../../types/types';
+import {ILocations} from '../../types/types';
 import {StackParamList} from '../../Routes/Stack';
-import {countries} from 'country-data';
 
 interface DefaultLocations {
-  city: Locations | null;
+  city: ILocations | null;
   navigation: NavigationProp<StackParamList>;
 }
 
 export default function DefaultLocation({city, navigation}: DefaultLocations) {
-  const [defaultCity, setDefaultCity] = useState<Locations | null>({
+  const [defaultCity, setDefaultCity] = useState<ILocations | null>({
     name: '',
     state: '',
     country: '',

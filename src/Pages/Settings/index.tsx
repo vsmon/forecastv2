@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, FlatList, Pressable} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Locations} from '../../types/types';
+import {ILocations} from '../../types/types';
 import {
   getAllStoredCities,
   getByKeyStoredCities,
@@ -13,7 +13,7 @@ import {
 import {countries} from 'country-data';
 
 export default function Settings({navigation}: DrawerContentComponentProps) {
-  const [locations, setLocations] = useState<Locations[] | null>([
+  const [locations, setLocations] = useState<ILocations[] | null>([
     {
       name: '',
       country: '',
@@ -23,7 +23,7 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
       countryFull: '',
     },
   ]);
-  const [defaultLocation, setDefaultLocation] = useState<Locations>({
+  const [defaultLocation, setDefaultLocation] = useState<ILocations>({
     name: '',
     country: '',
     lat: 0,
@@ -33,7 +33,7 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
   });
 
   async function handleReload() {
-    const cities: Locations[] | null = await getAllStoredCities();
+    const cities: ILocations[] | null = await getAllStoredCities();
     const city = await getByKeyStoredCities('default');
 
     if (cities === null || city === null) {
