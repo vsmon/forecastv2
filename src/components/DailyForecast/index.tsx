@@ -126,7 +126,8 @@ export default function DailyForecast({forecastData}: IDaily) {
 
   useEffect(() => {
     handleReload();
-  }, []);
+  }, [forecastData]);
+
   return (
     <View style={[GlobalStyle.container, {alignItems: 'stretch'}]}>
       <View

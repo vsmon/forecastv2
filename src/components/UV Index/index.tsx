@@ -17,7 +17,7 @@ export default function UVIndex({uv}: uv) {
     uvDescription = 'Alto';
   } else if (uv > 7 && uv <= 10) {
     uvDescription = 'Muito Alto';
-  } else if (uv >= 11) {
+  } else if (uv >= 10) {
     uvDescription = 'Extremo';
   }
 

@@ -112,7 +112,6 @@ function Home({navigation, route}: IHomeProps) {
 
   const handleReload = async () => {
     setActivityIndicator(true);
-
     let city: ILocations | null = {
       name: '',
       state: '',
@@ -154,7 +153,6 @@ function Home({navigation, route}: IHomeProps) {
       navigation.navigate('SearchLocation');
       return;
     }
-
     await getForecast(city);
 
     navigation.setParams({
@@ -164,14 +162,6 @@ function Home({navigation, route}: IHomeProps) {
     setIsLoading(false);
     setActivityIndicator(false);
   };
-
-  useFocusEffect(
-    useCallback(() => {
-      if (cityByParam !== undefined) {
-        handleReload();
-      }
-    }, [cityByParam]),
-  );
 
   useEffect(() => {
     const appStateSubscription = AppState.addEventListener(
@@ -185,6 +175,18 @@ function Home({navigation, route}: IHomeProps) {
       appStateSubscription.remove();
     };
   }, []);
+
+  useEffect(() => {
+    handleReload();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (cityByParam !== undefined) {
+        handleReload();
+      }
+    }, [cityByParam]),
+  );
 
   if (isLoading) {
     return (
@@ -212,7 +214,11 @@ function Home({navigation, route}: IHomeProps) {
       }}>
       {activityIndicator ? (
         <View>
-          <ActivityIndicator size="large" color="#FFF" />
+          <ActivityIndicator
+            animating={activityIndicator}
+            size="large"
+            color="#FFF"
+          />
         </View>
       ) : null}
       <ScrollView

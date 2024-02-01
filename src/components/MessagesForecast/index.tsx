@@ -33,9 +33,11 @@ export default function MessagesForecast({forecastData}: IAlerts) {
     setAlertsForecast(alerts);
     console.log('PASSEI ALERTS==========');
   }
+
   useEffect(() => {
     handleReload();
-  }, []);
+  }, [forecastData]);
+
   return (
     <View style={GlobalStyle.container}>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>

@@ -56,7 +56,7 @@ export default function HourlyForecast({forecastData}: IHourly) {
 
   useEffect(() => {
     handleReload();
-  }, []);
+  }, [forecastData]);
 
   return (
     <View style={[GlobalStyle.container, {alignItems: 'stretch'}]}>

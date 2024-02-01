@@ -27,9 +27,11 @@ export default function Sunset({forecastData}: SunsetForecast) {
     setSunsetForeast(sunset);
     console.log('PASSEI SUNSET==========');
   }
+
   useEffect(() => {
     handleReload();
-  }, []);
+  }, [forecastData]);
+
   return (
     <View style={[GlobalStyle.container, {flexDirection: 'row'}]}>
       <View style={{marginRight: 25, alignItems: 'center'}}>

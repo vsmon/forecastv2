@@ -170,7 +170,7 @@ export default function CurrentForecast({
 
   useEffect(() => {
     handleReload();
-  }, []);
+  }, [forecastData]);
 
   useEffect(() => {
     if (imageSizeValue >= 0.1 && imageSizeValue <= 0.4) {
@@ -183,7 +183,7 @@ export default function CurrentForecast({
       });
     }
 
-    return () => imageSize.removeAllListeners();
+    return () => opacityShow.removeAllListeners();
   }, [imageSizeValue]);
 
   return (

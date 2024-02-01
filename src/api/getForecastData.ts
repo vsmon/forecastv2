@@ -7,7 +7,7 @@ import {OPENWEATHERMAPTOKEN} from '@env'
 
 export default async function getForecastData(city:ILocations): Promise<any> {
     const {lat,lon} = city
-    const URL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&lang=pt_br&exclude=minutely&appid=${OPENWEATHERMAPTOKEN}`
+    const URL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&lang=pt_br&exclude=minutely&appid=f7e324eced811885a4c794141a933b13`
     
     try {
       const response = await fetch(URL
@@ -16,7 +16,7 @@ export default async function getForecastData(city:ILocations): Promise<any> {
       const json: IForecastData[] = await response.json();
 
       if(json === null){
-        throw new Error("Error gettting forecast data");        
+        throw new Error("Error getting forecast data");        
       }
 
       if(!response.ok){
@@ -25,8 +25,12 @@ export default async function getForecastData(city:ILocations): Promise<any> {
       }
       return Promise.resolve(json)
 
+
+
+      /* For testing */
       const seedForecast = seed
-      return Promise.resolve({...seedForecast, city})
+
+      return Promise.resolve({...seedForecast, city, current:{...seedForecast.current,dt:(+new Date() / 1000 ) + seedForecast.timezone_offset }})
     } catch (error) {
       console.log('CATCH==========', error);
     }
