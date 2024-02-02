@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -19,8 +19,13 @@ export default function Humidity({humidity}: humidity) {
           color={'#CCE9FF'}
         />
       </View>
-      <Text style={{color: '#FFF', marginTop: 10}}>Umidade</Text>
-      <Text style={{color: '#FFF9'}}>{humidity}%</Text>
+      <Text style={styles.textTitle}>Umidade</Text>
+      <Text style={styles.textDescription}>{humidity}%</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  textTitle: {color: '#FFF', marginTop: 10},
+  textDescription: {color: '#FFF9'},
+});

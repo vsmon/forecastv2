@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, ScrollView, Image} from 'react-native';
+import {View, Text, ScrollView, Image, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface HourlyItem {
@@ -18,57 +18,27 @@ export default function ItemHourlyForecast({
   hourlyForecast,
 }: HourlyForecastItem) {
   return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: 'column',
-        padding: 10,
-        alignItems: 'center',
-      }}>
+    <View style={styles.container}>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         {hourlyForecast.map((item, index) => {
           return (
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'column',
-                paddingRight: 15,
-                alignItems: 'center',
-              }}
-              key={index}>
+            <View style={styles.detailContainer} key={index}>
               <Text style={{color: '#FFF9'}}>{item.dt}</Text>
               <Image
-                style={{
-                  height: 40,
-                  width: 40,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                style={styles.icon}
                 source={{
                   uri: `https://openweathermap.org/img/wn/${item.icon}@2x.png`,
                 }}
               />
-              <Text style={{color: '#FFF', marginBottom: 5}}>{item.temp}°</Text>
+              <Text style={styles.textTemp}>{item.temp}°</Text>
               {/* <Text>Graphic</Text> */}
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
+              <View style={styles.rainContainer}>
                 <Icon
                   name={item.pop <= 10 ? 'water-outline' : 'water'}
                   size={18}
                   color={'skyblue'}
                 />
-                <Text
-                  style={{
-                    fontSize: 12,
-                    color: '#FFF9',
-                    alignSelf: 'center',
-                  }}>
-                  {item.pop}%
-                </Text>
+                <Text style={styles.textRain}>{item.pop}%</Text>
               </View>
             </View>
           );
@@ -77,3 +47,35 @@ export default function ItemHourlyForecast({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    padding: 10,
+    alignItems: 'center',
+  },
+  detailContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    paddingRight: 15,
+    alignItems: 'center',
+  },
+  icon: {
+    height: 40,
+    width: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textTemp: {color: '#FFF', marginBottom: 5},
+  rainContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  textRain: {
+    fontSize: 12,
+    color: '#FFF9',
+    alignSelf: 'center',
+  },
+});

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, StyleSheet} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {IForecastData} from '../../types/types';
@@ -130,88 +130,78 @@ export default function DailyForecast({forecastData}: IDaily) {
 
   return (
     <View style={[GlobalStyle.container, {alignItems: 'stretch'}]}>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}>
-        <Text style={{marginBottom: 5, fontSize: 12, color: '#FFF9'}}>
-          Ontem
-        </Text>
-        <Text
-          style={{
-            marginBottom: 5,
-            fontSize: 14,
-            paddingLeft: 5,
-            color: '#FFF9',
-          }}>
+      <View style={styles.yesterdayContainer}>
+        <Text style={styles.textYesterdayTitle}>Ontem</Text>
+        <Text style={styles.textMinMaxYesterday}>
           {dailyForecast[0].max}°{'  '}
           {dailyForecast[0].min}°
         </Text>
       </View>
-      <View style={{backgroundColor: '#FFF2', height: 1, margin: 15}}></View>
+
+      <View style={styles.horizontalLine}></View>
 
       {dailyForecast.map((item: Daily, index: number) => {
         return (
-          <View
-            key={index}
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View style={{flex: 1}}>
-              <Text style={{color: '#FFF'}}>
-                {index === 0 ? 'Hoje' : item.week}
-              </Text>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Icon
-                name={item.pop <= 10 ? 'water-outline' : 'water'}
-                size={24}
-                color={'skyblue'}
-              />
-              <View
-                style={{
-                  flex: 1,
-                }}>
-                <Text style={{color: '#FFF9', fontSize: 12}}> {item.pop}%</Text>
-              </View>
-            </View>
-            <View
-              style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-              <Image
-                style={{height: 40, width: 40}}
-                source={{
-                  uri: `https://openweathermap.org/img/wn/${item.icon}@2x.png`,
-                }}
-              />
-            </View>
-
+          <View key={index} style={styles.itemContainer}>
+            <Text style={styles.textWeek}>
+              {index === 0 ? 'Hoje' : item.week}
+            </Text>
+            <Icon
+              name={item.pop <= 10 ? 'water-outline' : 'water'}
+              size={24}
+              color={'skyblue'}
+            />
+            <Text style={styles.textRain}> {item.pop}%</Text>
+            <Image
+              style={styles.image}
+              source={{
+                uri: `https://openweathermap.org/img/wn/${item.icon}@2x.png`,
+              }}
+            />
             <Icon name={MoonPhase(item.moon_phase)} size={22} color={'#FFF9'} />
-            <View style={{flex: 1, alignItems: 'flex-end'}}>
-              <Text
-                style={{
-                  marginBottom: 5,
-                  fontSize: 14,
-                  paddingLeft: 5,
-                  color: '#FFF',
-                }}>
-                {item.max}°{'  '}
-                {item.min}°
-              </Text>
-            </View>
+            <Text style={styles.textMaxMinTemp}>
+              {item.max}°{'  '}
+              {item.min}°
+            </Text>
           </View>
         );
       })}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  yesterdayContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  textYesterdayTitle: {marginBottom: 5, fontSize: 12, color: '#FFF9'},
+  textMinMaxYesterday: {
+    marginBottom: 5,
+    fontSize: 14,
+    paddingLeft: 5,
+    color: '#FFF9',
+  },
+  horizontalLine: {backgroundColor: '#FFF2', height: 1, margin: 15},
+  itemContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  textWeek: {color: '#FFF', width: 60},
+  textRain: {
+    color: '#FFF9',
+    fontSize: 12,
+    width: 33,
+    marginLeft: -40,
+  },
+  image: {height: 40, width: 40},
+  textMaxMinTemp: {
+    marginBottom: 5,
+    fontSize: 14,
+    paddingLeft: 5,
+    color: '#FFF',
+  },
+});

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Animated, Easing} from 'react-native';
+import {View, Text, Animated, Easing, StyleSheet} from 'react-native';
 import {StackParamList} from '../../Routes/Stack';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import {IForecastData} from '../../types/types';
@@ -138,7 +138,7 @@ export default function CurrentForecast({
 
   const imageSize = animatedValue.interpolate({
     inputRange: [0, 150],
-    outputRange: [150, 120],
+    outputRange: [150, 105],
     easing: Easing.linear,
     extrapolate: 'clamp',
   });
@@ -146,10 +146,12 @@ export default function CurrentForecast({
   const opacityHidden = animatedValue.interpolate({
     inputRange: [0, 25],
     outputRange: [1, 0],
+    easing: Easing.linear,
   });
   const opacityShow = animatedValue.interpolate({
     inputRange: [0, 150],
     outputRange: [0, 1],
+    easing: Easing.linear,
   });
 
   /*let valueToChangeTitle: number = 0;
@@ -175,7 +177,7 @@ export default function CurrentForecast({
   useEffect(() => {
     if (imageSizeValue >= 0.1 && imageSizeValue <= 0.4) {
       navigation.navigate('StackScreen', {
-        params: {title: currentForecast.city?.name},
+        params: {title: currentForecast.city.name},
       });
     } else if (imageSizeValue === 0) {
       navigation.navigate('StackScreen', {
@@ -187,89 +189,26 @@ export default function CurrentForecast({
   }, [imageSizeValue]);
 
   return (
-    <Animated.View
-      style={[
-        GlobalStyle.container,
-        {
-          flex: 0,
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          padding: 0,
-          alignItems: 'stretch',
-          borderRadius: 0,
-          marginTop: 0,
-          backgroundColor: 'transparent',
-        },
-      ]}>
-      <Animated.View
-        style={{
-          flex: 1,
-          paddingLeft: 20,
-          paddingRight: 20,
-          backgroundColor: '#000',
-          height: headerHeight,
-        }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            //backgroundColor: 'blue',
-            flex: 1,
-          }}>
+    <Animated.View style={[GlobalStyle.container, styles.container]}>
+      <Animated.View style={[styles.animatedContainer, {height: headerHeight}]}>
+        <View style={styles.tempIconContainer}>
           <View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                //backgroundColor: 'blue',
-              }}>
-              <Text
-                style={{
-                  marginBottom: 5,
-                  fontSize: 56,
-                  color: '#FFF',
-                  marginRight: 15,
-                }}>
-                {currentForecast.temp}°
-              </Text>
+            <View style={styles.tempContainer}>
+              <Text style={styles.textTemp}>{currentForecast.temp}°</Text>
               <Animated.Text
-                style={{
-                  fontSize: 18,
-                  color: '#FFF',
-                  opacity: opacityShow,
-                }}>
+                style={[styles.textDetails, {opacity: opacityShow}]}>
                 {currentForecast.max}° / {currentForecast.min}° {'\n'}
                 {currentForecast.description}
               </Animated.Text>
             </View>
             <Animated.Text
-              style={{
-                marginBottom: 30,
-                fontSize: 18,
-                color: '#FFF',
-                opacity: opacityHidden,
-              }}>
+              style={[styles.textDescription, {opacity: opacityHidden}]}>
               {currentForecast.description}
             </Animated.Text>
           </View>
-          <Animated.View
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              //padding: 10,
-            }}>
+          <Animated.View style={styles.iconContainer}>
             <Animated.Image
-              style={{
-                flex: 1,
-                height: imageSize,
-                width: imageSize,
-                //marginTop: -30,
-                alignItems: 'center',
-                justifyContent: 'center',
-                //backgroundColor: 'red',
-              }}
+              style={[styles.icon, {height: imageSize, width: imageSize}]}
               source={{
                 uri: `https://openweathermap.org/img/wn/${currentForecast.icon}@2x.png`,
               }}
@@ -278,20 +217,9 @@ export default function CurrentForecast({
         </View>
       </Animated.View>
       <Animated.View
-        style={{
-          padding: 20,
-          opacity: opacityHidden,
-        }}>
-        <Text style={{marginBottom: 5, fontSize: 14, color: '#FFF'}}>
-          {currentForecast.dt}
-        </Text>
-        <Text
-          style={{
-            marginBottom: 5,
-            fontSize: 14,
-            flexDirection: 'row',
-            color: '#FFF',
-          }}>
+        style={[styles.detailsContainer, {opacity: opacityHidden}]}>
+        <Text style={styles.textDate}>{currentForecast.dt}</Text>
+        <Text style={styles.textLocation}>
           {currentForecast.city.name}
           {currentForecast.city.state
             ? ' - ' + currentForecast.city.state
@@ -300,7 +228,7 @@ export default function CurrentForecast({
           {currentForecast.city.countryFull}{' '}
           <Icon name="map-marker" size={14} color={'#FFF'} />
         </Text>
-        <Text style={{fontSize: 11, color: '#FFF'}}>
+        <Text style={styles.textTempMaxMin}>
           {currentForecast.max}° / {currentForecast.min}° {}
           Sensação térmica de {currentForecast.feels_like}°
         </Text>
@@ -308,3 +236,76 @@ export default function CurrentForecast({
     </Animated.View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 0,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    padding: 0,
+    alignItems: 'stretch',
+    borderRadius: 0,
+    marginTop: 0,
+    backgroundColor: 'transparent',
+  },
+  animatedContainer: {
+    flex: 1,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: '#000',
+    height: 350,
+  },
+  tempContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    //backgroundColor: 'blue',
+  },
+  tempIconContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    //backgroundColor: 'blue',
+    flex: 1,
+  },
+  detailsContainer: {
+    padding: 20,
+    opacity: 1,
+  },
+  textLocation: {
+    marginBottom: 5,
+    fontSize: 14,
+    flexDirection: 'row',
+    color: '#FFF',
+  },
+  textTemp: {
+    marginBottom: 5,
+    fontSize: 60,
+    color: '#FFF',
+    marginRight: 15,
+  },
+  textDetails: {
+    fontSize: 18,
+    color: '#FFF',
+    opacity: 1,
+  },
+  textDate: {marginBottom: 5, fontSize: 14, color: '#FFF'},
+  textTempMaxMin: {fontSize: 11, color: '#FFF'},
+  textDescription: {
+    marginBottom: 30,
+    fontSize: 18,
+    color: '#FFF',
+    opacity: 0,
+  },
+  iconContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  icon: {
+    flex: 1,
+    height: 150,
+    width: 150,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

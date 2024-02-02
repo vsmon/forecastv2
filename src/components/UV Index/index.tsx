@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -24,14 +24,16 @@ export default function UVIndex({uv}: uv) {
   return (
     <View style={GlobalStyle.container}>
       <Icon name="sun-wireless" size={32} color={'#f7e708'} />
-      <Text
-        style={{
-          color: '#FFF',
-          marginTop: 10,
-        }}>
-        Índice UV
-      </Text>
-      <Text style={{color: '#FFF9'}}>{uvDescription}</Text>
+      <Text style={styles.textTitle}>Índice UV</Text>
+      <Text style={styles.textDescription}>{uvDescription}</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  textTitle: {
+    color: '#FFF',
+    marginTop: 10,
+  },
+  textDescription: {color: '#FFF9'},
+});

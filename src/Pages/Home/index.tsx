@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   AppState,
   Animated,
+  Text,
 } from 'react-native';
 
 import CurrentForecast from '../../components/CurrentForecast';
@@ -27,6 +28,7 @@ import getPosition from '../../services/Geolocations';
 import getCityByCoords from '../../api/getCityByCoords';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {countries} from 'country-data';
+import LoadingFullScreen from '../../components/LoadingFullScreen';
 
 interface IHomeProps {
   navigation: NativeStackNavigationProp<StackParamList>;
@@ -111,7 +113,9 @@ function Home({navigation, route}: IHomeProps) {
   }
 
   const handleReload = async () => {
+    //setIsLoading(true);
     setActivityIndicator(true);
+
     let city: ILocations | null = {
       name: '',
       state: '',
@@ -163,7 +167,8 @@ function Home({navigation, route}: IHomeProps) {
     setActivityIndicator(false);
   };
 
-  useEffect(() => {
+  /* Reload data if app is active */
+  /* useEffect(() => {
     const appStateSubscription = AppState.addEventListener(
       'change',
       appState => {
@@ -174,7 +179,7 @@ function Home({navigation, route}: IHomeProps) {
     return () => {
       appStateSubscription.remove();
     };
-  }, []);
+  }, []); */
 
   useEffect(() => {
     handleReload();
@@ -189,21 +194,7 @@ function Home({navigation, route}: IHomeProps) {
   );
 
   if (isLoading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: '#000',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        {isError ? (
-          <Icon name={'network-off-outline'} size={44} color={'#FFF9'} />
-        ) : (
-          <ActivityIndicator size="large" color="#FFF" />
-        )}
-      </View>
-    );
+    return <LoadingFullScreen isLoading={isLoading} size={50} />;
   }
 
   return (
@@ -212,17 +203,8 @@ function Home({navigation, route}: IHomeProps) {
         flex: 1,
         backgroundColor: '#000',
       }}>
-      {activityIndicator ? (
-        <View>
-          <ActivityIndicator
-            animating={activityIndicator}
-            size="large"
-            color="#FFF"
-          />
-        </View>
-      ) : null}
       <ScrollView
-        scrollEventThrottle={0.1}
+        scrollEventThrottle={200}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scaleAnimValue}}}],
           {useNativeDriver: false},
@@ -238,6 +220,16 @@ function Home({navigation, route}: IHomeProps) {
           animatedValue={scaleAnimValue}
           navigation={navigation}
         />
+        {activityIndicator ? (
+          <View style={{height: 60}}>
+            {/* <ActivityIndicator
+            animating={activityIndicator}
+            size="large"
+            color="#FFF"
+          /> */}
+            <LoadingFullScreen isLoading={activityIndicator} size={30} />
+          </View>
+        ) : null}
         <HourlyForecast forecastData={forecastData} />
         <Messages forecastData={forecastData} />
         <DailyForecast forecastData={forecastData} />

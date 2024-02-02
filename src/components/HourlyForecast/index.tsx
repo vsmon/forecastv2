@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import ItemHourlyForecast from '../ItemHourlyForecast';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import {IForecastData} from '../../types/types';
@@ -61,15 +61,20 @@ export default function HourlyForecast({forecastData}: IHourly) {
   return (
     <View style={[GlobalStyle.container, {alignItems: 'stretch'}]}>
       <View>
-        <Text style={{marginBottom: 10, fontSize: 12, color: '#FFF'}}>
+        <Text style={styles.textMaxMinDescription}>
           {hourlyForecast[0].description}. Mínima de {hourlyForecast[0].min}
           °C e Máxima de {hourlyForecast[0].max}°C.
         </Text>
       </View>
-      <View style={{backgroundColor: '#FFF2', height: 1}}></View>
-      <View style={{flex: 1, flexDirection: 'row'}}>
-        <ItemHourlyForecast hourlyForecast={hourlyForecast} />
-      </View>
+
+      <View style={styles.horizontalLine}></View>
+
+      <ItemHourlyForecast hourlyForecast={hourlyForecast} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  textMaxMinDescription: {marginBottom: 10, fontSize: 12, color: '#FFF'},
+  horizontalLine: {backgroundColor: '#FFF2', height: 1},
+});

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {IForecastData} from '../../types/types';
@@ -40,15 +40,19 @@ export default function MessagesForecast({forecastData}: IAlerts) {
 
   return (
     <View style={GlobalStyle.container}>
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={styles.container}>
         <Icon name="alert" color={'#e5f50e'} size={26} />
-        <Text style={{marginBottom: 10, fontSize: 12, color: '#FFF'}}>
-          {alertsForecast?.alertEvent}
-        </Text>
-        <Text style={{marginBottom: 10, fontSize: 12, color: '#FFF'}}>
+        <Text style={styles.textTitleAlert}>{alertsForecast?.alertEvent}</Text>
+        <Text style={styles.textDescAlert}>
           {alertsForecast?.alertDescription}
         </Text>
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  textTitleAlert: {marginBottom: 10, fontSize: 12, color: '#FFF'},
+  textDescAlert: {marginBottom: 10, fontSize: 12, color: '#FFF'},
+});
