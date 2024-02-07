@@ -195,7 +195,8 @@ const styles = StyleSheet.create({
     color: '#FFF9',
     fontSize: 12,
     width: 33,
-    marginLeft: -40,
+    marginLeft: -25,
+    justifyContent: 'flex-end',
   },
   image: {height: 40, width: 40},
   textMaxMinTemp: {

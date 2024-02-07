@@ -49,8 +49,6 @@ export default function LocationManager({navigation, route}: LocationManager) {
       'default',
     );
 
-    console.log(cities);
-
     setDefaultLocation(defaultCity);
     setLocations(cities);
     getAllKeys();

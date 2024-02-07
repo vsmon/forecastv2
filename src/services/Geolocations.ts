@@ -25,7 +25,7 @@ import Geolocation, {
         },
         error => {
           console.log(error);
-          reject(error.message);
+          reject({Error:error.message});
         },
         {timeout:60000, enableHighAccuracy: true  , maximumAge: 10000, /*distanceFilter: 5 */},
       );

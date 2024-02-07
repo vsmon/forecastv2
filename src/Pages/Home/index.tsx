@@ -127,17 +127,23 @@ function Home({navigation, route}: IHomeProps) {
 
     const {latitude, longitude} = await getPosition();
 
-    const cityByCoordsResp: ILocations[] = await getCityByCoords(
-      latitude,
-      longitude,
-    );
+    if (latitude !== 0) {
+      const cityByCoordsResp: ILocations[] = await getCityByCoords(
+        latitude,
+        longitude,
+      );
 
-    const cityByCoords: ILocations[] = cityByCoordsResp.map(city => {
-      return {...city, countryFull: countries[city.country].name};
-    });
+      const cityByCoords: ILocations = {
+        ...cityByCoordsResp[0],
+        countryFull: countries[cityByCoordsResp[0].country].name,
+      };
+
+      console.log('CITY BY COORDS==============', cityByCoords);
+      city = cityByCoords;
+      storeCity(city, 'default');
+    }
 
     console.log('COORDS=============', latitude, longitude);
-    console.log('CITY BY COORDS==============', cityByCoords);
     console.log('CITY BY PARAMS==============', cityByParam);
     console.log('SCREEN ORIGIN============', screenOrigin);
 
@@ -145,10 +151,6 @@ function Home({navigation, route}: IHomeProps) {
 
     if (screenOrigin === undefined) {
       city = defaultCity;
-      if (cityByCoords.length > 0) {
-        city = cityByCoords[0];
-        storeCity(city, 'default');
-      }
     } else {
       city = cityByParam;
     }
