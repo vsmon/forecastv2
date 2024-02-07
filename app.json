@@ -1,10 +1,4 @@
 {
   "name": "forecast",
-  "displayName": "forecast",
-  "expo": {
-    "slug": "forecast",
-    "name": "forecast",
-    "sdkVersion": "50.0.0",
-    "entryPoint": ".vscode\\exponentIndex.js"
-  }
+  "displayName": "forecast"  
 }
