@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "build": "cd android && ./gradlew clean && ./gradlew assembleRelease && cd D:/Users/Rodrigo/Desktop/forecast/android/app/build/outputs/apk/release && ren app-release.apk forecast.apk && copy D:\\Users\\Rodrigo\\Desktop\\forecast\\android\\app\\build\\outputs\\apk\\release\\forecast.apk \\\\192.168.0.95\\private",
+    "build": "cd android && ./gradlew clean && ./gradlew assembleRelease && cd D:/Users/Rodrigo/Desktop/forecastv2/android/app/build/outputs/apk/release && ren app-release.apk forecast.apk && copy D:\\Users\\Rodrigo\\Desktop\\forecastv2\\android\\app\\build\\outputs\\apk\\release\\forecast.apk \\\\192.168.0.95\\private",
     "release": "cd android && gradlew clean && gradlew bundleRelease"
   },
   "dependencies": {
