@@ -2,14 +2,17 @@ import Geolocation, {
     GeolocationConfiguration, GeolocationError, 
   } from '@react-native-community/geolocation';
 
-  type Coordinates = {
-    latitude: number;
+  interface ICoordinates {
+    position?:{
+      latitude: number;
     longitude: number;
+    }
+    error?: GeolocationError
   };
 
 
 
-  export default function getPosition(): Promise<Coordinates> {
+  export default function getPosition(): Promise<ICoordinates> {
     const config: GeolocationConfiguration = {
       locationProvider: 'auto',
       skipPermissionRequests: false,
@@ -20,14 +23,14 @@ import Geolocation, {
     return new Promise((resolve, reject) => {
       Geolocation.getCurrentPosition(
         info => {
-          const {latitude, longitude} = info.coords;
-          resolve({latitude, longitude});
+          const {latitude,longitude} = info.coords;
+           resolve({position:{latitude,longitude}});
         },
         error => {
-          console.log(error);
-          reject({Error:error.message});
+          reject({Error:error});
+          console.log('ERROR WHEN GET POSITION', error);
         },
-        {timeout:60000, enableHighAccuracy: true  , maximumAge: 10000, /*distanceFilter: 5 */},
+        {timeout:30000, enableHighAccuracy: true  , maximumAge: 10000, /*distanceFilter: 5 */},
       );
     });
   }

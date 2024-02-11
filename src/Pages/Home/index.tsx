@@ -125,38 +125,41 @@ function Home({navigation, route}: IHomeProps) {
       countryFull: '',
     };
 
-    const {latitude, longitude} = await getPosition();
+    try {
+      const {position, error} = await getPosition();
+      console.log('POSITION============', position);
 
-    if (latitude !== 0) {
-      const cityByCoordsResp: ILocations[] = await getCityByCoords(
-        latitude,
-        longitude,
-      );
+      if (position) {
+        const {latitude, longitude} = position;
+        const cityByCoordsResp: ILocations[] = await getCityByCoords(
+          latitude,
+          longitude,
+        );
 
-      const cityByCoords: ILocations = {
-        ...cityByCoordsResp[0],
-        countryFull: countries[cityByCoordsResp[0].country].name,
-      };
+        const cityByCoords: ILocations = {
+          ...cityByCoordsResp[0],
+          countryFull: countries[cityByCoordsResp[0].country].name,
+        };
 
-      console.log('CITY BY COORDS==============', cityByCoords);
-      city = cityByCoords;
-      storeCity(city, 'default');
+        console.log('CITY BY COORDS==============', cityByCoords);
+        city = cityByCoords;
+        storeCity(city, 'default');
+      }
+    } catch (error) {
+      console.log('ERROR GPS============', error);
+      const defaultCity: ILocations | null = await getDefaultCity();
+      city = defaultCity;
     }
 
-    console.log('COORDS=============', latitude, longitude);
     console.log('CITY BY PARAMS==============', cityByParam);
     console.log('SCREEN ORIGIN============', screenOrigin);
 
-    const defaultCity: ILocations | null = await getDefaultCity();
-
-    if (screenOrigin === undefined) {
-      city = defaultCity;
-    } else {
+    if (screenOrigin !== undefined) {
       city = cityByParam;
     }
 
     if (city === null) {
-      navigation.navigate('SearchLocation');
+      navigation.navigate('LocationManager');
       return;
     }
     await getForecast(city);

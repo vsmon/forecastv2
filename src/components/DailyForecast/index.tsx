@@ -4,6 +4,7 @@ import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {IForecastData} from '../../types/types';
 import WeekDay from '../../utils/weekDay';
+import {FlatList} from 'react-native-gesture-handler';
 
 export interface IDailyForecast {
   dt: number;
@@ -146,23 +147,35 @@ export default function DailyForecast({forecastData}: IDaily) {
             <Text style={styles.textWeek}>
               {index === 0 ? 'Hoje' : item.week}
             </Text>
-            <Icon
-              name={item.pop <= 10 ? 'water-outline' : 'water'}
-              size={24}
-              color={'skyblue'}
-            />
-            <Text style={styles.textRain}> {item.pop}%</Text>
-            <Image
-              style={styles.image}
-              source={{
-                uri: `https://openweathermap.org/img/wn/${item.icon}@2x.png`,
-              }}
-            />
-            <Icon name={MoonPhase(item.moon_phase)} size={22} color={'#FFF9'} />
-            <Text style={styles.textMaxMinTemp}>
-              {item.max}°{'  '}
-              {item.min}°
-            </Text>
+            <View style={styles.rainContainer}>
+              <Icon
+                name={item.pop <= 10 ? 'water-outline' : 'water'}
+                size={24}
+                color={'skyblue'}
+              />
+              <Text style={styles.textRain}> {item.pop}%</Text>
+            </View>
+            <View style={styles.imageContainer}>
+              <Image
+                style={styles.image}
+                source={{
+                  uri: `https://openweathermap.org/img/wn/${item.icon}@2x.png`,
+                }}
+              />
+            </View>
+            <View style={styles.moonPhaseContainer}>
+              <Icon
+                name={MoonPhase(item.moon_phase)}
+                size={22}
+                color={'#FFF9'}
+              />
+            </View>
+            <View style={styles.tempMaxMinContainer}>
+              <Text style={styles.textMaxMinTemp}>
+                {item.max}°{'  '}
+                {item.min}°
+              </Text>
+            </View>
           </View>
         );
       })}
@@ -187,22 +200,35 @@ const styles = StyleSheet.create({
   itemContainer: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
   },
-  textWeek: {color: '#FFF', width: 60},
+  textWeek: {color: '#FFF', width: 100},
+  rainContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 70,
+  },
   textRain: {
     color: '#FFF9',
     fontSize: 12,
-    width: 33,
-    marginLeft: -25,
-    justifyContent: 'flex-end',
+  },
+  imageContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
   },
   image: {height: 40, width: 40},
+  moonPhaseContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  tempMaxMinContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
+  },
   textMaxMinTemp: {
-    marginBottom: 5,
     fontSize: 14,
-    paddingLeft: 5,
     color: '#FFF',
   },
 });

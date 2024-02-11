@@ -67,7 +67,7 @@ export default function SearchLocation({navigation}: SearchLocation) {
           value={city}
         />
         <Icon
-          name="map-search-outline"
+          name="magnify"
           color={'#FFF'}
           size={42}
           onPress={handleGetCities}

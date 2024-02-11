@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {PlatformColor, StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
   container: {
@@ -11,6 +11,8 @@ export default StyleSheet.create({
     borderRadius: 25,
     marginBottom: 5,
     backgroundColor: '#171517',
+    /* backgroundColor: PlatformColor('@android:color/holo_blue_bright'),
+    color: PlatformColor('?android:attr/textColor'), */
   },
   textColor: {
     color: '#FFF2',

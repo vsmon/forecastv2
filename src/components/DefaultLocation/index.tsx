@@ -32,8 +32,12 @@ export default function DefaultLocation({city, navigation}: DefaultLocations) {
           marginBottom: 15,
           borderRadius: 15,
           padding: 35,
+          justifyContent: 'center',
+          alignItems: 'center',
         }}>
-        <ActivityIndicator size="large" color="#FFF" />
+        {/* <ActivityIndicator size="large" color="#FFF" /> */}
+        {/* <Icon name="map-marker" size={30} color={'#FFF'} /> */}
+        <Text>...</Text>
       </View>
     );
   }
