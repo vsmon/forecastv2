@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, NativeModules} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {IForecastData} from '../../types/types';
@@ -20,7 +20,10 @@ function Alerts(ForecastData: IForecastData): IAlertsForecast {
   }
   return {
     alertEvent: '',
-    alertDescription: 'Nenhum Alerta no momento',
+    alertDescription:
+      NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+        ? `Nenhum Alerta no momento`
+        : `No Alerts at the moment`,
   };
 }
 

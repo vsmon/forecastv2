@@ -7,6 +7,7 @@ import {
   AppState,
   Animated,
   Text,
+  NativeModules,
 } from 'react-native';
 
 import CurrentForecast from '../../components/CurrentForecast';
@@ -29,6 +30,7 @@ import getCityByCoords from '../../api/getCityByCoords';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {countries} from 'country-data';
 import LoadingFullScreen from '../../components/LoadingFullScreen';
+import formatDate from '../../utils/formatDate';
 
 interface IHomeProps {
   navigation: NativeStackNavigationProp<StackParamList>;
@@ -153,6 +155,16 @@ function Home({navigation, route}: IHomeProps) {
 
     console.log('CITY BY PARAMS==============', cityByParam);
     console.log('SCREEN ORIGIN============', screenOrigin);
+
+    console.log(
+      'LOCALE===========',
+      NativeModules.I18nManager.localeIdentifier,
+    );
+
+    console.log(
+      'DATE===========',
+      formatDate(forecastData.current.dt).hourFormatted,
+    );
 
     if (screenOrigin !== undefined) {
       city = cityByParam;

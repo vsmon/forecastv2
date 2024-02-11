@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, NativeModules} from 'react-native';
 import ItemHourlyForecast from '../ItemHourlyForecast';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import {IForecastData} from '../../types/types';
@@ -62,12 +62,16 @@ export default function HourlyForecast({forecastData}: IHourly) {
     <View style={[GlobalStyle.container, {alignItems: 'stretch'}]}>
       <View>
         <Text style={styles.textMaxMinDescription}>
-          {hourlyForecast[0].description}. Mínima de {hourlyForecast[0].min}
-          °C e Máxima de {hourlyForecast[0].max}°C.
+          {hourlyForecast[0].description}.{' '}
+          {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+            ? `Mínima de ${hourlyForecast[0].min}°C e Máxima de ${hourlyForecast[0].max}°C`
+            : NativeModules.I18nManager.localeIdentifier === 'en_US'
+            ? `Low of ${hourlyForecast[0].min}°F and High of ${hourlyForecast[0].max}°F`
+            : `Low of ${hourlyForecast[0].min}°C and High of ${hourlyForecast[0].max}°C`}
         </Text>
       </View>
 
-      <View style={styles.horizontalLine}></View>
+      <View style={styles.horizontalLine} />
 
       <ItemHourlyForecast hourlyForecast={hourlyForecast} />
     </View>

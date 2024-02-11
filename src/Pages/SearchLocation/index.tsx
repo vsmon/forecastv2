@@ -8,6 +8,7 @@ import {
   Alert,
   FlatList,
   Pressable,
+  NativeModules,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {storeCity} from '../../Database/AsyncStorage';
@@ -15,6 +16,7 @@ import getCitiesData from '../../api/getCitiesData';
 import {ILocations} from '../../types/types';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {countries} from 'country-data';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 type StackParamList = {
   Home: undefined;
@@ -61,17 +63,18 @@ export default function SearchLocation({navigation}: SearchLocation) {
             padding: 15,
             borderRadius: 15,
           }}
-          placeholder="Pesquisar Cidade..."
+          placeholder={
+            NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+              ? 'Pesquisar Cidade...'
+              : 'Search City...'
+          }
           placeholderTextColor={'#FFF3'}
           onChangeText={city => setCity(city)}
           value={city}
         />
-        <Icon
-          name="magnify"
-          color={'#FFF'}
-          size={42}
-          onPress={handleGetCities}
-        />
+        <TouchableOpacity onPress={handleGetCities}>
+          <Icon name="magnify" color={'#FFF'} size={42} />
+        </TouchableOpacity>
       </View>
 
       <View

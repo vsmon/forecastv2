@@ -1,4 +1,5 @@
 
+import { NativeModules } from 'react-native';
 import {IForecastData, ILocations} from '../types/types';
 import seed from '../../seed.json'
 import seed2 from '../../seed2.json'
@@ -7,7 +8,9 @@ import {OPENWEATHERMAPTOKEN} from '@env'
 
 export default async function getForecastData(city:ILocations): Promise<any> {
     const {lat,lon} = city
-    const URL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&lang=pt_br&exclude=minutely&appid=f7e324eced811885a4c794141a933b13`
+    const language = NativeModules.I18nManager.localeIdentifier
+    const units = language === 'en_US' ? 'imperial' : 'metric'
+    const URL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=${units}&lang=${language}&exclude=minutely&appid=f7e324eced811885a4c794141a933b13`
     
     try {
       const response = await fetch(URL

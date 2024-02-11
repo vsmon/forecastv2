@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Animated, Easing, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Animated,
+  Easing,
+  StyleSheet,
+  NativeModules,
+} from 'react-native';
 import {StackParamList} from '../../Routes/Stack';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import {IForecastData} from '../../types/types';
@@ -230,7 +237,10 @@ export default function CurrentForecast({
         </Text>
         <Text style={styles.textTempMaxMin}>
           {currentForecast.max}° / {currentForecast.min}° {}
-          Sensação térmica de {currentForecast.feels_like}°
+          {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+            ? 'Sensação térmica de'
+            : 'Feels like'}{' '}
+          {currentForecast.feels_like}°
         </Text>
       </Animated.View>
     </Animated.View>

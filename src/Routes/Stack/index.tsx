@@ -5,6 +5,7 @@ import {
 import Home from '../../Pages/Home';
 import SearchLocation from '../../Pages/SearchLocation';
 import LocationManager from '../../Pages/LocationManager';
+import {NativeModules} from 'react-native';
 
 export type StackParamList = {
   Home: any;
@@ -35,12 +36,24 @@ export default function StackNavigator({navigation}: IStackNavigationProps) {
       <Stack.Screen
         name="LocationManager"
         component={LocationManager}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitle:
+            NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+              ? 'Gerenciar Localizações'
+              : 'Locations Managment',
+        }}
       />
       <Stack.Screen
         name="SearchLocation"
         component={SearchLocation}
-        options={{headerShown: true}}
+        options={{
+          headerShown: true,
+          headerTitle:
+            NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+              ? 'Pesquisar Localização'
+              : 'Search Location',
+        }}
       />
     </Stack.Navigator>
   );

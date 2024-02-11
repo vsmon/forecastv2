@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, NativeModules} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {IForecastData} from '../../types/types';
 import WeekDay from '../../utils/weekDay';
-import {FlatList} from 'react-native-gesture-handler';
 
 export interface IDailyForecast {
   dt: number;
@@ -132,7 +131,11 @@ export default function DailyForecast({forecastData}: IDaily) {
   return (
     <View style={[GlobalStyle.container, {alignItems: 'stretch'}]}>
       <View style={styles.yesterdayContainer}>
-        <Text style={styles.textYesterdayTitle}>Ontem</Text>
+        <Text style={styles.textYesterdayTitle}>
+          {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+            ? `Ontem`
+            : `Yesterday`}
+        </Text>
         <Text style={styles.textMinMaxYesterday}>
           {dailyForecast[0].max}°{'  '}
           {dailyForecast[0].min}°
@@ -145,7 +148,11 @@ export default function DailyForecast({forecastData}: IDaily) {
         return (
           <View key={index} style={styles.itemContainer}>
             <Text style={styles.textWeek}>
-              {index === 0 ? 'Hoje' : item.week}
+              {index === 0
+                ? NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+                  ? `Hoje`
+                  : `Today`
+                : item.week}
             </Text>
             <View style={styles.rainContainer}>
               <Icon

@@ -1,5 +1,5 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import {View, FlatList, Text} from 'react-native';
+import {View, FlatList, Text, NativeModules} from 'react-native';
 import {
   NavigationProp,
   RouteProp,
@@ -76,12 +76,16 @@ export default function LocationManager({navigation, route}: LocationManager) {
       </View>
       <View>
         <Text style={{marginLeft: 10, marginBottom: 10, color: '#FFF9'}}>
-          Localização Favorita
+          {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+            ? 'Localização Favorita'
+            : 'Favorite Location'}
         </Text>
         <DefaultLocation city={defaultLocation} navigation={navigation} />
       </View>
       <Text style={{marginLeft: 10, marginBottom: 10, color: '#FFF9'}}>
-        Outras Localidades
+        {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+          ? 'Outras Localidades'
+          : 'Other Locations'}
       </Text>
       <FlatList
         data={locations}

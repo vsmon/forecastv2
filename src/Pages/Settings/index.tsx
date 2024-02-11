@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, FlatList, Pressable} from 'react-native';
+import {View, Text, FlatList, Pressable, NativeModules} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ILocations} from '../../types/types';
 import {
@@ -63,7 +63,9 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
             }}>
             <Icon name="star" size={22} color={'#e7ff0d'} />
             <Text style={{fontSize: 18, marginLeft: 10, color: '#FFF9'}}>
-              Localização Favorita
+              {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+                ? 'Localização Favorita'
+                : 'Favorite Location'}
             </Text>
           </View>
         </View>
@@ -120,7 +122,9 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
         <View style={{flexDirection: 'row', marginBottom: 20}}>
           <Icon name="map-marker-multiple" size={22} color={'#e7ff0d'} />
           <Text style={{fontSize: 18, marginLeft: 10, color: '#FFF9'}}>
-            Outras Localizações
+            {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+              ? 'Outras Localidades'
+              : 'Other Locations'}
           </Text>
         </View>
         <View style={{height: 550, flex: 1}}>
@@ -188,7 +192,11 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
             padding: 15,
           }}
           onPress={() => navigation.navigate('LocationManager')}>
-          <Text style={{color: '#FFF'}}>Gerenciar Localizações</Text>
+          <Text style={{color: '#FFF'}}>
+            {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+              ? 'Gerenciar Localizações'
+              : 'Locations Management'}
+          </Text>
         </Pressable>
       </View>
     </View>

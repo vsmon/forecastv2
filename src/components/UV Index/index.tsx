@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, NativeModules} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -24,7 +24,11 @@ export default function UVIndex({uv}: uv) {
   return (
     <View style={GlobalStyle.container}>
       <Icon name="sun-wireless" size={32} color={'#f7e708'} />
-      <Text style={styles.textTitle}>Índice UV</Text>
+      <Text style={styles.textTitle}>
+        {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+          ? 'Índice UV'
+          : 'UV index'}
+      </Text>
       <Text style={styles.textDescription}>{uvDescription}</Text>
     </View>
   );
