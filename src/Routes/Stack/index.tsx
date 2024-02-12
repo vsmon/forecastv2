@@ -41,7 +41,7 @@ export default function StackNavigator({navigation}: IStackNavigationProps) {
           headerTitle:
             NativeModules.I18nManager.localeIdentifier === 'pt_BR'
               ? 'Gerenciar Localizações'
-              : 'Locations Managment',
+              : 'Locations Management',
         }}
       />
       <Stack.Screen

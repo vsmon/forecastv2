@@ -8,17 +8,28 @@ interface uv {
 }
 
 export default function UVIndex({uv}: uv) {
-  let uvDescription;
+  let uvDescription: string = '';
   if (uv <= 2) {
-    uvDescription = 'Baixo';
+    uvDescription =
+      NativeModules.I18nManager.localeIdentifier === 'pt_BR' ? 'Baixo' : 'Low';
   } else if (uv > 2 && uv <= 5) {
-    uvDescription = 'Moderado';
+    uvDescription = uvDescription =
+      NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+        ? 'Moderado'
+        : 'Moderate';
   } else if (uv > 5 && uv <= 7) {
-    uvDescription = 'Alto';
+    uvDescription = uvDescription =
+      NativeModules.I18nManager.localeIdentifier === 'pt_BR' ? 'Alto' : 'High';
   } else if (uv > 7 && uv <= 10) {
-    uvDescription = 'Muito Alto';
+    uvDescription = uvDescription =
+      NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+        ? 'Muito Alto'
+        : 'Very High';
   } else if (uv >= 10) {
-    uvDescription = 'Extremo';
+    uvDescription = uvDescription =
+      NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+        ? 'Extremo'
+        : 'Extreme';
   }
 
   return (
