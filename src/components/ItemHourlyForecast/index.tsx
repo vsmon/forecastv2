@@ -82,12 +82,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   halfRainIcon: {
-    height: 5,
-    width: 7,
-    marginRight: -13,
-    marginBottom: -8,
-    borderBottomLeftRadius: 3.5,
-    borderBottomRightRadius: 3.5,
+    height: 4,
+    width: 6,
+    marginRight: -12,
+    marginBottom: -6,
+    borderBottomLeftRadius: 3,
+    borderBottomRightRadius: 3,
     backgroundColor: 'skyblue',
   },
 });
