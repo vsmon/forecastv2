@@ -6,6 +6,7 @@ interface IForecastData {
     uvi: number;
     humidity: number;
     wind_speed: number;
+    wind_deg:number;
     sunrise: number;
     sunset: number;
     weather: [{description: string; icon: string}];

@@ -31,6 +31,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {countries} from 'country-data';
 import LoadingFullScreen from '../../components/LoadingFullScreen';
 import formatDate from '../../utils/formatDate';
+import Language from '../../utils/language';
 
 interface IHomeProps {
   navigation: NativeStackNavigationProp<StackParamList>;
@@ -46,6 +47,7 @@ function Home({navigation, route}: IHomeProps) {
       uvi: 0,
       humidity: 0,
       wind_speed: 0,
+      wind_deg: 0,
       sunrise: 0,
       sunset: 0,
       weather: [{description: '', icon: ''}],
@@ -156,16 +158,6 @@ function Home({navigation, route}: IHomeProps) {
     console.log('CITY BY PARAMS==============', cityByParam);
     console.log('SCREEN ORIGIN============', screenOrigin);
 
-    console.log(
-      'LOCALE===========',
-      NativeModules.I18nManager.localeIdentifier,
-    );
-
-    console.log(
-      'DATE===========',
-      formatDate(forecastData.current.dt).hourFormatted,
-    );
-
     if (screenOrigin !== undefined) {
       city = cityByParam;
     }
@@ -255,7 +247,10 @@ function Home({navigation, route}: IHomeProps) {
           <Humidity humidity={forecastData.current.humidity} />
         </View>
         <View style={{flex: 1, flexDirection: 'row'}}>
-          <Wind wind={forecastData.current.wind_speed} />
+          <Wind
+            windSpeed={forecastData.current.wind_speed}
+            windDeg={forecastData.current.wind_deg}
+          />
           <Sunset forecastData={forecastData} />
         </View>
       </ScrollView>

@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, NativeModules} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Language from '../../utils/language';
 
 interface humidity {
   humidity: number | undefined;
@@ -20,9 +21,7 @@ export default function Humidity({humidity}: humidity) {
         />
       </View>
       <Text style={styles.textTitle}>
-        {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
-          ? 'Umidade'
-          : 'Humidity'}
+        {Language() === 'pt_BR' ? 'Umidade' : 'Humidity'}
       </Text>
       <Text style={styles.textDescription}>{humidity}%</Text>
     </View>

@@ -6,6 +6,7 @@ import Home from '../../Pages/Home';
 import SearchLocation from '../../Pages/SearchLocation';
 import LocationManager from '../../Pages/LocationManager';
 import {NativeModules} from 'react-native';
+import Language from '../../utils/language';
 
 export type StackParamList = {
   Home: any;
@@ -39,7 +40,7 @@ export default function StackNavigator({navigation}: IStackNavigationProps) {
         options={{
           headerShown: true,
           headerTitle:
-            NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+            Language() === 'pt_BR'
               ? 'Gerenciar Localizações'
               : 'Locations Management',
         }}
@@ -50,7 +51,7 @@ export default function StackNavigator({navigation}: IStackNavigationProps) {
         options={{
           headerShown: true,
           headerTitle:
-            NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+            Language() === 'pt_BR'
               ? 'Pesquisar Localização'
               : 'Search Location',
         }}

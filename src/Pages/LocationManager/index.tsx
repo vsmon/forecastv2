@@ -19,6 +19,7 @@ import {ILocations} from '../../types/types';
 import ItemLocations from '../../components/ItemLocations';
 import DefaultLocation from '../../components/DefaultLocation';
 import {StackParamList} from '../../Routes/Stack';
+import Language from '../../utils/language';
 
 interface LocationManager {
   route: RouteProp<StackParamList>;
@@ -76,16 +77,14 @@ export default function LocationManager({navigation, route}: LocationManager) {
       </View>
       <View>
         <Text style={{marginLeft: 10, marginBottom: 10, color: '#FFF9'}}>
-          {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+          {Language() === 'pt_BR'
             ? 'Localização Favorita'
             : 'Favorite Location'}
         </Text>
         <DefaultLocation city={defaultLocation} navigation={navigation} />
       </View>
       <Text style={{marginLeft: 10, marginBottom: 10, color: '#FFF9'}}>
-        {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
-          ? 'Outras Localidades'
-          : 'Other Locations'}
+        {Language() === 'pt_BR' ? 'Outras Localidades' : 'Other Locations'}
       </Text>
       <FlatList
         data={locations}

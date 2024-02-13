@@ -33,8 +33,11 @@ export default function ItemHourlyForecast({
               <Text style={styles.textTemp}>{item.temp}°</Text>
               {/* <Text>Graphic</Text> */}
               <View style={styles.rainContainer}>
+                {item.pop > 0 && item.pop <= 50 ? (
+                  <View style={styles.halfRainIcon} />
+                ) : null}
                 <Icon
-                  name={item.pop <= 10 ? 'water-outline' : 'water'}
+                  name={item.pop <= 50 ? 'water-outline' : 'water'}
                   size={18}
                   color={'skyblue'}
                 />
@@ -77,5 +80,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#FFF9',
     alignSelf: 'center',
+  },
+  halfRainIcon: {
+    height: 5,
+    width: 7,
+    marginRight: -13,
+    marginBottom: -8,
+    borderBottomLeftRadius: 3.5,
+    borderBottomRightRadius: 3.5,
+    backgroundColor: 'skyblue',
   },
 });

@@ -11,6 +11,7 @@ import {
   DrawerContentComponentProps,
 } from '@react-navigation/drawer';
 import {countries} from 'country-data';
+import Language from '../../utils/language';
 
 export default function Settings({navigation}: DrawerContentComponentProps) {
   const [locations, setLocations] = useState<ILocations[] | null>([
@@ -63,7 +64,7 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
             }}>
             <Icon name="star" size={22} color={'#e7ff0d'} />
             <Text style={{fontSize: 18, marginLeft: 10, color: '#FFF9'}}>
-              {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+              {Language() === 'pt_BR'
                 ? 'Localização Favorita'
                 : 'Favorite Location'}
             </Text>
@@ -122,9 +123,7 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
         <View style={{flexDirection: 'row', marginBottom: 20}}>
           <Icon name="map-marker-multiple" size={22} color={'#e7ff0d'} />
           <Text style={{fontSize: 18, marginLeft: 10, color: '#FFF9'}}>
-            {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
-              ? 'Outras Localidades'
-              : 'Other Locations'}
+            {Language() === 'pt_BR' ? 'Outras Localidades' : 'Other Locations'}
           </Text>
         </View>
         <View style={{height: 550, flex: 1}}>
@@ -193,7 +192,7 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
           }}
           onPress={() => navigation.navigate('LocationManager')}>
           <Text style={{color: '#FFF'}}>
-            {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+            {Language() === 'pt_BR'
               ? 'Gerenciar Localizações'
               : 'Locations Management'}
           </Text>

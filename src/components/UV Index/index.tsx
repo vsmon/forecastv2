@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, NativeModules} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Language from '../../utils/language';
 
 interface uv {
   uv: number;
@@ -9,36 +10,35 @@ interface uv {
 
 export default function UVIndex({uv}: uv) {
   let uvDescription: string = '';
-  if (uv <= 2) {
-    uvDescription =
-      NativeModules.I18nManager.localeIdentifier === 'pt_BR' ? 'Baixo' : 'Low';
-  } else if (uv > 2 && uv <= 5) {
-    uvDescription = uvDescription =
-      NativeModules.I18nManager.localeIdentifier === 'pt_BR'
-        ? 'Moderado'
-        : 'Moderate';
-  } else if (uv > 5 && uv <= 7) {
-    uvDescription = uvDescription =
-      NativeModules.I18nManager.localeIdentifier === 'pt_BR' ? 'Alto' : 'High';
-  } else if (uv > 7 && uv <= 10) {
-    uvDescription = uvDescription =
-      NativeModules.I18nManager.localeIdentifier === 'pt_BR'
-        ? 'Muito Alto'
-        : 'Very High';
-  } else if (uv >= 10) {
-    uvDescription = uvDescription =
-      NativeModules.I18nManager.localeIdentifier === 'pt_BR'
-        ? 'Extremo'
-        : 'Extreme';
+  switch (true) {
+    case uv <= 2:
+      uvDescription = Language() === 'pt_BR' ? 'Baixo' : 'Low';
+      break;
+    case uv >= 3 && uv <= 5:
+      uvDescription = uvDescription =
+        Language() === 'pt_BR' ? 'Moderado' : 'Moderate';
+      break;
+    case uv >= 6 && uv <= 7:
+      uvDescription = uvDescription = Language() === 'pt_BR' ? 'Alto' : 'High';
+      break;
+    case uv >= 8 && uv <= 10:
+      uvDescription = uvDescription =
+        Language() === 'pt_BR' ? 'Muito Alto' : 'Very High';
+      break;
+    case uv >= 11:
+      uvDescription = uvDescription =
+        Language() === 'pt_BR' ? 'Extremo' : 'Extreme';
+      break;
+    default:
+      uvDescription = 'Value out of range';
+      break;
   }
 
   return (
     <View style={GlobalStyle.container}>
       <Icon name="sun-wireless" size={32} color={'#f7e708'} />
       <Text style={styles.textTitle}>
-        {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
-          ? 'Índice UV'
-          : 'UV index'}
+        {Language() === 'pt_BR' ? 'Índice UV' : 'UV index'}
       </Text>
       <Text style={styles.textDescription}>{uvDescription}</Text>
     </View>

@@ -4,6 +4,7 @@ import ItemHourlyForecast from '../ItemHourlyForecast';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import {IForecastData} from '../../types/types';
 import FormatDate from '../../utils/formatDate';
+import Language from '../../utils/language';
 
 export interface IHourlyForecast {
   dt: string;
@@ -63,9 +64,9 @@ export default function HourlyForecast({forecastData}: IHourly) {
       <View>
         <Text style={styles.textMaxMinDescription}>
           {hourlyForecast[0].description}.{' '}
-          {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+          {Language() === 'pt_BR'
             ? `Mínima de ${hourlyForecast[0].min}°C e Máxima de ${hourlyForecast[0].max}°C`
-            : NativeModules.I18nManager.localeIdentifier === 'en_US'
+            : Language() === 'en_US'
             ? `Low of ${hourlyForecast[0].min}°F and High of ${hourlyForecast[0].max}°F`
             : `Low of ${hourlyForecast[0].min}°C and High of ${hourlyForecast[0].max}°C`}
         </Text>

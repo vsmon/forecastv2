@@ -4,6 +4,7 @@ import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {IForecastData} from '../../types/types';
 import WeekDay from '../../utils/weekDay';
+import Language from '../../utils/language';
 
 export interface IDailyForecast {
   dt: number;
@@ -132,9 +133,7 @@ export default function DailyForecast({forecastData}: IDaily) {
     <View style={[GlobalStyle.container, {alignItems: 'stretch'}]}>
       <View style={styles.yesterdayContainer}>
         <Text style={styles.textYesterdayTitle}>
-          {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
-            ? `Ontem`
-            : `Yesterday`}
+          {Language() === 'pt_BR' ? `Ontem` : `Yesterday`}
         </Text>
         <Text style={styles.textMinMaxYesterday}>
           {dailyForecast[0].max}°{'  '}
@@ -147,16 +146,22 @@ export default function DailyForecast({forecastData}: IDaily) {
       {dailyForecast.map((item: Daily, index: number) => {
         return (
           <View key={index} style={styles.itemContainer}>
-            <Text style={styles.textWeek}>
-              {index === 0
-                ? NativeModules.I18nManager.localeIdentifier === 'pt_BR'
-                  ? `Hoje`
-                  : `Today`
-                : item.week}
-            </Text>
+            <View style={styles.weekDayContainer}>
+              <Text style={styles.textWeek}>
+                {index === 0
+                  ? Language() === 'pt_BR'
+                    ? `Hoje`
+                    : `Today`
+                  : item.week}
+              </Text>
+            </View>
             <View style={styles.rainContainer}>
+              {item.pop > 0 && item.pop <= 50 ? (
+                <View style={styles.halfRainIcon} />
+              ) : null}
+
               <Icon
-                name={item.pop <= 10 ? 'water-outline' : 'water'}
+                name={item.pop <= 50 ? 'water-outline' : 'water'}
                 size={24}
                 color={'skyblue'}
               />
@@ -209,11 +214,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  textWeek: {color: '#FFF', width: 100},
+  weekDayContainer: {
+    flex: 1,
+    marginRight: 25,
+    flexWrap: 'wrap',
+    flexBasis: 15,
+  },
+  textWeek: {color: '#FFF'},
   rainContainer: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    width: 70,
+    justifyContent: 'flex-start',
   },
   textRain: {
     color: '#FFF9',
@@ -221,7 +233,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'flex-end',
     justifyContent: 'flex-start',
   },
   image: {height: 40, width: 40},
@@ -237,5 +249,15 @@ const styles = StyleSheet.create({
   textMaxMinTemp: {
     fontSize: 14,
     color: '#FFF',
+  },
+  halfRainIcon: {
+    height: 5,
+    width: 11,
+    marginRight: -17,
+    marginLeft: 5,
+    marginBottom: -8,
+    borderBottomLeftRadius: 5.5,
+    borderBottomRightRadius: 5.5,
+    backgroundColor: 'skyblue',
   },
 });

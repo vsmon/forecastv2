@@ -65,7 +65,7 @@ async function getByKeyStoredCities(key:string): Promise<ILocations|null> {
       await AsyncStorage.removeItem((key).replace(' ', ''))
     } catch(e) {
       // remove error
-      console.log('Erro ao remover cidade', e)
+      console.log('Error remove key', e)
     }
   
     console.log('Done.')

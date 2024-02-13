@@ -15,6 +15,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import FormatDate from '../../utils/formatDate';
 import {ILocations} from '../../types/types';
+import Language from '../../utils/language';
 
 export interface ICurrentForecast {
   dt: string;
@@ -237,9 +238,7 @@ export default function CurrentForecast({
         </Text>
         <Text style={styles.textTempMaxMin}>
           {currentForecast.max}° / {currentForecast.min}° {}
-          {NativeModules.I18nManager.localeIdentifier === 'pt_BR'
-            ? 'Sensação térmica de'
-            : 'Feels like'}{' '}
+          {Language() === 'pt_BR' ? 'Sensação térmica de' : 'Feels like'}{' '}
           {currentForecast.feels_like}°
         </Text>
       </Animated.View>

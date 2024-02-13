@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, NativeModules} from 'react-native';
 import GlobalStyle from '../../Constants/GlobalStyle';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {IForecastData} from '../../types/types';
+import Language from '../../utils/language';
 
 export interface IAlertsForecast {
   alertEvent: string | undefined;
@@ -21,7 +22,7 @@ function Alerts(ForecastData: IForecastData): IAlertsForecast {
   return {
     alertEvent: '',
     alertDescription:
-      NativeModules.I18nManager.localeIdentifier === 'pt_BR'
+      Language() === 'pt_BR'
         ? `Nenhum Alerta no momento`
         : `No Alerts at the moment`,
   };

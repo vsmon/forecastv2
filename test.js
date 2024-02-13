@@ -26,3 +26,39 @@ console.log(
     ' - ' +
     FormatDate(1705173718).hourFormatted,
 );
+
+const uv = 9;
+let uvDescription = '';
+/* if (uv <= 2) {
+  uvDescription = 'Low';
+} else if (uv > 2 && uv <= 5) {
+  uvDescription = uvDescription = 'Moderate';
+} else if (uv > 5 && uv <= 7) {
+  uvDescription = uvDescription = 'High';
+} else if (uv > 7 && uv <= 10) {
+  uvDescription = uvDescription = 'Very High';
+} else if (uv >= 10) {
+  uvDescription = uvDescription = 'Extreme';
+} */
+
+switch (true) {
+  case uv <= 2:
+    uvDescription = 'Low';
+    break;
+  case uv > 2 && uv <= 5:
+    uvDescription = 'Moderate';
+    break;
+  case uv > 5 && uv <= 7:
+    uvDescription = 'High';
+    break;
+  case uv > 7 && uv < 10:
+    uvDescription = 'Very High';
+    break;
+  case uv >= 10:
+    uvDescription = 'Extreme';
+    break;
+  default:
+    uvDescription = '';
+    break;
+}
+console.log(uvDescription);

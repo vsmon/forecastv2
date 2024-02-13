@@ -17,6 +17,7 @@ import {ILocations} from '../../types/types';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {countries} from 'country-data';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import Language from '../../utils/language';
 
 type StackParamList = {
   Home: undefined;
@@ -64,9 +65,7 @@ export default function SearchLocation({navigation}: SearchLocation) {
             borderRadius: 15,
           }}
           placeholder={
-            NativeModules.I18nManager.localeIdentifier === 'pt_BR'
-              ? 'Pesquisar Cidade...'
-              : 'Search City...'
+            Language() === 'pt_BR' ? 'Pesquisar Cidade...' : 'Search City...'
           }
           placeholderTextColor={'#FFF3'}
           onChangeText={city => setCity(city)}
