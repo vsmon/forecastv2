@@ -21,7 +21,7 @@ export default function UVIndex({uv}: uv) {
     case uv >= 6 && uv <= 7:
       uvDescription = uvDescription = Language() === 'pt_BR' ? 'Alto' : 'High';
       break;
-    case uv >= 8 && uv <= 10:
+    case uv >= 8 && uv < 11:
       uvDescription = uvDescription =
         Language() === 'pt_BR' ? 'Muito Alto' : 'Very High';
       break;
