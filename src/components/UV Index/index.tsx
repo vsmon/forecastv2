@@ -11,17 +11,17 @@ interface uv {
 export default function UVIndex({uv}: uv) {
   let uvDescription: string = '';
   switch (true) {
-    case uv <= 2:
+    case uv <= 2.9 /* 1 until 2 */:
       uvDescription = Language() === 'pt_BR' ? 'Baixo' : 'Low';
       break;
-    case uv >= 3 && uv <= 5:
+    case uv >= 3 && uv <= 5.9 /* 3 until 5 */:
       uvDescription = uvDescription =
         Language() === 'pt_BR' ? 'Moderado' : 'Moderate';
       break;
-    case uv >= 6 && uv <= 7:
+    case uv >= 6 && uv <= 7.9 /* 6 until 7 */:
       uvDescription = uvDescription = Language() === 'pt_BR' ? 'Alto' : 'High';
       break;
-    case uv >= 8 && uv < 11:
+    case uv >= 8 && uv <= 10.9 /* 8 until 10 */:
       uvDescription = uvDescription =
         Language() === 'pt_BR' ? 'Muito Alto' : 'Very High';
       break;
