@@ -1,7 +1,19 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import toastMessage from '../utils/toastMessage';
-import { ILocations } from '../types/types';
+import { IForecastData, ILocations } from '../types/types';
+import { DatabaseKeys } from '../Pages/Home';
 
+async function storeForecast(value: IForecastData, key: string ) {
+  try {
+    const jsonValue = JSON.stringify(value);
+    await AsyncStorage.setItem(
+      (key).replace(' ', ''),
+      jsonValue,
+    );
+  } catch (e) {
+    toastMessage(`Não foi possível salvar os dados!: ${e}`);
+  }
+}
 
 async function storeCity(value: ILocations, key: string ) {
     //Save city in async storage
@@ -25,7 +37,7 @@ async function storeCity(value: ILocations, key: string ) {
       keys.map(async key => {
         const response: string|any = await AsyncStorage.getItem(key);
         const json: ILocations = JSON.parse(response);
-        if(key !== 'default'){
+        if(key !== DatabaseKeys.Default && key !== DatabaseKeys.Forecast){
 
           citiesList.push(json);        
         }
@@ -59,7 +71,23 @@ async function getByKeyStoredCities(key:string): Promise<ILocations|null> {
       return Promise.resolve(null)
     }
   }
+  async function getStoredForecast(key:string): Promise<IForecastData|null> {
+    try {
 
+      const response: string | null= await AsyncStorage.getItem(key);
+      const json: any = response != null ? JSON.parse(response) : null; //JSON.parse(response);
+      
+      if(json === null){
+        throw new Error("Nenhum registro encontrado com e key: " + key);
+        
+      }
+      //console.log('API BY KEY===========', json)        
+      return Promise.resolve<IForecastData>(json) 
+    } catch (e: any) {
+      console.log('Error read keys', e);
+      return Promise.resolve(null)
+    }
+  }
   async function removeCity(key:string){
     try {
       await AsyncStorage.removeItem((key).replace(' ', ''))
@@ -83,4 +111,4 @@ async function getByKeyStoredCities(key:string): Promise<ILocations|null> {
 
   }
 
-  export {storeCity,getAllStoredCities,getByKeyStoredCities,removeCity,getAllKeys}
+  export {storeCity,getAllStoredCities,getByKeyStoredCities,removeCity,getAllKeys,storeForecast,getStoredForecast}

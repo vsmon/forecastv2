@@ -20,6 +20,7 @@ import ItemLocations from '../../components/ItemLocations';
 import DefaultLocation from '../../components/DefaultLocation';
 import {StackParamList} from '../../Routes/Stack';
 import Language from '../../utils/language';
+import {DatabaseKeys} from '../Home';
 
 interface LocationManager {
   route: RouteProp<StackParamList>;
@@ -47,7 +48,7 @@ export default function LocationManager({navigation, route}: LocationManager) {
     const cities: ILocations[] | null = await getAllStoredCities();
 
     const defaultCity: ILocations | null = await getByKeyStoredCities(
-      'default',
+      DatabaseKeys.Default,
     );
 
     setDefaultLocation(defaultCity);
@@ -99,8 +100,8 @@ export default function LocationManager({navigation, route}: LocationManager) {
                 : '#FFF'
             }
             onPress={() => {
-              storeCity(item, 'default');
-              getByKeyStoredCities('default');
+              storeCity(item, DatabaseKeys.Default);
+              getByKeyStoredCities(DatabaseKeys.Default);
               handleLoadCities();
             }}
             onLongPress={() => {

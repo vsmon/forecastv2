@@ -9,7 +9,7 @@
     "start": "react-native start",
     "test": "jest",
     "build": "cd android && ./gradlew clean && ./gradlew assembleRelease && cd D:/Users/Rodrigo/Desktop/forecastv2/android/app/build/outputs/apk/release && ren app-release.apk forecast.apk && copy D:\\Users\\Rodrigo\\Desktop\\forecastv2\\android\\app\\build\\outputs\\apk\\release\\forecast.apk \\\\192.168.0.95\\private",
-    "release": "cd android && gradlew clean && gradlew bundleRelease"
+    "release": "cd android && gradlew clean && gradlew bundleRelease && start .\\android\\app\\build\\outputs\\bundle\\release"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.21.0",

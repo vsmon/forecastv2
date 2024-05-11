@@ -12,6 +12,7 @@ import {
 } from '@react-navigation/drawer';
 import {countries} from 'country-data';
 import Language from '../../utils/language';
+import {DatabaseKeys} from '../Home';
 
 export default function Settings({navigation}: DrawerContentComponentProps) {
   const [locations, setLocations] = useState<ILocations[] | null>([
@@ -35,7 +36,7 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
 
   async function handleReload() {
     const cities: ILocations[] | null = await getAllStoredCities();
-    const city = await getByKeyStoredCities('default');
+    const city = await getByKeyStoredCities(DatabaseKeys.Default);
 
     if (cities === null || city === null) {
       return;

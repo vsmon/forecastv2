@@ -8,6 +8,7 @@ import {
   Animated,
   Text,
   NativeModules,
+  Button,
 } from 'react-native';
 
 import CurrentForecast from '../../components/CurrentForecast';
@@ -22,20 +23,30 @@ import Sunset from '../../components/Sunset';
 import {StackParamList} from '../../Routes/Stack';
 import {IForecastData, ILocations} from '../../types/types';
 import getForecastData from '../../api/getForecastData';
-import {getByKeyStoredCities, storeCity} from '../../Database/AsyncStorage';
+import {
+  getByKeyStoredCities,
+  getStoredForecast,
+  storeCity,
+  storeForecast,
+} from '../../Database/AsyncStorage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import toastMessage from '../../utils/toastMessage';
 import getPosition from '../../services/Geolocations';
 import getCityByCoords from '../../api/getCityByCoords';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {countries} from 'country-data';
-import LoadingFullScreen from '../../components/LoadingFullScreen';
+import LoadingFullScreenIcon from '../../components/LoadingFullScreen';
 import formatDate from '../../utils/formatDate';
 import Language from '../../utils/language';
 
 interface IHomeProps {
   navigation: NativeStackNavigationProp<StackParamList>;
   route: RouteProp<StackParamList>;
+}
+
+export enum DatabaseKeys {
+  Default = 'default',
+  Forecast = 'forecast',
 }
 
 function Home({navigation, route}: IHomeProps) {
@@ -94,7 +105,11 @@ function Home({navigation, route}: IHomeProps) {
     try {
       const ForecastData: IForecastData = await getForecastData(city);
 
-      setForecastData({...ForecastData, city});
+      const forecastWithCity = {...ForecastData, city};
+
+      setForecastData(forecastWithCity);
+
+      storeForecast(forecastWithCity, DatabaseKeys.Forecast);
 
       console.log('CURRENT CITY==========', {
         name: city.name,
@@ -111,13 +126,31 @@ function Home({navigation, route}: IHomeProps) {
   }
 
   async function getDefaultCity(): Promise<ILocations | null> {
-    const city = await getByKeyStoredCities('default');
+    const city = await getByKeyStoredCities(DatabaseKeys.Default);
 
     return city;
   }
 
+  const handlePreReload = async () => {
+    const storedForecast = await getStoredForecast(DatabaseKeys.Forecast);
+
+    if (storedForecast) {
+      console.log(
+        'PASSEI STORED FORECAST================',
+        storedForecast.current,
+      );
+      setForecastData(storedForecast);
+
+      //setTimeout(() => {
+      setIsLoading(false);
+      //}, 3000);
+
+      return true;
+    }
+    return false;
+  };
+
   const handleReload = async () => {
-    //setIsLoading(true);
     setActivityIndicator(true);
 
     let city: ILocations | null = {
@@ -191,7 +224,11 @@ function Home({navigation, route}: IHomeProps) {
   }, []); */
 
   useEffect(() => {
-    handleReload();
+    const haveStoredForecast = handlePreReload();
+    console.log('=============', haveStoredForecast);
+    if (!haveStoredForecast) {
+      handleReload();
+    }
   }, []);
 
   useFocusEffect(
@@ -203,7 +240,7 @@ function Home({navigation, route}: IHomeProps) {
   );
 
   if (isLoading) {
-    return <LoadingFullScreen isLoading={isLoading} size={50} />;
+    return <LoadingFullScreenIcon isLoading={isLoading} size={50} />;
   }
 
   return (
@@ -236,9 +273,10 @@ function Home({navigation, route}: IHomeProps) {
             size="large"
             color="#FFF"
           /> */}
-            <LoadingFullScreen isLoading={activityIndicator} size={30} />
+            <LoadingFullScreenIcon isLoading={activityIndicator} size={30} />
           </View>
         ) : null}
+
         <HourlyForecast forecastData={forecastData} />
         <Messages forecastData={forecastData} />
         <DailyForecast forecastData={forecastData} />

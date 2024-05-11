@@ -1,10 +1,11 @@
 import {ILocations} from '../types/types';
 import {OPENWEATHERMAPTOKEN} from '@env'
+import TOKEN_OPENWEATHER from './token.js'
 
 export default async function getCityByCoords(lat:number,lon:number): Promise<ILocations[]> {
     try {
       const response = await fetch(
-        `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=f7e324eced811885a4c794141a933b13`,
+        `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${TOKEN_OPENWEATHER}`,
       );
       
       const json: ILocations[] = await response.json();
