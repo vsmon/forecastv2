@@ -132,9 +132,21 @@ function Home({navigation, route}: IHomeProps) {
   }
 
   async function handlePreReload(): Promise<boolean> {
-    const storedForecast = await getStoredForecast(DatabaseKeys.Forecast);
+    const storedForecast = await getStoredForecast(DatabaseKeys.Forecast).then(
+      data => {
+        data && setIsLoading(false);
+        data && setForecastData(data);
+        return data;
+      },
+    );
 
     if (storedForecast) {
+      return Promise.resolve(true);
+    } else {
+      return Promise.resolve(false);
+    }
+
+    /* if (storedForecast) {
       console.log(
         'PASSEI STORED FORECAST================',
         storedForecast.current,
@@ -146,8 +158,8 @@ function Home({navigation, route}: IHomeProps) {
       }, 0);
 
       return Promise.resolve(true);
-    }
-    return Promise.resolve(false);
+    } 
+    return Promise.resolve(false);*/
   }
 
   const handleReload = async () => {
