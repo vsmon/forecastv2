@@ -12,7 +12,6 @@ export default async function getForecastData(city:ILocations): Promise<any> {
     const language = Language()
     const units = language === 'en_US' ? 'imperial' : 'metric'
     const URL = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=${units}&lang=${language}&exclude=minutely&appid=${TOKEN_OPENWEATHER}`
-    console.log('URL:',URL)
     try {
       const response = await fetch(URL
         ,{method:'GET', headers:{Accept:'application/json', 'Content-Type': 'application/json'}}

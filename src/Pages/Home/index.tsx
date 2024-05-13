@@ -131,7 +131,7 @@ function Home({navigation, route}: IHomeProps) {
     return city;
   }
 
-  const handlePreReload = async () => {
+  async function handlePreReload(): Promise<boolean> {
     const storedForecast = await getStoredForecast(DatabaseKeys.Forecast);
 
     if (storedForecast) {
@@ -141,14 +141,14 @@ function Home({navigation, route}: IHomeProps) {
       );
       setForecastData(storedForecast);
 
-      //setTimeout(() => {
-      setIsLoading(false);
-      //}, 3000);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 0);
 
-      return true;
+      return Promise.resolve(true);
     }
-    return false;
-  };
+    return Promise.resolve(false);
+  }
 
   const handleReload = async () => {
     setActivityIndicator(true);
@@ -224,11 +224,11 @@ function Home({navigation, route}: IHomeProps) {
   }, []); */
 
   useEffect(() => {
-    const haveStoredForecast = handlePreReload();
-    console.log('=============', haveStoredForecast);
-    if (!haveStoredForecast) {
-      handleReload();
-    }
+    (async () => {
+      const preLoading = await handlePreReload();
+      console.log('PRE LOADING==============>', preLoading);
+      !preLoading && handleReload();
+    })();
   }, []);
 
   useFocusEffect(
