@@ -145,21 +145,6 @@ function Home({navigation, route}: IHomeProps) {
     } else {
       return Promise.resolve(false);
     }
-
-    /* if (storedForecast) {
-      console.log(
-        'PASSEI STORED FORECAST================',
-        storedForecast.current,
-      );
-      setForecastData(storedForecast);
-
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 0);
-
-      return Promise.resolve(true);
-    } 
-    return Promise.resolve(false);*/
   }
 
   const handleReload = async () => {
