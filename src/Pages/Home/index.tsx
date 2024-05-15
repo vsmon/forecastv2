@@ -224,7 +224,8 @@ function Home({navigation, route}: IHomeProps) {
     (async () => {
       const preLoading = await handlePreReload();
       console.log('PRE LOADING==============>', preLoading);
-      !preLoading && handleReload();
+      //!preLoading && handleReload();
+      handleReload();
     })();
   }, []);
 

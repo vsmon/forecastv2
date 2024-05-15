@@ -72,11 +72,10 @@ function Current(ForecastData: IForecastData): Promise<ICurrentForecast> {
     ],
   } = ForecastData;
   const currentForecast: ICurrentForecast = {
-    dt:
-      FormatDate(dtCurrent).dateFormatted +
+    dt: new Date(dtCurrent * 1000).toLocaleString(),
+    /* FormatDate(dtCurrent).dateFormatted +
       ' - ' +
-      FormatDate(dtCurrent).hourFormatted,
-    temp: Number(temp.toFixed(0)),
+      FormatDate(dtCurrent).hourFormatted */ temp: Number(temp.toFixed(0)),
     feels_like: parseInt(feels_like.toFixed(0)),
     description,
     icon,
