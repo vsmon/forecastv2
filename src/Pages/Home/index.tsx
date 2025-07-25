@@ -284,7 +284,7 @@ function Home({navigation, route}: IHomeProps) {
         </View>
         <View style={{flex: 1, flexDirection: 'row'}}>
           <Wind
-            windSpeed={forecastData.current.wind_speed}
+            windSpeed={forecastData.current.wind_speed * 3.6}
             windDeg={forecastData.current.wind_deg}
           />
           <Sunset forecastData={forecastData} />
