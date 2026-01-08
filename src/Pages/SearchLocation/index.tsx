@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -11,12 +11,12 @@ import {
   NativeModules,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {storeCity} from '../../Database/AsyncStorage';
+import { storeCity } from '../../Database/AsyncStorage';
 import getCitiesData from '../../api/getCitiesData';
-import {ILocations} from '../../types/types';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {countries} from 'country-data';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { ILocations } from '../../types/types';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { countries } from 'country-data';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Language from '../../utils/language';
 
 type StackParamList = {
@@ -30,7 +30,7 @@ interface SearchLocation {
   navigation: NativeStackNavigationProp<StackParamList>;
 }
 
-export default function SearchLocation({navigation}: SearchLocation) {
+export default function SearchLocation({ navigation }: SearchLocation) {
   const [city, setCity] = useState('');
   const [cities, setCities] = useState<ILocations[]>([]);
 
@@ -38,7 +38,7 @@ export default function SearchLocation({navigation}: SearchLocation) {
     try {
       const resp: ILocations[] = await getCitiesData(city);
       const citiesWithFullCountry: ILocations[] = resp.map(city => {
-        return {...city, countryFull: countries[city.country].name};
+        return { ...city, countryFull: countries[city.country].name };
       });
       setCities(citiesWithFullCountry);
     } catch (error) {
@@ -47,14 +47,15 @@ export default function SearchLocation({navigation}: SearchLocation) {
   }
 
   return (
-    <View style={{flex: 1, backgroundColor: '#000'}}>
+    <View style={{ flex: 1, backgroundColor: '#000' }}>
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
           margin: 5,
-        }}>
+        }}
+      >
         <TextInput
           style={{
             flex: 1,
@@ -82,7 +83,8 @@ export default function SearchLocation({navigation}: SearchLocation) {
           justifyContent: 'center',
           borderRadius: 45,
           margin: 10,
-        }}>
+        }}
+      >
         <FlatList
           keyboardShouldPersistTaps="handled"
           ItemSeparatorComponent={() => {
@@ -97,14 +99,15 @@ export default function SearchLocation({navigation}: SearchLocation) {
             );
           }}
           data={cities}
-          renderItem={({item, separators}) => (
+          renderItem={({ item, separators }) => (
             <View
               style={{
                 flex: 1,
                 justifyContent: 'center',
-              }}>
+              }}
+            >
               <Pressable
-                style={{flex: 1, padding: 25}}
+                style={{ flex: 1, padding: 25 }}
                 android_ripple={{
                   color: 'gray',
                   foreground: false,
@@ -113,12 +116,16 @@ export default function SearchLocation({navigation}: SearchLocation) {
                 }}
                 onPress={() => {
                   storeCity(item, item.name + item.state);
-                  navigation.navigate('LocationManager');
-                }}>
-                <View style={{alignItems: 'baseline'}}>
+                  //navigation.navigate('LocationManager');
+                  navigation.goBack();
+                }}
+              >
+                <View style={{ alignItems: 'baseline' }}>
                   <Icon name="map-marker" size={18} color={'#FFF'} />
-                  <Text style={{fontSize: 18, color: '#FFF'}}>{item.name}</Text>
-                  <Text style={{fontSize: 12, color: '#FFF9'}}>
+                  <Text style={{ fontSize: 18, color: '#FFF' }}>
+                    {item.name}
+                  </Text>
+                  <Text style={{ fontSize: 12, color: '#FFF9' }}>
                     {item.state ? item.state + ', ' : null}
                     {item.countryFull}
                   </Text>

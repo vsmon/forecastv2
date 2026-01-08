@@ -1,3 +1,4 @@
+console.log(String('pt-BR').replace('-', '_'));
 function FormatDate(date) {
   const dateFormatted = new Date(date * 1000).toLocaleDateString(undefined, {
     year: 'numeric',
@@ -16,7 +17,7 @@ function FormatDate(date) {
     hour: '2-digit',
     minute: '2-digit',
   });
-  return {hourFormatted, dateFormatted, dateTimeFormatted};
+  return { hourFormatted, dateFormatted, dateTimeFormatted };
 }
 
 console.log('DATE===========', FormatDate(1705173718).dateTimeFormatted);

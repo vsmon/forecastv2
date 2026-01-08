@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, FlatList, Pressable, NativeModules} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, Pressable, NativeModules } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {ILocations} from '../../types/types';
+import { ILocations } from '../../types/types';
 import {
   getAllStoredCities,
   getByKeyStoredCities,
@@ -10,11 +10,11 @@ import {
   useDrawerStatus,
   DrawerContentComponentProps,
 } from '@react-navigation/drawer';
-import {countries} from 'country-data';
+import { countries } from 'country-data';
 import Language from '../../utils/language';
-import {DatabaseKeys} from '../Home';
+import { DatabaseKeys } from '../Home';
 
-export default function Settings({navigation}: DrawerContentComponentProps) {
+export default function Settings({ navigation }: DrawerContentComponentProps) {
   const [locations, setLocations] = useState<ILocations[] | null>([
     {
       name: '',
@@ -51,20 +51,22 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
   }, [useDrawerStatus()]);
 
   return (
-    <View style={{flex: 1, backgroundColor: '#171517', padding: 25}}>
+    <View style={{ flex: 1, backgroundColor: '#171517', padding: 25 }}>
       <View
         style={{
           //flex: 1,
           /* backgroundColor: 'red', */
           marginTop: 25,
-        }}>
+        }}
+      >
         <View>
           <View
             style={{
               flexDirection: 'row',
-            }}>
+            }}
+          >
             <Icon name="star" size={22} color={'#e7ff0d'} />
-            <Text style={{fontSize: 18, marginLeft: 10, color: '#FFF9'}}>
+            <Text style={{ fontSize: 18, marginLeft: 10, color: '#FFF9' }}>
               {Language() === 'pt_BR'
                 ? 'Localização Favorita'
                 : 'Favorite Location'}
@@ -84,25 +86,28 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
             padding: 15,
           }}
           onPress={() =>
-            navigation.navigate('Home', {
-              params: {city: defaultLocation, screenName: 'Settings'},
+            navigation.navigate('StackScreen', {
+              screen: 'Home',
+              params: { city: defaultLocation, screenName: 'Settings' },
             })
-          }>
+          }
+        >
           <Icon name="map-marker" size={22} color={'#FFF'} />
-          <View style={{justifyContent: 'center', marginLeft: 20}}>
+          <View style={{ justifyContent: 'center', marginLeft: 20 }}>
             <Text
               style={{
                 fontSize: 18,
                 color: '#FFF',
-              }}>
+              }}
+            >
               {defaultLocation.name}
             </Text>
             {defaultLocation.state ? (
-              <Text style={{fontSize: 12, color: '#FFF9'}}>
+              <Text style={{ fontSize: 12, color: '#FFF9' }}>
                 {defaultLocation.state}, {defaultLocation.countryFull}
               </Text>
             ) : (
-              <Text style={{fontSize: 14, color: '#FFF9'}}>
+              <Text style={{ fontSize: 14, color: '#FFF9' }}>
                 {defaultLocation.countryFull}
               </Text>
             )}
@@ -115,24 +120,26 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
           height: 1,
           marginBottom: 15,
           marginTop: 5,
-        }}></View>
+        }}
+      ></View>
       <View
         style={{
           flex: 1,
           /* backgroundColor: 'blue', */
-        }}>
-        <View style={{flexDirection: 'row', marginBottom: 20}}>
+        }}
+      >
+        <View style={{ flexDirection: 'row', marginBottom: 20 }}>
           <Icon name="map-marker-multiple" size={22} color={'#e7ff0d'} />
-          <Text style={{fontSize: 18, marginLeft: 10, color: '#FFF9'}}>
+          <Text style={{ fontSize: 18, marginLeft: 10, color: '#FFF9' }}>
             {Language() === 'pt_BR' ? 'Outras Localidades' : 'Other Locations'}
           </Text>
         </View>
-        <View style={{height: 550, flex: 1}}>
+        <View style={{ height: 550, flex: 1 }}>
           <FlatList
             showsVerticalScrollIndicator={false}
             maxToRenderPerBatch={15}
             data={locations}
-            renderItem={({item, separators}) => (
+            renderItem={({ item: city, separators }) => (
               <View>
                 <Pressable
                   android_ripple={{
@@ -147,26 +154,40 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
                     padding: 15,
                   }}
                   onPress={() =>
-                    navigation.navigate('Home', {
-                      params: {city: item, screenName: 'Settings'},
+                    navigation.navigate('StackScreen', {
+                      screen: 'Home',
+                      params: { city: city, screenName: 'Settings' },
+                      /* params: {
+                        city: {
+                          name: 'Curitiba',
+                          state: 'Parana',
+                          country: 'BR',
+                          lat: -23.5003451,
+                          lon: -47.4582864,
+                          countryFull: 'Brazil',
+                        },
+                        screenName: 'Settings',
+                      }, */
                     })
-                  }>
+                  }
+                >
                   {/* <Icon name="map-marker" size={22} /> */}
-                  <View style={{justifyContent: 'center', marginLeft: 20}}>
+                  <View style={{ justifyContent: 'center', marginLeft: 20 }}>
                     <Text
                       style={{
                         fontSize: 18,
                         color: '#FFF',
-                      }}>
-                      {item.name}
+                      }}
+                    >
+                      {city.name}
                     </Text>
-                    {item.state ? (
-                      <Text style={{fontSize: 12, color: '#FFF9'}}>
-                        {item.state}, {item.countryFull}
+                    {city.state ? (
+                      <Text style={{ fontSize: 12, color: '#FFF9' }}>
+                        {city.state}, {city.countryFull}
                       </Text>
                     ) : (
-                      <Text style={{fontSize: 14, color: '#FFF9'}}>
-                        {item.countryFull}
+                      <Text style={{ fontSize: 14, color: '#FFF9' }}>
+                        {city.countryFull}
                       </Text>
                     )}
                   </View>
@@ -182,7 +203,8 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
             /* backgroundColor: 'gray', */
             //flex: 2,
           }
-        }>
+        }
+      >
         <Pressable
           style={{
             backgroundColor: '#FFF3',
@@ -191,8 +213,16 @@ export default function Settings({navigation}: DrawerContentComponentProps) {
             alignItems: 'center',
             padding: 15,
           }}
-          onPress={() => navigation.navigate('LocationManager')}>
-          <Text style={{color: '#FFF'}}>
+          onPress={() =>
+            navigation.navigate('StackScreen', {
+              screen: 'LocationManager',
+              params: {
+                /*...*/
+              },
+            })
+          }
+        >
+          <Text style={{ color: '#FFF' }}>
             {Language() === 'pt_BR'
               ? 'Gerenciar Localizações'
               : 'Locations Management'}

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   ScrollView,
@@ -14,14 +14,14 @@ import {
 import CurrentForecast from '../../components/CurrentForecast';
 import DailyForecast from '../../components/DailyForecast';
 import HourlyForecast from '../../components/HourlyForecast';
-import {RouteProp, useFocusEffect} from '@react-navigation/native';
+import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import Messages from '../../components/MessagesForecast';
 import UVIndex from '../../components/UV Index';
 import Humidity from '../../components/Humidity';
 import Wind from '../../components/Wind';
 import Sunset from '../../components/Sunset';
-import {StackParamList} from '../../Routes/Stack';
-import {IForecastData, ILocations} from '../../types/types';
+import { StackParamList } from '../../Routes/Stack';
+import { IForecastData, ILocations } from '../../types/types';
 import getForecastData from '../../api/getForecastData';
 import {
   getByKeyStoredCities,
@@ -33,8 +33,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import toastMessage from '../../utils/toastMessage';
 import getPosition from '../../services/Geolocations';
 import getCityByCoords from '../../api/getCityByCoords';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {countries} from 'country-data';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { countries } from 'country-data';
 import LoadingFullScreenIcon from '../../components/LoadingFullScreen';
 import formatDate from '../../utils/formatDate';
 import Language from '../../utils/language';
@@ -49,7 +49,7 @@ export enum DatabaseKeys {
   Forecast = 'forecast',
 }
 
-function Home({navigation, route}: IHomeProps) {
+function Home({ navigation, route }: IHomeProps) {
   const [forecastData, setForecastData] = useState<IForecastData>({
     current: {
       dt: 0,
@@ -61,7 +61,7 @@ function Home({navigation, route}: IHomeProps) {
       wind_deg: 0,
       sunrise: 0,
       sunset: 0,
-      weather: [{description: '', icon: ''}],
+      weather: [{ description: '', icon: '' }],
     },
     city: {
       name: '',
@@ -77,20 +77,20 @@ function Home({navigation, route}: IHomeProps) {
         pop: 0,
         icon: '',
         moon_phase: 0,
-        temp: {max: 0, min: 0},
-        weather: [{icon: ''}],
+        temp: { max: 0, min: 0 },
+        weather: [{ icon: '' }],
       },
     ],
     hourly: [
       {
         dt: 0,
         temp: 0,
-        weather: [{icon: '', description: ''}],
+        weather: [{ icon: '', description: '' }],
         pop: 0,
         icon: '',
       },
     ],
-    alerts: [{event: '', description: ''}],
+    alerts: [{ event: '', description: '' }],
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
@@ -98,14 +98,14 @@ function Home({navigation, route}: IHomeProps) {
 
   const scaleAnimValue = useRef(new Animated.Value(0)).current;
 
-  const cityByParam: ILocations = route.params?.params.city;
-  const screenOrigin: string = route.params?.params.screenName;
+  const cityByParam: ILocations | undefined = route.params?.city;
+  const screenOrigin: string | undefined = route.params?.screenName;
 
   async function getForecast(city: ILocations) {
     try {
       const ForecastData: IForecastData = await getForecastData(city);
 
-      const forecastWithCity = {...ForecastData, city};
+      const forecastWithCity = { ...ForecastData, city };
 
       setForecastData(forecastWithCity);
 
@@ -160,11 +160,11 @@ function Home({navigation, route}: IHomeProps) {
     };
 
     try {
-      const {position, error} = await getPosition();
+      const { position, error } = await getPosition();
       console.log('POSITION============', position);
 
       if (position) {
-        const {latitude, longitude} = position;
+        const { latitude, longitude } = position;
         const cityByCoordsResp: ILocations[] = await getCityByCoords(
           latitude,
           longitude,
@@ -180,6 +180,7 @@ function Home({navigation, route}: IHomeProps) {
         storeCity(city, 'default');
       }
     } catch (error) {
+      toastMessage('GPS Signal not detected!');
       console.log('ERROR GPS============', error);
       const defaultCity: ILocations | null = await getDefaultCity();
       city = defaultCity;
@@ -189,7 +190,7 @@ function Home({navigation, route}: IHomeProps) {
     console.log('SCREEN ORIGIN============', screenOrigin);
 
     if (screenOrigin !== undefined) {
-      city = cityByParam;
+      city = cityByParam!;
     }
 
     if (city === null) {
@@ -199,7 +200,7 @@ function Home({navigation, route}: IHomeProps) {
     await getForecast(city);
 
     navigation.setParams({
-      params: {screenName: undefined},
+      params: { screenName: undefined },
     });
 
     setIsLoading(false);
@@ -246,26 +247,28 @@ function Home({navigation, route}: IHomeProps) {
       style={{
         flex: 1,
         backgroundColor: '#000',
-      }}>
+      }}
+    >
       <ScrollView
         scrollEventThrottle={200}
         onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {y: scaleAnimValue}}}],
-          {useNativeDriver: false},
+          [{ nativeEvent: { contentOffset: { y: scaleAnimValue } } }],
+          { useNativeDriver: false },
         )}
         stickyHeaderIndices={[0]}
         //stickyHeaderHiddenOnScroll={false}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={handleReload} />
-        }>
+        }
+      >
         <CurrentForecast
           forecastData={forecastData}
           animatedValue={scaleAnimValue}
           navigation={navigation}
         />
         {activityIndicator ? (
-          <View style={{height: 60}}>
+          <View style={{ height: 60 }}>
             {/* <ActivityIndicator
             animating={activityIndicator}
             size="large"
@@ -278,11 +281,11 @@ function Home({navigation, route}: IHomeProps) {
         <HourlyForecast forecastData={forecastData} />
         <Messages forecastData={forecastData} />
         <DailyForecast forecastData={forecastData} />
-        <View style={{flex: 1, flexDirection: 'row'}}>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
           <UVIndex uv={forecastData.current.uvi} />
           <Humidity humidity={forecastData.current.humidity} />
         </View>
-        <View style={{flex: 1, flexDirection: 'row'}}>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
           <Wind
             windSpeed={forecastData.current.wind_speed * 3.6}
             windDeg={forecastData.current.wind_deg}

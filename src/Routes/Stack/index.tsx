@@ -5,8 +5,9 @@ import {
 import Home from '../../Pages/Home';
 import SearchLocation from '../../Pages/SearchLocation';
 import LocationManager from '../../Pages/LocationManager';
-import {NativeModules} from 'react-native';
+import { NativeModules } from 'react-native';
 import Language from '../../utils/language';
+import DrawerNavigator from '../Drawer';
 
 export type StackParamList = {
   Home: any;
@@ -14,6 +15,7 @@ export type StackParamList = {
   LocationManager: any;
   SearchLocation: any;
   StackScreen: any;
+  DrawerScreen: any;
 };
 
 interface IStackNavigationProps {
@@ -22,17 +24,19 @@ interface IStackNavigationProps {
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
-export default function StackNavigator({navigation}: IStackNavigationProps) {
+export default function StackNavigator() {
   return (
     <Stack.Navigator
+      /* initialRouteName="Home" */
       screenOptions={{
-        headerStyle: {backgroundColor: '#000'},
+        headerStyle: { backgroundColor: '#000' },
         headerTintColor: '#FFF',
-      }}>
+      }}
+    >
       <Stack.Screen
         name="Home"
         component={Home}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="LocationManager"

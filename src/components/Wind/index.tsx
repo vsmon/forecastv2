@@ -93,7 +93,9 @@ export default function Wind(wind: wind) {
       <Text style={styles.textTitle}>
         {Language() === 'pt_BR' ? 'Vento' : 'Wind'}
       </Text>
-      <Text style={styles.textDescription}>{wind.windSpeed} km/h</Text>
+      <Text style={styles.textDescription}>
+        {wind.windSpeed?.toFixed(0)} km/h
+      </Text>
       <Text style={styles.textDescription}>{windDirection}</Text>
     </View>
   );
